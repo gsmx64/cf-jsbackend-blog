@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
+import * as session from 'express-session';
 import { CORS } from './constants';
 
 async function bootstrap() {
@@ -10,6 +11,14 @@ async function bootstrap() {
   app.use(morgan('dev'));
 
   const configService = app.get(ConfigService);
+
+  app.use(
+    session({
+      secret: configService.get('APP_AUTH_SECRET'),
+      resave: false,
+      saveUninitialized: false,
+    })
+  )
 
   app.enableCors(CORS);
 
