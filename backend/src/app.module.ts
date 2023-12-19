@@ -5,7 +5,7 @@ import { DataSourceConfig } from './config/data.source';
 import { AuthModule } from './auth/auth.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
-import { ProfileModule } from './profile/profile.module';
+import { CategoriesModule } from './categories/categories.module';
 import { CommentsModule } from './comments/comments.module';
 
 @Module({
@@ -18,7 +18,7 @@ import { CommentsModule } from './comments/comments.module';
     TypeOrmModule.forRoot({ ...DataSourceConfig }),
     PostsModule,
     UsersModule,
-    ProfileModule,
+    CategoriesModule,
     CommentsModule,
   ]
 })

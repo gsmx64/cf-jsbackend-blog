@@ -9,4 +9,9 @@ export class UsersController {
   getUsersList(): string {
     return this.usersService.getUsersList();
   }
+
+  @Get('profile')
+  getUserProfile(): string {
+    return this.usersService.getUserProfile();
+  }
 }

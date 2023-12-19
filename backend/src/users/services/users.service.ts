@@ -5,4 +5,8 @@ export class UsersService {
   getUsersList(): string {
     return 'Hello World Users!';
   }
+
+  getUserProfile(): string {
+    return 'Hello World User Profile!';
+  }
 }

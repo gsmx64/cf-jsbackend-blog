@@ -21,7 +21,16 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "orm:init": "npx typeorm-ts-node-commonjs -d ./src/config/data.source.ts",
+    "m:gen:dev": "export NODE_ENV=development && npm run orm:init migration:generate",
+    "m:run:dev": "export NODE_ENV=development && npm run orm:init migration:run",
+    "m:gen": "export NODE_ENV=production && npm run orm:init migration:generate",
+    "m:run": "export NODE_ENV=production && npm run orm:init migration:run",
+    "mw:gen:dev": "set NODE_ENV=development && npm run orm:init migration:generate",
+    "mw:run:dev": "set NODE_ENV=development && npm run orm:init migration:run",
+    "mw:gen": "set NODE_ENV=production && npm run orm:init migration:generate",
+    "mw:run": "set NODE_ENV=production && npm run orm:init migration:run"
   },
   "dependencies": {
     "@nestjs/common": "^10.2.10",
