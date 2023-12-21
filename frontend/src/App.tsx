@@ -1,26 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import Posts from './components/Posts';
+import './App.css'
 
 function App() {
+  const [value, setValue] = useState(0)
+
+  setTimeout(()=> {
+    setValue(value + 1);
+  }, 3000);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      {value < 2 ? (
+        <div>Cargando...</div>
+      ) : (
+        <div>
+          <Navbar />
+          <Posts />
+        </div>
+      )}
+    </>
+  )
 }
 
-export default App;
+export default App

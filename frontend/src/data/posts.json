@@ -1,0 +1,26 @@
+{
+    "_embedded":
+    {
+        "posts":
+        [
+            {
+                "id": 1,
+                "name": "Prueba 01",
+                "image": "http://s1.imagesurl.temp/1.png",
+                "content": "Loren Impsum bla bla bla..."
+            },
+            {
+                "id": 2,
+                "image": "http://s1.imagesurl.temp/2.png",
+                "name": "Prueba 02",
+                "content": "Loren Impsum bla bla bla..."
+            },
+            {
+                "id": 3,
+                "name": "Prueba 03",
+                "image": "http://s1.imagesurl.temp/3.png",
+                "content": "Loren Impsum bla bla bla..."
+            }
+        ]
+    }
+}
