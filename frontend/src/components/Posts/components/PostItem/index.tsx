@@ -1,6 +1,12 @@
 import React from "react";
 
-const PostItem: React.FC<{}> = () => {
+interface Props {
+    name: string,
+    image: string,    
+    content: string
+}
+
+const PostItem: React.FC<Props> = ({name, image, content}: Props) => {
     return (
         <div>
             <img src={image} alt={name} />

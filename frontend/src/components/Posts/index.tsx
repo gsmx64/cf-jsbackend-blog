@@ -2,20 +2,17 @@ import React from "react";
 import PostItem from "./components/PostItem";
 import data from '../../data/posts.json';
 
-interface PostsProps {
-    key: string,
-    image: string,
+/*
+interface Props {
+    id: number,
     name: string,
-    content: string,
-}
-/*export type Props = {
-    children?: React.ReactNode;
-};
-*/
+    image: string,    
+    content: string
+}*/
 
 const { _embedded: { posts }} = data;
 
-const Posts: React.FC<PostsProps> = (props: PostsProps) => {
+const Posts: React.FC<{}> = () => {
     const postsComponent = posts.map((postItem) => (
         <PostItem
             key={`post-item-${postItem.id}`}
