@@ -1,4 +1,4 @@
-import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn, Column } from "typeorm";
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export abstract class BaseEntity {
     @PrimaryGeneratedColumn('uuid')
@@ -12,13 +12,7 @@ export abstract class BaseEntity {
 
     @UpdateDateColumn({
         type: 'timestamp',
-        name: 'update_at'
+        name: 'updated_at'
     })
     updateAt: Date;
-
-    @Column({
-        type: 'timestamp',
-        name: 'update_at'
-    })
-    modifiedAt: Date;
 }

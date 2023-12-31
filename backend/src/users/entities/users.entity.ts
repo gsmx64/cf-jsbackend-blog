@@ -24,7 +24,7 @@ export class UsersEntity extends BaseEntity implements IUser {
     })
     role: ROLES;
 
-    @Column()
+    @Column({ default: 0 })
     karma: string;
 
     @Column()

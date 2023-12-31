@@ -6,7 +6,10 @@ import { CategoriesPostsEntity } from "./categoriesPosts.entity";
 @Entity({ name: 'comments' })
 export class CategoriesEntity extends BaseEntity implements ICategory {
     @Column()
-    name: string;
+    title: string;
+
+    @Column()
+    description: string;
 
     @Column()
     status: number;
