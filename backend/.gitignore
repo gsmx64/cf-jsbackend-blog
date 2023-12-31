@@ -5,6 +5,9 @@
 /dist
 /node_modules
 
+# migrations
+/src/migrations
+
 # Logs
 logs
 *.log
