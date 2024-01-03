@@ -2,14 +2,6 @@ import React from "react";
 import PostItem from "./components/PostItem";
 import data from '../../data/posts.json';
 
-/*
-interface Props {
-    id: number,
-    name: string,
-    image: string,    
-    content: string
-}*/
-
 const { _embedded: { posts }} = data;
 
 const Posts: React.FC<{}> = () => {
