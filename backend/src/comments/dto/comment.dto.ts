@@ -1,5 +1,4 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
-import { ROLES } from "src/constants/roles";
 
 export class CommentDTO {
     @IsNotEmpty({ message: 'Please enter a comment' })

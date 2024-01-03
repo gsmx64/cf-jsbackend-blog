@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { PostsEntity } from '../entities/posts.entity';
 import { PostDTO, PostUpdateDTO } from '../dto/post.dto';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class PostsService {
@@ -15,9 +16,16 @@ export class PostsService {
     body: PostDTO
   ): Promise<PostsEntity> {
     try{
-      return await this.postRepository.save(body);
+      const post: PostsEntity = await this.postRepository.save(body);
+      if(!post) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se creó el posteo'
+        });
+      }
+      return post;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -28,10 +36,14 @@ export class PostsService {
     try{
       const post: UpdateResult = await this.postRepository.update(id, body);
       if(post.affected === 0){
-        return undefined;
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se actualizó el post'
+        });
       }
+      return post;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -41,10 +53,14 @@ export class PostsService {
     try{
       const post: DeleteResult = await this.postRepository.delete(id);
       if(post.affected === 0){
-        return undefined;
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se eliminó el post'
+        });
       }
+      return post;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -52,20 +68,34 @@ export class PostsService {
     id: string
   ): Promise<PostsEntity> {
     try{
-      return await this.postRepository
-        .createQueryBuilder('post')
-        .where({id})
-        .getOne();
+      const post: PostsEntity = await this.postRepository
+                                      .createQueryBuilder('post')
+                                      .where({id})
+                                      .getOne();
+      if(!post) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró el post'
+        });
+      }
+      return post;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findAllPosts(): Promise<PostsEntity[]> {
     try{
-      return await this.postRepository.find();
+      const posts: PostsEntity[] = await this.postRepository.find();
+      if(posts.length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron posts'
+        });
+      }
+      return posts;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 }

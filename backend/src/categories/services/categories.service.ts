@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CategoriesEntity } from '../entities/categories.entity';
 import { CategoryDTO, CategoryUpdateDTO } from '../dto/category.dto';
+import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()
 export class CategoriesService {
@@ -15,9 +16,16 @@ export class CategoriesService {
     body: CategoryDTO
   ): Promise<CategoriesEntity> {
     try{
-      return await this.categoryRepository.save(body);
+      const category: CategoriesEntity = await this.categoryRepository.save(body);
+      if(!category) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se creó la categoría'
+        });
+      }
+      return category;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -28,10 +36,14 @@ export class CategoriesService {
     try{
       const category: UpdateResult = await this.categoryRepository.update(id, body);
       if(category.affected === 0){
-        return undefined;
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se actualizó la categoría'
+        });
       }
+      return category;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -41,10 +53,14 @@ export class CategoriesService {
     try{
       const category: DeleteResult = await this.categoryRepository.delete(id);
       if(category.affected === 0){
-        return undefined;
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se eliminó la categoría'
+        });
       }
+      return category;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -52,20 +68,34 @@ export class CategoriesService {
     id: string
   ): Promise<CategoriesEntity> {
     try{
-      return await this.categoryRepository
-        .createQueryBuilder('category')
-        .where({id})
-        .getOne();
+      const category: CategoriesEntity = await this.categoryRepository
+                                              .createQueryBuilder('category')
+                                              .where({id})
+                                              .getOne();
+      if(!category) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró la categoría'
+        });
+      }
+      return category;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findAllCategories(): Promise<CategoriesEntity[]> {
     try{
-      return await this.categoryRepository.find();
+      const categories: CategoriesEntity[] = await this.categoryRepository.find();
+      if(categories.length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron categorías'
+        });
+      }
+      return categories;
     } catch(error){
-      throw new Error(error);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
