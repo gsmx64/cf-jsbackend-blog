@@ -1,5 +1,10 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator";
-import { ROLES } from "src/constants/roles";
+import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString,
+        IsUUID, Length } from "class-validator";
+import { ACCESS_LEVEL, ROLES } from "src/constants/roles";
+import { UsersEntity } from "../entities/users.entity";
+import { PostsEntity } from "src/posts/entities/posts.entity";
+import { CommentsEntity } from "src/comments/entities/comments.entity";
+import * as bcrypt from 'bcrypt';
 
 export class UserDTO {
     @IsNotEmpty({ message: 'Please enter an username' })
@@ -21,11 +26,10 @@ export class UserDTO {
     @IsEnum(ROLES)
     role: ROLES;
 
-    @IsNotEmpty()
     @IsString()
     karma: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     avatar: string;
 
@@ -102,4 +106,28 @@ export class UserUpdateDTO {
     @IsOptional()
     @IsString()
     country: string;
+}
+
+export class UserToPostDTO {
+    @IsNotEmpty()
+    @IsUUID()
+    username: UsersEntity;
+
+    @IsNotEmpty()
+    @IsUUID()
+    post: PostsEntity;
+
+    @IsNotEmpty()
+    @IsEnum(ACCESS_LEVEL)
+    accessLevel: ACCESS_LEVEL
+}
+
+export class UserToCommentDTO {
+    @IsNotEmpty()
+    @IsUUID()
+    username: UsersEntity;
+
+    @IsNotEmpty()
+    @IsUUID()
+    comment: CommentsEntity;
 }

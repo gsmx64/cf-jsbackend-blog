@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class PostDTO {
     @IsNotEmpty({ message: 'Please enter a title' })
@@ -9,6 +9,10 @@ export class PostDTO {
     @IsString({ message: 'Please enter a valid description' })
     description: string;
 
+    @IsOptional()
+    @IsString({ message: 'Please insert a valid image' })
+    image: string;
+
     @IsNotEmpty({ message: 'Please write some content' })
     @IsString({ message: 'Please enter a valid content' })
     content: string;
@@ -18,8 +22,8 @@ export class PostDTO {
     status: number;
 
     @IsNotEmpty()
-    @IsNumber()
-    catid: number;
+    @IsString()
+    category_id: string;
 }
 
 export class PostUpdateDTO {
@@ -32,6 +36,10 @@ export class PostUpdateDTO {
     description: string;
 
     @IsOptional()
+    @IsString({ message: 'Please insert a valid image' })
+    image: string;
+
+    @IsOptional()
     @IsString()
     content: string;
 
@@ -40,6 +48,6 @@ export class PostUpdateDTO {
     status: number;
 
     @IsOptional()
-    @IsNumber()
-    catid: number;
+    @IsString()
+    category_id: string;
 }

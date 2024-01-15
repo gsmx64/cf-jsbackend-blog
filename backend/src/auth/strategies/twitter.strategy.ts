@@ -1,16 +1,16 @@
-import { Strategy } from 'passport-twitter';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthService } from '../auth.service';
-import { ConfigService } from '@nestjs/config';
+import { PassportStrategy } from '@nestjs/passport';
+import { AuthService } from '../services/auth.service';
+import { Strategy } from '@superfaceai/passport-twitter-oauth2';
 
 @Injectable()
 export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
-  constructor(private authService: AuthService, configService: ConfigService) {
+  constructor(private authService: AuthService) {
     super({
-      consumerKey: configService.get('APP_AUTH_TWITTER_KEY'),
-      consumerSecret: configService.get('APP_AUTH_TWITTER_SECRET'),
-      callbackURL: 'http://localhost:3000/auth/twitter/callback',
+      clientID: process.env.APP_AUTH_TWITTER_ID,
+      clientSecret: process.env.APP_AUTH_TWITTER_SECRET,
+      clientType: 'confidential',
+      callbackURL: `http://${process.env.APP_HOST}:${process.env.APP_PORT}/auth/twitter/callback`,
     });
   }
 

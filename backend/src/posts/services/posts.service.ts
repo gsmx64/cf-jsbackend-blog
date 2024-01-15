@@ -71,6 +71,10 @@ export class PostsService {
       const post: PostsEntity = await this.postRepository
                                       .createQueryBuilder('post')
                                       .where({id})
+                                      .leftJoinAndSelect('post.usersIncludes', 'usersIncludes')
+                                      .leftJoinAndSelect('usersIncludes.user', 'user')
+                                      .leftJoinAndSelect('post.categoriesIncludes', 'categoriesIncludes')
+                                      .leftJoinAndSelect('categoriesIncludes.user', 'category')
                                       .getOne();
       if(!post) {
         throw new ErrorManager({

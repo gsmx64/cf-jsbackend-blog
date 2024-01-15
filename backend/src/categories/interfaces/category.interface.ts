@@ -1,7 +1,6 @@
-export interface IPost {
+export interface ICategory {
     title: string;
     description: string;
-    content: string;
+    image: string;
     status: number;
-    catid: number;
 }

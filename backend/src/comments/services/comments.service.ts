@@ -71,6 +71,8 @@ export class CommentsService {
       const comment: CommentsEntity = await this.commentRepository
                                             .createQueryBuilder('comment')
                                             .where({id})
+                                            .leftJoinAndSelect('comment.usersIncludes', 'usersIncludes')
+                                            .leftJoinAndSelect('usersIncludes.user', 'user')
                                             .getOne();
       if(!comment) {
         throw new ErrorManager({

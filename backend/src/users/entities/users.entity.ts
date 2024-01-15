@@ -1,6 +1,7 @@
 import { Entity, Column, OneToMany } from "typeorm";
+import { Exclude } from "class-transformer";
 import { ROLES } from "../../constants/roles";
-import { IUser } from "../../interfaces/user.interface";
+import { IUser } from "../interfaces/user.interface";
 import { BaseEntity } from "../../config/base.entity";
 import { UsersPostsEntity } from "./usersPosts.entity";
 import { UsersCommentsEntity } from "./usersComments.entity";
@@ -12,6 +13,7 @@ export class UsersEntity extends BaseEntity implements IUser {
     })
     username: string;
 
+    @Exclude()
     @Column()
     password: string;
 
@@ -20,11 +22,11 @@ export class UsersEntity extends BaseEntity implements IUser {
     
     @Column({
         type: 'enum',
-        enum: ROLES,
+        enum: ROLES
     })
     role: ROLES;
 
-    @Column({ default: 0 })
+    @Column()
     karma: string;
 
     @Column()

@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CategoriesService } from '../services/categories.service';
-import { CategoryDTO, CategoryUpdateDTO } from '../dto/category.dto';
+import { CategoryDTO, CategoryToPostDTO, CategoryUpdateDTO } from '../dto/category.dto';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
 
-@Controller()
+@Controller('categories')
+@UseGuards(LocalAuthGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
@@ -11,6 +14,14 @@ export class CategoriesController {
     @Body() body: CategoryDTO
   ) {
     return this.categoriesService.createCategory(body);
+  }
+
+  @PublicAccess()
+  @Post('categorypost')
+  public async categoryToPost(
+    @Body() body: CategoryToPostDTO
+  ) {
+    return this.categoriesService.relationToPost(body);
   }
 
   @Get('edit/:id')
@@ -28,14 +39,16 @@ export class CategoriesController {
     return this.categoriesService.deleteCategory(id);
   }
 
-  @Get('category/:id')
+  @PublicAccess()
+  @Get('view/:id')
   public async findOneCategory(
     @Param('id') id: string
   ) {
     return this.categoriesService.findOneCategory(id);
   }
 
-  @Get('categorieslist')
+  @PublicAccess()
+  @Get('list')
   public async findAllCategories() {
     return this.categoriesService.findAllCategories();
   }

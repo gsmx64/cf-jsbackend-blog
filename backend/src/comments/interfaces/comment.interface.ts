@@ -1,5 +1,5 @@
 export interface IComment {
     comment: string;
-    author_id: number;
+    author_id: string;
     reaction: string;
 }

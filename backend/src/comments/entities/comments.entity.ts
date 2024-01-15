@@ -1,5 +1,5 @@
 import { Entity, Column, OneToMany } from "typeorm";
-import { IComment } from "../../interfaces/comment.interface";
+import { IComment } from "../interfaces/comment.interface";
 import { BaseEntity } from "../../config/base.entity";
 import { UsersCommentsEntity } from "../../users/entities/usersComments.entity";
 
@@ -9,7 +9,7 @@ export class CommentsEntity extends BaseEntity implements IComment {
     comment: string;
 
     @Column()
-    author_id: number;
+    author_id: string;
 
     @Column()
     reaction: string;

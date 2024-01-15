@@ -6,8 +6,8 @@ export class CommentDTO {
     comment: string;
 
     @IsNotEmpty()
-    @IsNumber()
-    author_id: number;
+    @IsString()
+    author_id: string;
 
     @IsNotEmpty()
     @IsString()
@@ -20,8 +20,8 @@ export class CommentUpdateDTO {
     comment: string;
 
     @IsOptional()
-    @IsNumber()
-    author_id: number;
+    @IsString()
+    author_id: string;
 
     @IsOptional()
     @IsString()

@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { PostsService } from '../services/posts.service';
 import { PostDTO, PostUpdateDTO } from '../dto/post.dto';
+import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
+import { PublicAccess } from 'src/auth/decorators/public.decorator';
 
 @Controller('posts')
+@UseGuards(LocalAuthGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
@@ -28,14 +31,16 @@ export class PostsController {
     return this.postsService.deletePost(id);
   }
 
-  @Get('post/:id')
+  @PublicAccess()
+  @Get('view/:id')
   public async findOnePost(
     @Param('id') id: string
   ) {
     return this.postsService.findOnePost(id);
   }
 
-  @Get('postslist')
+  @PublicAccess()
+  @Get('list')
   public async findAllPosts() {
     return this.postsService.findAllPosts();
   }
