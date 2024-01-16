@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CommentsService } from '../services/comments.service';
-import { CommentDTO, CommentUpdateDTO } from '../dto/comment.dto';
+import { CommentDTO } from '../dto/comment.dto';
+import { CommentUpdateDTO } from '../dto/comment.update.dto';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 import { PublicAccess } from 'src/auth/decorators/public.decorator';
 

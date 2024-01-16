@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
-import { UserDTO, UserToCommentDTO, UserToPostDTO, UserUpdateDTO } from '../dto/user.dto';
+import { UserDTO } from '../dto/user.dto';
+import { UserUpdateDTO } from '../dto/user.update.dto';
 import { PublicAccess } from 'src/auth/decorators/public.decorator';
 import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
 
@@ -17,7 +18,7 @@ export class UsersController {
     return this.usersService.createUser(body);
   }
 
-  @Post('userpost')
+  /*@Post('userpost')
   public async userToPost(
     @Body() body: UserToPostDTO
   ) {
@@ -29,7 +30,7 @@ export class UsersController {
     @Body() body: UserToCommentDTO
   ) {
     return this.usersService.relationToComment(body);
-  }
+  }*/
 
   @Get('edit/:id')
   public async updateUser(

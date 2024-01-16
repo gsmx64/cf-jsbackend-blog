@@ -1,10 +1,10 @@
-import { IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString,
-        IsUUID, Length } from "class-validator";
-import { ACCESS_LEVEL, ROLES } from "src/constants/roles";
-import { UsersEntity } from "../entities/users.entity";
-import { PostsEntity } from "src/posts/entities/posts.entity";
-import { CommentsEntity } from "src/comments/entities/comments.entity";
-import * as bcrypt from 'bcrypt';
+import { Type } from "class-transformer";
+import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional,
+            IsString, Length, 
+            ValidateNested} from "class-validator";
+import { PostDTO } from "../../posts/dto/post.dto";
+import { CommentDTO } from "../../comments/dto/comment.dto";
+import { ROLES } from "../../constants/roles";
 
 export class UserDTO {
     @IsNotEmpty({ message: 'Please enter an username' })
@@ -56,78 +56,16 @@ export class UserDTO {
     @IsNotEmpty({ message: 'Please enter your country' })
     @IsString({ message: 'Please enter a valid country' })
     country: string;
-}
 
-export class UserUpdateDTO {
+    @ValidateNested()
+    @IsArray()
+    @Type(() => PostDTO)
     @IsOptional()
-    @IsString()
-    username: string;
+    posts: PostDTO[];
 
+    @ValidateNested()
+    @IsArray()
+    @Type(() => CommentDTO)
     @IsOptional()
-    @IsString()
-    password: string;
-
-    @IsOptional()
-    @IsNumber()
-    status: number;
-    
-    @IsOptional()
-    @IsEnum(ROLES)
-    role: ROLES;
-
-    @IsOptional()
-    @IsString()
-    karma: string;
-
-    @IsOptional()
-    @IsString()
-    avatar: string;
-
-    @IsOptional()
-    @IsString()
-    firstName: string;
-
-    @IsOptional()
-    @IsString()
-    lastName: string;
-
-    @IsOptional()
-    @IsString()
-    email: string;
-
-    @IsOptional()
-    @IsNumber()
-    age: number;
-
-    @IsOptional()
-    @IsString()
-    city: string;
-
-    @IsOptional()
-    @IsString()
-    country: string;
-}
-
-export class UserToPostDTO {
-    @IsNotEmpty()
-    @IsUUID()
-    username: UsersEntity;
-
-    @IsNotEmpty()
-    @IsUUID()
-    post: PostsEntity;
-
-    @IsNotEmpty()
-    @IsEnum(ACCESS_LEVEL)
-    accessLevel: ACCESS_LEVEL
-}
-
-export class UserToCommentDTO {
-    @IsNotEmpty()
-    @IsUUID()
-    username: UsersEntity;
-
-    @IsNotEmpty()
-    @IsUUID()
-    comment: CommentsEntity;
+    comments: CommentDTO[];
 }

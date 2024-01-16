@@ -3,9 +3,8 @@ import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { UsersEntity } from '../entities/users.entity';
-import { UsersPostsEntity } from '../entities/usersPosts.entity';
-import { UsersCommentsEntity } from '../entities/usersComments.entity';
-import { UserDTO, UserToCommentDTO, UserToPostDTO, UserUpdateDTO } from '../dto/user.dto';
+import { UserDTO } from '../dto/user.dto';
+import { UserUpdateDTO } from '../dto/user.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 
 
@@ -14,30 +13,12 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
-
-    @InjectRepository(UsersPostsEntity)
-    private readonly userPostRepository: Repository<UsersPostsEntity>,
-
-    @InjectRepository(UsersCommentsEntity)
-    private readonly userCommentRepository: Repository<UsersCommentsEntity>,
   ) {}
 
   public async createUser(
     body: UserDTO
   ): Promise<UsersEntity> {
-    try{
-      /*body.password = await bcrypt.hash(body.password, +process.env.APP_AUTH_HASH_SALT);
-      const user: UsersEntity = await this.userRepository.save(body);
-
-      if(!user) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se creó el usuario'
-        });
-      }
-
-      return user;*/
-      //body.role = ADMIN;
+    try {
       body.password = await bcrypt.hash(body.password, +process.env.APP_AUTH_HASH_SALT);
       console.log(body);
       return await this.userRepository.save(body);
@@ -46,7 +27,7 @@ export class UsersService {
     }
   }
 
-  public async relationToPost(
+  /*public async relationToPost(
     body: UserToPostDTO
   ): Promise<UserToPostDTO> {
     try{
@@ -59,18 +40,18 @@ export class UsersService {
   public async relationToComment(
     body: UserToCommentDTO
   ): Promise<UserToCommentDTO> {
-    try{
+    try {
       return await this.userCommentRepository.save(body);
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
     }
-  }
+  }*/
 
   public async updateUser(
     body: UserUpdateDTO,
     id: string,
   ): Promise<UpdateResult | undefined>{
-    try{
+    try {
       const user: UpdateResult = await this.userRepository.update(id, body);
       if(user.affected === 0){
         throw new ErrorManager({
@@ -87,7 +68,7 @@ export class UsersService {
   public async deleteUser(
     id: string,
   ): Promise<DeleteResult | undefined>{
-    try{
+    try {
       const user: DeleteResult = await this.userRepository.delete(id);
       if(user.affected === 0){
         throw new ErrorManager({
@@ -141,7 +122,7 @@ export class UsersService {
   }
 
   public async findAllUsers(): Promise<UsersEntity[]> {
-    try{
+    try {
       const users: UsersEntity[] = await this.userRepository.find();
       if(users.length === 0) {
         throw new ErrorManager({

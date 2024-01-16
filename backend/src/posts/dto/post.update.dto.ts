@@ -1,36 +1,36 @@
 import { Type } from "class-transformer";
-import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsInt, IsOptional, IsString, ValidateNested } from "class-validator";
 import { CategoriesEntity } from "../../categories/entities/categories.entity";
 import { CommentDTO } from "../../comments/dto/comment.dto";
 import { UsersEntity } from "../../users/entities/users.entity";
 
-export class PostDTO {
-    @IsNotEmpty({ message: 'Please enter a title' })
-    @IsString({ message: 'Please enter a valid title' })
+export class PostUpdateDTO {
+    @IsString()
+    @IsOptional()
     title: string;
 
-    @IsNotEmpty({ message: 'Please enter a description' })
-    @IsString({ message: 'Please enter a valid description' })
+    @IsString()
+    @IsOptional()
     description: string;
 
-    @IsOptional()
     @IsString({ message: 'Please insert a valid image' })
+    @IsOptional()
     image: string;
 
-    @IsNotEmpty({ message: 'Please write some content' })
-    @IsString({ message: 'Please enter a valid content' })
+    @IsOptional()
+    @IsString()
     content: string;
 
-    @IsNotEmpty()
     @IsInt()
+    @IsOptional()
     status: number;
 
-    @IsNotEmpty()
     @IsString()
+    @IsOptional()
     user_id: UsersEntity;
 
-    @IsNotEmpty()
     @IsString()
+    @IsOptional()
     category_id: CategoriesEntity;
 
     @ValidateNested()

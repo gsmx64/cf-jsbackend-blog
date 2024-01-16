@@ -7,16 +7,12 @@ import { UsersService } from 'src/users/services/users.service';
 import { AuthService } from 'src/auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersEntity } from 'src/users/entities/users.entity';
-import { UsersPostsEntity } from 'src/users/entities/usersPosts.entity';
-import { UsersCommentsEntity } from 'src/users/entities/usersComments.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       CommentsEntity,
-      UsersEntity,
-      UsersPostsEntity,
-      UsersCommentsEntity
+      UsersEntity
     ])  
   ],
   providers: [

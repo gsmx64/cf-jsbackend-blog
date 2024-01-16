@@ -11,7 +11,7 @@ import { CommentsModule } from './comments/comments.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.development.env',
+      envFilePath: process.env.NODE_ENV.trim(),
       isGlobal: true,
     }),
     AuthModule,

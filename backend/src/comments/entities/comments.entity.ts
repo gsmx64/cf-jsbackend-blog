@@ -1,7 +1,8 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { IComment } from "../interfaces/comment.interface";
 import { BaseEntity } from "../../config/base.entity";
-import { UsersCommentsEntity } from "../../users/entities/usersComments.entity";
+import { UsersEntity } from "../../users/entities/users.entity";
+import { PostsEntity } from "../../posts/entities/posts.entity";
 
 @Entity({ name: 'comments' })
 export class CommentsEntity extends BaseEntity implements IComment {
@@ -9,11 +10,11 @@ export class CommentsEntity extends BaseEntity implements IComment {
     comment: string;
 
     @Column()
-    author_id: string;
-
-    @Column()
     reaction: string;
 
-    @OneToMany(()=>UsersCommentsEntity, (usersComments)=>usersComments.comment)
-    usersIncludes: UsersCommentsEntity[]
+    @ManyToOne(()=>UsersEntity, (user)=>user.comments)
+    author_id: UsersEntity;
+
+    @ManyToOne(()=>PostsEntity, (post)=>post.comments)
+    post_id: PostsEntity;
 }

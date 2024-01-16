@@ -1,6 +1,5 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from '@nestjs/config';
 import * as morgan from 'morgan';
 import * as session from 'express-session';
 import { CORS } from './constants';
@@ -22,11 +21,9 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
-  const configService = app.get(ConfigService);
-
   app.use(
     session({
-      secret: configService.get('APP_AUTH_SECRET'),
+      secret: process.env.APP_AUTH_SECRET,
       resave: false,
       saveUninitialized: false,
     })
@@ -36,13 +33,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  await app.listen(configService.get('APP_PORT'));
+  await app.listen(process.env.APP_PORT);
 
   var decor = '-';
-  var appUrl = `http://${configService.get('APP_HOST')}:${configService.get('APP_PORT')}/`
+  var appUrl = `http://${process.env.APP_HOST}:${process.env.APP_PORT}/`
   console.log(` \n` + decor.repeat(36));
-  console.log(` >>> APP PORT: ` + configService.get('APP_PORT'));
   console.log(` >>> APP URL: ${appUrl}`);
+  console.log(` >>> ENVIRONMENT: ${process.env.NODE_ENV}`);
   console.log(decor.repeat(36) + ` \n`);
 }
 bootstrap();

@@ -2,18 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CategoriesEntity } from '../entities/categories.entity';
-import { CategoryDTO, CategoryToPostDTO, CategoryUpdateDTO } from '../dto/category.dto';
+import { CategoryDTO } from '../dto/category.dto';
+import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
-import { CategoriesPostsEntity } from '../entities/categoriesPosts.entity';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(CategoriesEntity)
     private readonly categoryRepository: Repository<CategoriesEntity>,
-
-    @InjectRepository(CategoriesPostsEntity)
-    private readonly categoryPostRepository: Repository<CategoriesPostsEntity>,
   ){}
 
   public async createCategory(
@@ -33,7 +30,7 @@ export class CategoriesService {
     }
   }
 
-  public async relationToPost(
+  /*public async relationToPost(
     body: CategoryToPostDTO
   ): Promise<CategoryToPostDTO> {
     try{
@@ -41,7 +38,7 @@ export class CategoriesService {
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
     }
-  }
+  }*/
 
   public async updateCategory(
     body: CategoryUpdateDTO,

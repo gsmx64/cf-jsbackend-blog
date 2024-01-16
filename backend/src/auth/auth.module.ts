@@ -1,15 +1,8 @@
 import { Global, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 
 import { AuthService } from './services/auth.service';
-
-/*import { FacebookAuthModule } from './modules/facebook-auth.module';
-import { GoogleOauthModule } from './modules/google-oauth.module';
-import { JwtAuthModule } from './modules/jwt-auth.module';
-import { LocalAuthModule } from './modules/local-auth.module';
-import { TwitterOauthModule } from './modules/twitter-oauth.module';
-*/
 
 import { FacebookStrategy } from './strategies/facebook.strategy';
 import { GoogleStrategy } from './strategies/google-oauth.strategy';
@@ -24,11 +17,7 @@ import { LocalAuthController } from './controllers/local-auth.controller';
 import { TwitterOAuthController } from './controllers/twitter-oauth.controller';
 
 import { UsersService } from 'src/users/services/users.service';
-import { UsersEntity } from 'src/users/entities/users.entity';
-import { UsersPostsEntity } from 'src/users/entities/usersPosts.entity';
-import { UsersCommentsEntity } from 'src/users/entities/usersComments.entity';
 import { UsersModule } from 'src/users/users.module';
-import { JwtAuthModule } from './modules/jwt-auth.module';
 
 
 @Global()
@@ -45,11 +34,6 @@ import { JwtAuthModule } from './modules/jwt-auth.module';
         inject: [],
     }),
     UsersModule,
-    /*FacebookAuthModule,
-    GoogleOauthModule,
-    JwtAuthModule,
-    LocalAuthModule,
-    TwitterOauthModule*/
   ],
   providers: [
     AuthService, 

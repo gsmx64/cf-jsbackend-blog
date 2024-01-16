@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { User } from 'src/types/User';
 import { AuthResponse, PayloadToken } from '../interfaces/auth.interface';
 import { UsersService } from 'src/users/services/users.service';
 import { UsersEntity } from 'src/users/entities/users.entity';

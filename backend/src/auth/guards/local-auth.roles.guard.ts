@@ -32,7 +32,7 @@ export class LocalRolesGuard implements CanActivate {
 
     const { roleUser } = req;
 
-    if (roles === undefined) {
+    /*if (roles === undefined) {
       if (!admin) {
         return true;
       } else if (admin && roleUser === admin) {
@@ -40,7 +40,7 @@ export class LocalRolesGuard implements CanActivate {
       } else {
         throw new UnauthorizedException('No tienes permisos para esta operación.');
       }
-    }
+    }*/
 
     if(roleUser === ROLES.ADMIN){
       return true

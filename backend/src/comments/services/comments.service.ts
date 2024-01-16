@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { CommentsEntity } from '../entities/comments.entity';
-import { CommentDTO, CommentUpdateDTO } from '../dto/comment.dto';
+import { CommentDTO } from '../dto/comment.dto';
+import { CommentUpdateDTO } from '../dto/comment.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()

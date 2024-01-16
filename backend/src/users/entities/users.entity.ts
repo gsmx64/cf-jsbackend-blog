@@ -3,8 +3,8 @@ import { Exclude } from "class-transformer";
 import { ROLES } from "../../constants/roles";
 import { IUser } from "../interfaces/user.interface";
 import { BaseEntity } from "../../config/base.entity";
-import { UsersPostsEntity } from "./usersPosts.entity";
-import { UsersCommentsEntity } from "./usersComments.entity";
+import { PostsEntity } from "../../posts/entities/posts.entity";
+import { CommentsEntity } from "../../comments/entities/comments.entity";
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity implements IUser {
@@ -12,6 +12,11 @@ export class UsersEntity extends BaseEntity implements IUser {
         unique: true
     })
     username: string;
+
+    @Column({
+        unique: true
+    })
+    email: string;
 
     @Exclude()
     @Column()
@@ -37,11 +42,6 @@ export class UsersEntity extends BaseEntity implements IUser {
 
     @Column()
     lastName: string;
-    
-    @Column({
-        unique: true
-    })
-    email: string;
 
     @Column()
     age: number;
@@ -52,9 +52,9 @@ export class UsersEntity extends BaseEntity implements IUser {
     @Column()
     country: string;
 
-    @OneToMany(()=>UsersPostsEntity, (usersPosts)=>usersPosts.user)
-    postsIncludes: UsersPostsEntity[]
+    @OneToMany(()=>PostsEntity, (post)=>post.author_id)
+    posts: PostsEntity[];
 
-    @OneToMany(()=>UsersCommentsEntity, (usersComments)=>usersComments.user)
-    commentsIncludes: UsersCommentsEntity[]
+    @OneToMany(()=>CommentsEntity, (comment)=>comment.author_id)
+    comments: CommentsEntity[];
 }

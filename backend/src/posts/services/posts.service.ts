@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { PostsEntity } from '../entities/posts.entity';
-import { PostDTO, PostUpdateDTO } from '../dto/post.dto';
+import { PostDTO } from '../dto/post.dto';
+import { PostUpdateDTO } from '../dto/post.update.dto';
 import { ErrorManager } from 'src/utils/error.manager';
 
 @Injectable()

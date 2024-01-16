@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { CategoriesService } from '../services/categories.service';
-import { CategoryDTO, CategoryToPostDTO, CategoryUpdateDTO } from '../dto/category.dto';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
-import { PublicAccess } from 'src/auth/decorators/public.decorator';
+import { CategoryDTO } from '../dto/category.dto';
+import { CategoryUpdateDTO } from '../dto/category.update.dto';
+import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
+import { PublicAccess } from '../../auth/decorators/public.decorator';
 
 @Controller('categories')
 @UseGuards(LocalAuthGuard)
@@ -16,13 +17,13 @@ export class CategoriesController {
     return this.categoriesService.createCategory(body);
   }
 
-  @PublicAccess()
+  /*@PublicAccess()
   @Post('categorypost')
   public async categoryToPost(
     @Body() body: CategoryToPostDTO
   ) {
     return this.categoriesService.relationToPost(body);
-  }
+  }*/
 
   @Get('edit/:id')
   public async updateCategory(

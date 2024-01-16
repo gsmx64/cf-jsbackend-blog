@@ -1,8 +1,9 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { IPost } from "../interfaces/post.interface";
 import { BaseEntity } from "../../config/base.entity";
-import { UsersPostsEntity } from "../../users/entities/usersPosts.entity";
-import { CategoriesPostsEntity } from "../../categories/entities/categoriesPosts.entity";
+import { UsersEntity } from "../../users/entities/users.entity";
+import { CategoriesEntity } from "../../categories/entities/categories.entity";
+import { CommentsEntity } from "../../comments/entities/comments.entity";
 
 @Entity({ name: 'posts' })
 export class PostsEntity extends BaseEntity implements IPost {
@@ -23,12 +24,12 @@ export class PostsEntity extends BaseEntity implements IPost {
     @Column()
     status: number;
 
-    @Column()
-    category_id: string;
+    @ManyToOne(()=>UsersEntity, (user)=>user.posts)
+    author_id: UsersEntity;
 
-    @OneToMany(()=>UsersPostsEntity, (usersPosts)=>usersPosts.post)
-    usersIncludes: UsersPostsEntity[]
+    @ManyToOne(()=>CategoriesEntity, (category)=>category.posts)
+    category_id: CategoriesEntity;
 
-    @OneToMany(()=>CategoriesPostsEntity, (categoriesPosts)=>categoriesPosts.post)
-    categoriesIncludes: CategoriesPostsEntity[]
+    @OneToMany(()=>CommentsEntity, (comment)=>comment.post_id)
+    comments: CommentsEntity[];
 }

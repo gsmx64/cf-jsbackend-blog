@@ -1,22 +1,22 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNotEmpty, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
 import { PostDTO } from "../../posts/dto/post.dto";
 
-export class CategoryDTO {
-    @IsNotEmpty()
+export class CategoryUpdateDTO {
     @IsString({ message: 'Please insert a valid title' })
+    @IsOptional()
     title: string;
 
-    @IsNotEmpty()
     @IsString({ message: 'Please insert a valid description' })
+    @IsOptional()
     description: string;
 
-    @IsOptional()
     @IsString({ message: 'Please insert a valid image' })
+    @IsOptional()
     image: string;
 
-    @IsNotEmpty()
     @IsNumber()
+    @IsOptional()
     status: number;
 
     @ValidateNested()
