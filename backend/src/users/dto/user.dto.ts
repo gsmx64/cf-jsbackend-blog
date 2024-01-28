@@ -1,20 +1,26 @@
 import { Type } from "class-transformer";
 import { IsArray, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional,
-            IsString, Length, 
-            ValidateNested} from "class-validator";
-import { PostDTO } from "../../posts/dto/post.dto";
+            IsString, Length, ValidateNested} from "class-validator";
+
 import { CommentDTO } from "../../comments/dto/comment.dto";
 import { ROLES } from "../../constants/roles";
+import { PostDTO } from "../../posts/dto/post.dto";
+import { CategoryDTO } from "../../categories/dto/category.dto";
+
 
 export class UserDTO {
     @IsNotEmpty({ message: 'Please enter an username' })
     @IsString()
     username: string;
+    
+    @IsNotEmpty({ message: 'Please enter your email' })
+    @IsEmail()
+    email: string;
 
     @IsNotEmpty()
     @IsString()
-    @Length(8, 50, {
-        message: 'Password length Must be between 8 and 50 charcters',
+    @Length(8, 40, {
+        message: 'Password length Must be between 8 and 40 charcters',
     })
     password: string;
 
@@ -39,11 +45,7 @@ export class UserDTO {
 
     @IsNotEmpty({ message: 'Please enter your lastname' })
     @IsString({ message: 'Please enter a valid lastname' })
-    lastName: string;
-
-    @IsNotEmpty({ message: 'Please enter your email' })
-    @IsEmail()
-    email: string;
+    lastName: string;    
 
     @IsNotEmpty({ message: 'Please enter your age' })
     @IsNumber()
@@ -62,6 +64,12 @@ export class UserDTO {
     @Type(() => PostDTO)
     @IsOptional()
     posts: PostDTO[];
+
+    @ValidateNested()
+    @IsArray()
+    @Type(() => CategoryDTO)
+    @IsOptional()
+    categories: CategoryDTO[];
 
     @ValidateNested()
     @IsArray()

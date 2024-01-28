@@ -1,10 +1,13 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
 import { Exclude } from "class-transformer";
+
 import { ROLES } from "../../constants/roles";
 import { IUser } from "../interfaces/user.interface";
 import { BaseEntity } from "../../config/base.entity";
-import { PostsEntity } from "../../posts/entities/posts.entity";
 import { CommentsEntity } from "../../comments/entities/comments.entity";
+import { PostsEntity } from "../../posts/entities/posts.entity";
+import { CategoriesEntity } from "../../categories/entities/categories.entity";
+
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity implements IUser {
@@ -52,9 +55,12 @@ export class UsersEntity extends BaseEntity implements IUser {
     @Column()
     country: string;
 
-    @OneToMany(()=>PostsEntity, (post)=>post.author_id)
+    @OneToMany(()=>PostsEntity, (posts)=>posts.author)
     posts: PostsEntity[];
 
-    @OneToMany(()=>CommentsEntity, (comment)=>comment.author_id)
+    @OneToMany(()=>CategoriesEntity, (categories)=>categories.author)
+    categories: CategoriesEntity[];
+
+    @OneToMany(()=>CommentsEntity, (comments)=>comments.author)
     comments: CommentsEntity[];
 }

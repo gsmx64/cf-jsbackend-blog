@@ -1,11 +1,13 @@
-import { IsNotEmpty, IsString } from "class-validator";
-import { CommentsEntity } from "../entities/comments.entity";
-import { PostsEntity } from "../../posts/entities/posts.entity";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+
+import { UserDTO } from "../../users/dto/user.dto";
+import { PostDTO } from "../../posts/dto/post.dto";
+
 
 export class CommentDTO {
     @IsNotEmpty({ message: 'Please enter a comment' })
     @IsString({ message: 'Please enter a valid comment' })
-    comment: string;
+    message: string;
 
     @IsNotEmpty()
     @IsString()
@@ -13,9 +15,9 @@ export class CommentDTO {
 
     @IsNotEmpty()
     @IsString()
-    author_id: CommentsEntity;
+    author: UserDTO;
 
-    @IsNotEmpty()
     @IsString()
-    post_id: PostsEntity;
+    @IsOptional()
+    post: PostDTO;
 }

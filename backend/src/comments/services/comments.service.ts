@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+
 import { CommentsEntity } from '../entities/comments.entity';
 import { CommentDTO } from '../dto/comment.dto';
 import { CommentUpdateDTO } from '../dto/comment.update.dto';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ErrorManager } from '../../utils/error.manager';
+
 
 @Injectable()
 export class CommentsService {
@@ -70,11 +72,13 @@ export class CommentsService {
   ): Promise<CommentsEntity> {
     try{
       const comment: CommentsEntity = await this.commentRepository
-                                            .createQueryBuilder('comment')
-                                            .where({id})
-                                            .leftJoinAndSelect('comment.usersIncludes', 'usersIncludes')
-                                            .leftJoinAndSelect('usersIncludes.user', 'user')
-                                            .getOne();
+          .createQueryBuilder('comment')
+          .where({id})
+          .leftJoinAndSelect('comment.author', 'author')
+          .leftJoinAndSelect('author.comments', 'comment_user')
+          .leftJoinAndSelect('comment.post', 'post')
+          .leftJoinAndSelect('post.comments', 'post_comment')
+          .getOne();
       if(!comment) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',

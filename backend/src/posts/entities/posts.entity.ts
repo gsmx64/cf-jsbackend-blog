@@ -1,9 +1,11 @@
 import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
+
 import { IPost } from "../interfaces/post.interface";
 import { BaseEntity } from "../../config/base.entity";
-import { UsersEntity } from "../../users/entities/users.entity";
 import { CategoriesEntity } from "../../categories/entities/categories.entity";
+import { UsersEntity } from "../../users/entities/users.entity";
 import { CommentsEntity } from "../../comments/entities/comments.entity";
+
 
 @Entity({ name: 'posts' })
 export class PostsEntity extends BaseEntity implements IPost {
@@ -24,12 +26,12 @@ export class PostsEntity extends BaseEntity implements IPost {
     @Column()
     status: number;
 
-    @ManyToOne(()=>UsersEntity, (user)=>user.posts)
-    author_id: UsersEntity;
+    @ManyToOne(()=>UsersEntity, (author)=>author.posts)
+    author: UsersEntity;
 
     @ManyToOne(()=>CategoriesEntity, (category)=>category.posts)
-    category_id: CategoriesEntity;
+    category: CategoriesEntity;
 
-    @OneToMany(()=>CommentsEntity, (comment)=>comment.post_id)
+    @OneToMany(()=>CommentsEntity, (comments)=>comments.post)
     comments: CommentsEntity[];
 }

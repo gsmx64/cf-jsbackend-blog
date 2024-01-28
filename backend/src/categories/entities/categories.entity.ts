@@ -1,7 +1,10 @@
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
+
 import { ICategory } from "../interfaces/category.interface";
 import { BaseEntity } from "../../config/base.entity";
 import { PostsEntity } from "../../posts/entities/posts.entity";
+import { UsersEntity } from "../../users/entities/users.entity";
+
 
 @Entity({ name: 'categories' })
 export class CategoriesEntity extends BaseEntity implements ICategory {
@@ -17,6 +20,9 @@ export class CategoriesEntity extends BaseEntity implements ICategory {
     @Column()
     status: number;
 
-    @OneToMany(()=>PostsEntity, (post)=>post.category_id)
+    @ManyToOne(()=>UsersEntity, (author)=>author.categories)
+    author: UsersEntity;
+
+    @OneToMany(()=>PostsEntity, (posts)=>posts.category)
     posts: PostsEntity[];
 }

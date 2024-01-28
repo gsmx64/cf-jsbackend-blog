@@ -1,11 +1,13 @@
 import { IsOptional, IsString } from "class-validator";
-import { CommentsEntity } from "../entities/comments.entity";
-import { PostsEntity } from "../../posts/entities/posts.entity";
+
+import { UserDTO } from "../../users/dto/user.dto";
+import { PostDTO } from "../../posts/dto/post.dto";
+
 
 export class CommentUpdateDTO {
     @IsString()
     @IsOptional()
-    comment: string;
+    message: string;
 
     @IsString()
     @IsOptional()
@@ -13,9 +15,9 @@ export class CommentUpdateDTO {
 
     @IsString()
     @IsOptional()
-    author_id: CommentsEntity;
+    author: UserDTO;
 
     @IsString()
     @IsOptional()
-    post_id: PostsEntity;
+    post: PostDTO;
 }

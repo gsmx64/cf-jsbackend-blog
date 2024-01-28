@@ -3,6 +3,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
 import { AuthService } from './services/auth.service';
+import { UsersService } from '../users/services/users.service';
+import { UsersModule } from '../users/users.module';
 
 import { FacebookStrategy } from './strategies/facebook.strategy';
 import { GoogleStrategy } from './strategies/google-oauth.strategy';
@@ -15,9 +17,6 @@ import { GoogleOauthController } from './controllers/google-oauth.controller';
 import { JwtAuthController } from './controllers/jwt-auth.controller.ts';
 import { LocalAuthController } from './controllers/local-auth.controller';
 import { TwitterOAuthController } from './controllers/twitter-oauth.controller';
-
-import { UsersService } from 'src/users/services/users.service';
-import { UsersModule } from 'src/users/users.module';
 
 
 @Global()

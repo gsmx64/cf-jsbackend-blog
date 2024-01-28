@@ -1,21 +1,24 @@
 import { Module } from '@nestjs/common';
 import { CategoriesService } from './services/categories.service';
-import { CategoriesController } from './controllers/categories.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoriesEntity } from './entities/categories.entity';
-import { UsersService } from 'src/users/services/users.service';
-import { AuthService } from 'src/auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UsersEntity } from 'src/users/entities/users.entity';
+
+import { CategoriesController } from './controllers/categories.controller';
+import { AuthService } from '../auth/services/auth.service';
+import { UsersService } from '../users/services/users.service';
+import { CategoriesEntity } from './entities/categories.entity';
+import { UsersEntity } from '../users/entities/users.entity';
+import { PostsEntity } from 'src/posts/entities/posts.entity';
+import { CommentsEntity } from 'src/comments/entities/comments.entity';
+
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature(
-      [
-        CategoriesEntity,
-        UsersEntity
-      ]
-    )
+    TypeOrmModule.forFeature([
+      CategoriesEntity,
+      UsersEntity,
+      PostsEntity      
+    ])
   ],
   providers: [
     CategoriesService,

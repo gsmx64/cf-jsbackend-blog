@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+
 import { CategoriesEntity } from '../entities/categories.entity';
 import { CategoryDTO } from '../dto/category.dto';
 import { CategoryUpdateDTO } from '../dto/category.update.dto';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ErrorManager } from '../../utils/error.manager';
+
 
 @Injectable()
 export class CategoriesService {
@@ -29,16 +31,6 @@ export class CategoriesService {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
-
-  /*public async relationToPost(
-    body: CategoryToPostDTO
-  ): Promise<CategoryToPostDTO> {
-    try{
-      return await this.categoryPostRepository.save(body);
-    } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
-    }
-  }*/
 
   public async updateCategory(
     body: CategoryUpdateDTO,
@@ -80,11 +72,11 @@ export class CategoriesService {
   ): Promise<CategoriesEntity> {
     try{
       const category: CategoriesEntity = await this.categoryRepository
-                                              .createQueryBuilder('category')
-                                              .where({id})
-                                              .leftJoinAndSelect('comment.postsIncludes', 'postsIncludes')
-                                              .leftJoinAndSelect('postsIncludes.user', 'post')
-                                              .getOne();
+          .createQueryBuilder('category')
+          .where({id})
+          .leftJoinAndSelect('category.posts', 'posts')
+          .leftJoinAndSelect('posts.category', 'category_posts')          
+          .getOne();
       if(!category) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',

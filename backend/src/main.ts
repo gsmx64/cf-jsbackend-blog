@@ -6,7 +6,9 @@ import { CORS } from './constants';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: true
+  });
   
   app.use(morgan('dev'));
 
@@ -33,7 +35,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  await app.listen(process.env.APP_PORT);
+  await app.listen(process.env.APP_PORT, '0.0.0.0');
 
   var decor = '-';
   var appUrl = `http://${process.env.APP_HOST}:${process.env.APP_PORT}/`

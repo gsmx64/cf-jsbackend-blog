@@ -1,6 +1,7 @@
-import { CategoriesEntity } from "src/categories/entities/categories.entity";
-import { CommentsEntity } from "src/comments/entities/comments.entity";
-import { UsersEntity } from "src/users/entities/users.entity";
+import { UsersEntity } from "../../users/entities/users.entity";
+import { CategoriesEntity } from "../../categories/entities/categories.entity";
+import { CommentsEntity } from "../../comments/entities/comments.entity";
+
 
 export interface IPost {
     title: string;
@@ -8,7 +9,7 @@ export interface IPost {
     image: string;
     content: string;
     status: number;
-    author_id: UsersEntity;
-    category_id: CategoriesEntity;
+    author: UsersEntity;
+    category: CategoriesEntity;
     comments: CommentsEntity[];
 }

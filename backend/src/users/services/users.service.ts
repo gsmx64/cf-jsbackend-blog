@@ -1,16 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+
 import { UsersEntity } from '../entities/users.entity';
 import { UserDTO } from '../dto/user.dto';
 import { UserUpdateDTO } from '../dto/user.update.dto';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ErrorManager } from '../../utils/error.manager';
+import { IUseToken } from '../../auth/interfaces/auth.interface';
+import { useToken } from '../../utils/use.token';
 
 
 @Injectable()
 export class UsersService {
   constructor(
+    @Inject(REQUEST) private request: Request,
+
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
   ) {}
@@ -19,33 +25,14 @@ export class UsersService {
     body: UserDTO
   ): Promise<UsersEntity> {
     try {
-      body.password = await bcrypt.hash(body.password, +process.env.APP_AUTH_HASH_SALT);
-      console.log(body);
-      return await this.userRepository.save(body);
+        const hashedPassword = await bcrypt.hash(body.password, Number(process.env.APP_AUTH_HASH_SALT));        
+        const savedUser: UsersEntity = await this.userRepository.save({ ...body, password: hashedPassword });
+        console.log(body);
+      return savedUser;
     } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
+      throw ErrorManager.createSignatureError(error.toString());//.message+' 999'
     }
   }
-
-  /*public async relationToPost(
-    body: UserToPostDTO
-  ): Promise<UserToPostDTO> {
-    try{
-      return await this.userPostRepository.save(body);
-    } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
-    }
-  }
-
-  public async relationToComment(
-    body: UserToCommentDTO
-  ): Promise<UserToCommentDTO> {
-    try {
-      return await this.userCommentRepository.save(body);
-    } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
-    }
-  }*/
 
   public async updateUser(
     body: UserUpdateDTO,
@@ -103,10 +90,10 @@ export class UsersService {
       const user: UsersEntity = await this.userRepository
           .createQueryBuilder('user')
           .where({id})
-          /*.leftJoinAndSelect('user.postsIncludes', 'postsIncludes')
-          .leftJoinAndSelect('postsIncludes.post', 'post')
-          .leftJoinAndSelect('user.commentsIncludes', 'commentsIncludes')
-          .leftJoinAndSelect('commentsIncludes.post', 'comment')*/
+          .leftJoinAndSelect('user.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('user.comments', 'comments')
+          .leftJoinAndSelect('comments.author', 'authorcom')
           .getOne();
 
       if(!user) {
@@ -118,6 +105,33 @@ export class UsersService {
       return user;
     } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async findOwnProfile(request: any): Promise<any> {
+    const currentToken = request.headers['access_token'];
+    const manageToken: IUseToken | string = useToken(currentToken); 
+    const id = manageToken.sub;
+
+    try {      
+      const user: UsersEntity = await this.userRepository
+          .createQueryBuilder('user')
+          .where({id})
+          .leftJoinAndSelect('user.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'author_users')
+          .leftJoinAndSelect('user.comments', 'comments')
+          .leftJoinAndSelect('comments.author', 'author_comments')
+          .getOne();
+
+      if(!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró el usuario.'
+        });
+      }
+      return user;
+    } catch(error) {
+      throw ErrorManager.createSignatureError(error.message+' ID: '+currentToken);
     }
   }
 

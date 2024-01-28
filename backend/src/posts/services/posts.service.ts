@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+
 import { PostsEntity } from '../entities/posts.entity';
 import { PostDTO } from '../dto/post.dto';
 import { PostUpdateDTO } from '../dto/post.update.dto';
-import { ErrorManager } from 'src/utils/error.manager';
+import { ErrorManager } from '../../utils/error.manager';
+
 
 @Injectable()
 export class PostsService {
@@ -21,7 +23,7 @@ export class PostsService {
       if(!post) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se creó el posteo'
+          message: 'No se creó el posteo.'
         });
       }
       return post;
@@ -39,7 +41,7 @@ export class PostsService {
       if(post.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se actualizó el post'
+          message: 'No se actualizó el post.'
         });
       }
       return post;
@@ -56,7 +58,7 @@ export class PostsService {
       if(post.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se eliminó el post'
+          message: 'No se eliminó el post.'
         });
       }
       return post;
@@ -70,13 +72,15 @@ export class PostsService {
   ): Promise<PostsEntity> {
     try{
       const post: PostsEntity = await this.postRepository
-                                      .createQueryBuilder('post')
-                                      .where({id})
-                                      .leftJoinAndSelect('post.usersIncludes', 'usersIncludes')
-                                      .leftJoinAndSelect('usersIncludes.user', 'user')
-                                      .leftJoinAndSelect('post.categoriesIncludes', 'categoriesIncludes')
-                                      .leftJoinAndSelect('categoriesIncludes.user', 'category')
-                                      .getOne();
+          .createQueryBuilder('post')
+          .where({id})
+          .leftJoinAndSelect('post.author', 'author')
+          .leftJoinAndSelect('author.posts', 'posts_users')
+          .leftJoinAndSelect('post.category', 'category')
+          .leftJoinAndSelect('category.posts', 'posts_category')
+          .leftJoinAndSelect('post.comments', 'comments')
+          .leftJoinAndSelect('comments.comment', 'comment')
+          .getOne();
       if(!post) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',

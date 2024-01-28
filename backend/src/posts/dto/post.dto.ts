@@ -1,8 +1,10 @@
 import { Type } from "class-transformer";
 import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString, ValidateNested } from "class-validator";
-import { CategoriesEntity } from "../../categories/entities/categories.entity";
+
+import { CategoryDTO } from "../../categories/dto/category.dto";
+import { UserDTO } from "../../users/dto/user.dto";
 import { CommentDTO } from "../../comments/dto/comment.dto";
-import { UsersEntity } from "../../users/entities/users.entity";
+
 
 export class PostDTO {
     @IsNotEmpty({ message: 'Please enter a title' })
@@ -25,13 +27,13 @@ export class PostDTO {
     @IsInt()
     status: number;
 
-    @IsNotEmpty()
     @IsString()
-    user_id: UsersEntity;
+    @IsNotEmpty()
+    author: UserDTO;
 
     @IsNotEmpty()
     @IsString()
-    category_id: CategoriesEntity;
+    category: CategoryDTO;
 
     @ValidateNested()
     @IsArray()

@@ -1,18 +1,25 @@
 import { Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { PostsController } from './controllers/posts.controller';
-import { AuthService } from 'src/auth/services/auth.service';
-import { UsersService } from 'src/users/services/users.service';
+import { AuthService } from '../auth/services/auth.service';
+import { UsersService } from '../users/services/users.service';
 import { PostsService } from './services/posts.service';
+
+import { UsersEntity } from '../users/entities/users.entity';
+import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { PostsEntity } from './entities/posts.entity';
-import { UsersEntity } from 'src/users/entities/users.entity';
+import { CommentsEntity } from '../comments/entities/comments.entity';
+
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       PostsEntity,
-      UsersEntity
+      UsersEntity,
+      CategoriesEntity,
+      CommentsEntity
     ])
   ],
   providers: [

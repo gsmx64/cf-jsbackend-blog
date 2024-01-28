@@ -1,13 +1,21 @@
 import { Type } from "class-transformer";
-import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
-import { PostDTO } from "../../posts/dto/post.dto";
+import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional,
+    IsString, ValidateNested } from "class-validator";
+
 import { CommentDTO } from "../../comments/dto/comment.dto";
+import { CategoryDTO } from "../../categories/dto/category.dto";
+import { PostDTO } from "../../posts/dto/post.dto";
 import { ROLES } from "../../constants/roles";
 
-export class UserUpdateDTO {
+
+export class UserUpdateDTO {    
     @IsString()
     @IsOptional()
     username: string;
+
+    @IsEmail()
+    @IsOptional()
+    email: string;
 
     @IsString()
     @IsOptional()
@@ -35,11 +43,7 @@ export class UserUpdateDTO {
 
     @IsString()
     @IsOptional()
-    lastName: string;
-
-    @IsEmail()
-    @IsOptional()
-    email: string;
+    lastName: string;    
 
     @IsNumber()
     @IsOptional()
@@ -58,6 +62,12 @@ export class UserUpdateDTO {
     @Type(() => PostDTO)
     @IsOptional()
     posts: PostDTO[];
+
+    @ValidateNested()
+    @IsArray()
+    @Type(() => CategoryDTO)
+    @IsOptional()
+    categories: CategoryDTO[];
 
     @ValidateNested()
     @IsArray()

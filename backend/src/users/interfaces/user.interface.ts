@@ -1,5 +1,6 @@
-import { CommentsEntity } from "src/comments/entities/comments.entity";
-import { PostsEntity } from "src/posts/entities/posts.entity";
+import { PostsEntity } from "../../posts/entities/posts.entity";
+import { CommentsEntity } from "../../comments/entities/comments.entity";
+
 
 export interface IUser {
     username: string;

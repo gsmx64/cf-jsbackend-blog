@@ -1,15 +1,22 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+
 import { CategoriesService } from '../services/categories.service';
 import { CategoryDTO } from '../dto/category.dto';
 import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
+import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
+import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
+import { Roles } from '../../auth/decorators/roles.decorator';
+
 
 @Controller('categories')
-@UseGuards(LocalAuthGuard)
+@UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @AdminAccess()
+  @Roles('MODERATOR')
   @Post('create')
   public async createCategory(
     @Body() body: CategoryDTO
@@ -17,14 +24,8 @@ export class CategoriesController {
     return this.categoriesService.createCategory(body);
   }
 
-  /*@PublicAccess()
-  @Post('categorypost')
-  public async categoryToPost(
-    @Body() body: CategoryToPostDTO
-  ) {
-    return this.categoriesService.relationToPost(body);
-  }*/
-
+  @AdminAccess()
+  @Roles('MODERATOR')
   @Get('edit/:id')
   public async updateCategory(
     @Param('id') id: string, 
@@ -33,6 +34,7 @@ export class CategoriesController {
     return this.categoriesService.updateCategory(body, id);
   }
 
+  @AdminAccess()
   @Get('delete/:id')
   public async deleteCategory(
     @Param('id') id: string

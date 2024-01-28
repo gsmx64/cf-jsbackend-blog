@@ -1,6 +1,10 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsOptional,
+    IsString, ValidateNested } from "class-validator";
+
 import { PostDTO } from "../../posts/dto/post.dto";
+import { UserDTO } from "../../users/dto/user.dto";
+
 
 export class CategoryUpdateDTO {
     @IsString({ message: 'Please insert a valid title' })
@@ -18,6 +22,10 @@ export class CategoryUpdateDTO {
     @IsNumber()
     @IsOptional()
     status: number;
+
+    @IsString()
+    @IsOptional()
+    author: UserDTO;
 
     @ValidateNested()
     @IsArray()

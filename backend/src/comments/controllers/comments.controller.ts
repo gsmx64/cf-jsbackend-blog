@@ -1,15 +1,22 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+
 import { CommentsService } from '../services/comments.service';
 import { CommentDTO } from '../dto/comment.dto';
 import { CommentUpdateDTO } from '../dto/comment.update.dto';
-import { LocalAuthGuard } from 'src/auth/guards/local-auth.guard';
-import { PublicAccess } from 'src/auth/decorators/public.decorator';
+import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
+import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
+import { AdminAccess } from '../../auth/decorators/admin.decorator';
+import { PublicAccess } from '../../auth/decorators/public.decorator';
+import { Roles } from '../../auth/decorators/roles.decorator';
+
 
 @Controller('comments')
-@UseGuards(LocalAuthGuard)
+@UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @AdminAccess()
+  @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Post('create')
   public async createComment(
     @Body() body: CommentDTO
@@ -17,6 +24,8 @@ export class CommentsController {
     return this.commentsService.createComment(body);
   }
 
+  @AdminAccess()
+  @Roles('MODERATOR')
   @Get('edit/:id')
   public async updateComment(
     @Param('id') id: string, 
@@ -25,6 +34,8 @@ export class CommentsController {
     return this.commentsService.updateComment(body, id);
   }
 
+  @AdminAccess()
+  @Roles('MODERATOR')
   @Get('delete/:id')
   public async deleteComment(
     @Param('id') id: string

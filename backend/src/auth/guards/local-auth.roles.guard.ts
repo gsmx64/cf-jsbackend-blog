@@ -2,8 +2,8 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { ROLES } from 'src/constants/roles';
-import { PUBLIC_KEY, ADMIN_KEY, ROLES_KEY } from 'src/constants/key-decorators';
+import { ROLES } from '../../constants/roles';
+import { PUBLIC_KEY, ADMIN_KEY, ROLES_KEY } from '../../constants/key-decorators';
 
 @Injectable()
 export class LocalRolesGuard implements CanActivate {
@@ -32,18 +32,26 @@ export class LocalRolesGuard implements CanActivate {
 
     const { roleUser } = req;
 
-    /*if (roles === undefined) {
+    if (roles === undefined) {
       if (!admin) {
         return true;
       } else if (admin && roleUser === admin) {
         return true;
+      } else if (roleUser === ROLES.MODERATOR) {
+        return true;
+      } else if (roleUser === ROLES.EDITOR) {
+        return true;    
       } else {
         throw new UnauthorizedException('No tienes permisos para esta operación.');
       }
-    }*/
+    }
 
-    if(roleUser === ROLES.ADMIN){
+    if(roleUser === ROLES.ADMIN) {
       return true
+    } else if (roleUser === ROLES.MODERATOR) {
+      return true;
+    } else if (roleUser === ROLES.EDITOR) {
+      return true;    
     }
 
     const isAuth = roles.some((role) => role === roleUser);
