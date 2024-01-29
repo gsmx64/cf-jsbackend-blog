@@ -8,10 +8,16 @@ import { PostsEntity } from "../../posts/entities/posts.entity";
 
 @Entity({ name: 'comments' })
 export class CommentsEntity extends BaseEntity implements IComment {
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 255
+    })
     message: string;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 10
+    })
     reaction: string;
 
     @ManyToOne(()=>UsersEntity, (author)=>author.comments)

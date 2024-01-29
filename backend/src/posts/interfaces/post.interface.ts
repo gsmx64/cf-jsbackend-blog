@@ -8,7 +8,7 @@ export interface IPost {
     description: string;
     image: string;
     content: string;
-    status: number;
+    status: string;
     author: UsersEntity;
     category: CategoriesEntity;
     comments: CommentsEntity[];

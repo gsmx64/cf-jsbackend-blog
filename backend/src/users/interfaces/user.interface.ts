@@ -6,9 +6,9 @@ export interface IUser {
     username: string;
     email: string;
     password: string;
-    status: number;
+    status: string;
     role: string;
-    karma: string;
+    karma: number;
     avatar: string;
     firstName: string;
     lastName: string;

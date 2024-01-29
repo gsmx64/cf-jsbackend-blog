@@ -5,6 +5,6 @@ import { PostsEntity } from "../../posts/entities/posts.entity";
 export interface IComment {
     message: string;
     reaction: string;
-    author: UsersEntity;    
+    author: UsersEntity;
     post: PostsEntity;
 }

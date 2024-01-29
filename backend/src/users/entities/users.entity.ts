@@ -7,52 +7,85 @@ import { BaseEntity } from "../../config/base.entity";
 import { CommentsEntity } from "../../comments/entities/comments.entity";
 import { PostsEntity } from "../../posts/entities/posts.entity";
 import { CategoriesEntity } from "../../categories/entities/categories.entity";
+import { USER_STATUS } from "../../constants/userStatus";
 
 
 @Entity({ name: 'users' })
 export class UsersEntity extends BaseEntity implements IUser {
     @Column({
+        type: 'varchar',
+        width: 20,
         unique: true
     })
     username: string;
 
     @Column({
+        type: 'varchar',
+        width: 255,
         unique: true
     })
     email: string;
 
     @Exclude()
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 40
+    })
     password: string;
 
-    @Column()
-    status: number;
+    @Column({
+        type: 'enum',
+        enum: USER_STATUS,
+        default: USER_STATUS.PENDING
+    })
+    status: USER_STATUS;
     
     @Column({
         type: 'enum',
-        enum: ROLES
+        enum: ROLES,
+        default: ROLES.BASIC
     })
     role: ROLES;
 
-    @Column()
-    karma: string;
+    @Column({
+        type: 'int',
+        width: 5
+    })
+    karma: number;
 
-    @Column()
+    @Column({
+        type: 'text'
+    })
     avatar: string;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 40
+    })
     firstName: string;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 40
+    })
     lastName: string;
 
-    @Column()
+    @Column({
+        type: 'int',
+        width: 2
+    })
     age: number;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 40
+    })
     city: string;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 40
+    })
     country: string;
 
     @OneToMany(()=>PostsEntity, (posts)=>posts.author)

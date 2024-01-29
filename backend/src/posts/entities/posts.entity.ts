@@ -5,26 +5,40 @@ import { BaseEntity } from "../../config/base.entity";
 import { CategoriesEntity } from "../../categories/entities/categories.entity";
 import { UsersEntity } from "../../users/entities/users.entity";
 import { CommentsEntity } from "../../comments/entities/comments.entity";
+import { PUBLISH_STATUS } from "../../constants/publishStatus";
 
 
 @Entity({ name: 'posts' })
 export class PostsEntity extends BaseEntity implements IPost {
     @Column({
+        type: 'varchar',
+        width: 100,
         unique: true
     })
     title: string;
 
-    @Column()
+    @Column({
+        type: 'varchar',
+        width: 255
+    })
     description: string;
 
-    @Column()
+    @Column({
+        type: 'text'
+    })
     image: string;
 
-    @Column()
+    @Column({
+        type: 'text'
+    })
     content: string;
 
-    @Column()
-    status: number;
+    @Column({
+        type: 'enum',
+        enum: PUBLISH_STATUS,
+        default: PUBLISH_STATUS.UNPUBLISHED
+    })
+    status: PUBLISH_STATUS;
 
     @ManyToOne(()=>UsersEntity, (author)=>author.posts)
     author: UsersEntity;

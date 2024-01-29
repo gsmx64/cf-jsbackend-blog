@@ -2,10 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+
 import { AuthResponse, PayloadToken } from '../interfaces/auth.interface';
-import { UsersService } from 'src/users/services/users.service';
-import { UsersEntity } from 'src/users/entities/users.entity';
+import { UsersService } from '../../users/services/users.service';
+import { UsersEntity } from '../../users/entities/users.entity';
 import { AuthDTO } from '../dto/auth.dto';
+import { LoggingMessages } from '../../utils/logging.messages';
 
 
 @Injectable()
@@ -54,7 +56,7 @@ export class AuthService {
   }
 
   public async generateJWT(user: UsersEntity): Promise<AuthResponse> {
-    const getUser = await this.userService.findOneUser(user.id);
+    const getUser = await this.userService.findIdRoleOnly(user.id);
 
     const payload: PayloadToken = {
       role: getUser.role,
@@ -83,6 +85,7 @@ export class AuthService {
 
     const jwt = await this.generateJWT(userValidate);
 
+    LoggingMessages.log(jwt, 'AuthService.login({ username, password }) -> jwt', jwt);
     return jwt;
   }
 }

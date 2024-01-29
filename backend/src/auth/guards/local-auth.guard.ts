@@ -42,7 +42,7 @@ export class LocalAuthGuard implements CanActivate {
         }
 
         const { sub } = manageToken;
-        const user = await this.userService.findOneUser(sub);
+        const user = await this.userService.findIdRoleOnly(sub);
         if(!user){
             throw new UnauthorizedException('Invalid user!');
         }

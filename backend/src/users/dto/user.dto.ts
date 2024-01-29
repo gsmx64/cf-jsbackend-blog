@@ -6,6 +6,7 @@ import { CommentDTO } from "../../comments/dto/comment.dto";
 import { ROLES } from "../../constants/roles";
 import { PostDTO } from "../../posts/dto/post.dto";
 import { CategoryDTO } from "../../categories/dto/category.dto";
+import { USER_STATUS } from "../../constants/userStatus";
 
 
 export class UserDTO {
@@ -25,15 +26,15 @@ export class UserDTO {
     password: string;
 
     @IsNotEmpty()
-    @IsNumber()
-    status: number;
+    @IsEnum(USER_STATUS)
+    status: USER_STATUS;
     
     @IsNotEmpty()
     @IsEnum(ROLES)
     role: ROLES;
 
     @IsString()
-    karma: string;
+    karma: number;
 
     @IsOptional()
     @IsString()

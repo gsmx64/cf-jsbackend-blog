@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { DataSourceConfig } from './config/data.source';
 import { AuthModule } from './auth/auth.module';
+import { AdminModule } from './admin/admin.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
@@ -17,11 +18,13 @@ import { CommentsModule } from './comments/comments.module';
       isGlobal: true
     }),
     AuthModule,
-    TypeOrmModule.forRoot({ ...DataSourceConfig }),    
+    TypeOrmModule.forRoot({ ...DataSourceConfig }),
+    AdminModule,
     UsersModule,
     PostsModule,
     CategoriesModule,
     CommentsModule,
   ]
 })
+
 export class AppModule {}

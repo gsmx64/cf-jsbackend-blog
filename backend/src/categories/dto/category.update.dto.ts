@@ -1,9 +1,10 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsOptional,
+import { IsArray, IsEnum, IsNumber, IsOptional,
     IsString, ValidateNested } from "class-validator";
 
 import { PostDTO } from "../../posts/dto/post.dto";
 import { UserDTO } from "../../users/dto/user.dto";
+import { PUBLISH_STATUS } from "../../constants/publishStatus";
 
 
 export class CategoryUpdateDTO {
@@ -19,9 +20,9 @@ export class CategoryUpdateDTO {
     @IsOptional()
     image: string;
 
-    @IsNumber()
+    @IsEnum(PUBLISH_STATUS)
     @IsOptional()
-    status: number;
+    status: PUBLISH_STATUS;
 
     @IsString()
     @IsOptional()

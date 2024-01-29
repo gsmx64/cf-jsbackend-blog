@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { UsersEntity } from '../entities/users.entity';
@@ -10,27 +10,56 @@ import { UserUpdateDTO } from '../dto/user.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { IUseToken } from '../../auth/interfaces/auth.interface';
 import { useToken } from '../../utils/use.token';
+import { USER_STATUS } from '../../constants/userStatus';
+import { ROLES } from '../../constants/roles';
+import { LoggingMessages } from '../../utils/logging.messages';
 
 
 @Injectable()
 export class UsersService {
+  private cTokenForLog: string;
+
   constructor(
     @Inject(REQUEST) private request: Request,
 
     @InjectRepository(UsersEntity)
-    private readonly userRepository: Repository<UsersEntity>,
-  ) {}
+    private readonly userRepository: Repository<UsersEntity>,    
+  ) {
+    this.cTokenForLog = (
+      (process.env.NODE_ENV.trim() != 'production') &&
+      (String(process.env.LOGGING_ENABLE) === 'true')
+    ) ? request.headers['access_token'] : null;
+  }
 
   public async createUser(
     body: UserDTO
   ): Promise<UsersEntity> {
     try {
-        const hashedPassword = await bcrypt.hash(body.password, Number(process.env.APP_AUTH_HASH_SALT));        
-        const savedUser: UsersEntity = await this.userRepository.save({ ...body, password: hashedPassword });
-        console.log(body);
-      return savedUser;
+      const statusOverride = 'PENDING' as USER_STATUS;
+      const roleOverride = 'BASIC' as ROLES;
+      const hashedPassword = await bcrypt.hash(
+        body.password, 
+        Number(process.env.APP_AUTH_HASH_SALT)
+      );
+      const user: UsersEntity = await this.userRepository.save(
+        { ...body,
+          status: statusOverride,
+          role: roleOverride,
+          password: hashedPassword
+        }
+      );
+
+      if(!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se creó el usuario.'
+        });
+      }
+
+      LoggingMessages.log(user, 'UsersService.createUser(body) -> user', this.cTokenForLog);
+      return user;
     } catch(error){
-      throw ErrorManager.createSignatureError(error.toString());//.message+' 999'
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
@@ -40,12 +69,15 @@ export class UsersService {
   ): Promise<UpdateResult | undefined>{
     try {
       const user: UpdateResult = await this.userRepository.update(id, body);
+
       if(user.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'No se actualizó el usuario'
         });
       }
+
+      LoggingMessages.log(user, 'UsersService.updateUser(body, id) -> user', this.cTokenForLog);
       return user;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -57,12 +89,15 @@ export class UsersService {
   ): Promise<DeleteResult | undefined>{
     try {
       const user: DeleteResult = await this.userRepository.delete(id);
+
       if(user.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'No se eliminó el usuario'
         });
       }
+
+      LoggingMessages.log(user, 'UsersService.deleteUser(id) -> user', this.cTokenForLog);
       return user;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -77,8 +112,33 @@ export class UsersService {
         .where({ [key]: value })
         .getOne();
 
-      return user;
+        LoggingMessages.log(user, 'UsersService.findBy({key, value}) -> user', this.cTokenForLog);
+        return user;
     } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async findIdRoleOnly(
+    id: string
+  ): Promise<UsersEntity> {
+    try {
+      const user: UsersEntity = await this.userRepository
+          .createQueryBuilder('user')
+          .select(['user.id', 'user.role'])
+          .where({id})
+          .getOne();
+
+      if(!user) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontró el usuario.'
+        });
+      }
+
+      LoggingMessages.log(user, 'UsersService.findIdRolOnly(id) -> user', this.cTokenForLog);
+      return user;
+    } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
     }
   }
@@ -102,6 +162,8 @@ export class UsersService {
           message: 'No se encontró el usuario.'
         });
       }
+
+      LoggingMessages.log(user, 'UsersService.findOneUser(id) -> user', this.cTokenForLog);
       return user;
     } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
@@ -129,21 +191,26 @@ export class UsersService {
           message: 'No se encontró el usuario.'
         });
       }
+
+      LoggingMessages.log(user, 'UsersService.findOwnProfile(request) -> user', this.cTokenForLog);
       return user;
     } catch(error) {
-      throw ErrorManager.createSignatureError(error.message+' ID: '+currentToken);
+      throw ErrorManager.createSignatureError(error.message);
     }
   }
 
   public async findAllUsers(): Promise<UsersEntity[]> {
     try {
       const users: UsersEntity[] = await this.userRepository.find();
+
       if(users.length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
           message: 'No se encontraron usuarios.'
         });
       }
+
+      LoggingMessages.log(users, 'UsersService.findAllUsers() -> users', this.cTokenForLog);
       return users;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

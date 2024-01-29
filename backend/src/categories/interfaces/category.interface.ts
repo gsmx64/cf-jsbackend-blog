@@ -6,7 +6,7 @@ export interface ICategory {
     title: string;
     description: string;
     image: string;
-    status: number;
+    status: string;
     author: UsersEntity;
     posts: PostsEntity[];
 }
