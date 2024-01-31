@@ -2,13 +2,27 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, Pagination,
+  paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
+import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { CategoriesEntity } from '../entities/categories.entity';
-import { CategoryDTO } from '../dto/category.dto';
+import { CategoryCreateDTO } from '../dto/category.create.dto';
 import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
-import { PUBLISH_STATUS } from '../../constants/publishStatus';
+import { ROLES } from '../../constants/roles';
+import { useToken } from '../../utils/use.token';
+import { IUseToken } from '../../auth/interfaces/auth.interface';
+import { PUBLISH_STATUS } from '../../constants/publish.status';
 import { LoggingMessages } from '../../utils/logging.messages';
+import {
+  CATEGORIES_FILTER_CONFIG,
+  CATEGORIES_FILTER_CONFIG_LOW
+} from '../filters/categories.filter';
+import {
+  CATEGORIES_SEARCH_CONFIG,
+  CATEGORIES_SEARCH_CONFIG_LOW
+} from '../filters/categories.search';
 
 
 @Injectable()
@@ -28,7 +42,7 @@ export class CategoriesService {
   }
 
   public async createCategory(
-    body: CategoryDTO
+    body: CategoryCreateDTO
   ): Promise<CategoriesEntity> {
     try{
       const statusOverride = 'UNPUBLISHED' as PUBLISH_STATUS;
@@ -38,7 +52,7 @@ export class CategoriesService {
       if(!category) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se creó la categoría'
+          message: 'Error while creating the category.'
         });
       }
 
@@ -59,7 +73,7 @@ export class CategoriesService {
       if(category.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se actualizó la categoría'
+          message: 'Error while updating the category.'
         });
       }
 
@@ -79,7 +93,7 @@ export class CategoriesService {
       if(category.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se eliminó la categoría'
+          message: 'Error while deleting the category.'
         });
       }
 
@@ -106,7 +120,7 @@ export class CategoriesService {
       if(!category) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró la categoría'
+          message: 'Category not found.'
         });
       }
 
@@ -117,14 +131,20 @@ export class CategoriesService {
     }
   }
 
-  public async findAllCategories(): Promise<CategoriesEntity[]> {
-    try{
-      const categories: CategoriesEntity[] = await this.categoryRepository.find();
+  public async findAllCategories(
+    options: IPaginationOptions 
+  ): Promise<Pagination<CategoriesEntity>> {
+    try {
+      const queryBuilder = this.categoryRepository
+          .createQueryBuilder('categories')
+          .orderBy('categories.created_at', 'DESC');
 
-      if(categories.length === 0) {
+      const categories = await paginate_ntp<CategoriesEntity>(queryBuilder, options);
+
+      if(Object.keys(categories.items).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontraron categorías'
+          message: 'No categories found.'
         });
       }
 
@@ -135,4 +155,61 @@ export class CategoriesService {
     }
   }
 
+  public async searchCategories(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<CategoriesEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const categories = await paginate(
+        query,
+        this.categoryRepository,
+        (roleUser == ROLES.BASIC ? CATEGORIES_SEARCH_CONFIG_LOW : CATEGORIES_SEARCH_CONFIG)
+      )
+
+      if(Object.keys(categories.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No categories found.'
+        });
+      }
+
+      LoggingMessages.log(categories, 'CategoriesService.searchCategories() -> categories', this.cTokenForLog);
+      return categories;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async filterCategories(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<CategoriesEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const categories = await paginate(
+        query,
+        this.categoryRepository,
+        (roleUser == ROLES.BASIC ? CATEGORIES_FILTER_CONFIG_LOW : CATEGORIES_FILTER_CONFIG)
+      )
+
+      if(Object.keys(categories.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No categories found.'
+        });
+      }
+
+      LoggingMessages.log(categories, 'CategoriesService.filterCategories() -> categories', this.cTokenForLog);
+      return categories;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
 }

@@ -2,13 +2,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, Pagination, paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
+import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { PostsEntity } from '../entities/posts.entity';
-import { PostDTO } from '../dto/post.dto';
+import { PostCreateDTO } from '../dto/post.create.dto';
 import { PostUpdateDTO } from '../dto/post.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
-import { PUBLISH_STATUS } from '../../constants/publishStatus';
+import { PUBLISH_STATUS } from '../../constants/publish.status';
 import { LoggingMessages } from '../../utils/logging.messages';
+import { POSTS_FILTER_CONFIG, POSTS_FILTER_CONFIG_LOW } from '../filters/posts.filter';
+import { POSTS_SEARCH_CONFIG, POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
+import { ROLES } from '../../constants/roles';
+import { useToken } from '../../utils/use.token';
+import { IUseToken } from '../../auth/interfaces/auth.interface';
 
 
 @Injectable()
@@ -28,7 +35,7 @@ export class PostsService {
   }
 
   public async createPost(
-    body: PostDTO
+    body: PostCreateDTO
   ): Promise<PostsEntity> {
     try{
       const statusOverride = 'UNPUBLISHED' as PUBLISH_STATUS;
@@ -38,7 +45,7 @@ export class PostsService {
       if(!post) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se creó el posteo.'
+          message: 'Error while creating the post.'
         });
       }
 
@@ -59,7 +66,7 @@ export class PostsService {
       if(post.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se actualizó el post.'
+          message: 'Error while updating the post.'
         });
       }
 
@@ -79,7 +86,7 @@ export class PostsService {
       if(post.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se eliminó el post.'
+          message: 'Error while deleting the post.'
         });
       }
 
@@ -108,7 +115,7 @@ export class PostsService {
       if(!post) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró el post'
+          message: 'Post not found.'
         });
       }
 
@@ -119,18 +126,82 @@ export class PostsService {
     }
   }
 
-  public async findAllPosts(): Promise<PostsEntity[]> {
-    try{
-      const posts: PostsEntity[] = await this.postRepository.find();
+  public async findAllPosts(
+    options: IPaginationOptions 
+  ): Promise<Pagination<PostsEntity>> {
+    try {
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .orderBy('posts.created_at', 'DESC');
 
-      if(posts.length === 0) {
+      const posts = await paginate_ntp<PostsEntity>(queryBuilder, options);
+
+      if(Object.keys(posts.items).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontraron posts'
+          message: 'No posts found.'
         });
       }
 
       LoggingMessages.log(posts, 'PostsService.findAllPosts() -> posts', this.cTokenForLog);
+      return posts;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async searchPosts(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<PostsEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const posts = await paginate(
+        query,
+        this.postRepository,
+        (roleUser == ROLES.BASIC ? POSTS_SEARCH_CONFIG_LOW : POSTS_SEARCH_CONFIG)
+      )
+
+      if(Object.keys(posts.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron posts.'
+        });
+      }
+
+      LoggingMessages.log(posts, 'PostsService.searchPosts() -> posts', this.cTokenForLog);
+      return posts;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async filterPosts(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<PostsEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const posts = await paginate(
+        query,
+        this.postRepository,
+        (roleUser == ROLES.BASIC ? POSTS_FILTER_CONFIG_LOW : POSTS_FILTER_CONFIG)
+      )
+
+      if(Object.keys(posts.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No posts found.'
+        });
+      }
+
+      LoggingMessages.log(posts, 'PostsService.filterPosts() -> posts', this.cTokenForLog);
       return posts;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

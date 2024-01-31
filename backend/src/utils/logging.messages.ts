@@ -5,7 +5,7 @@ export class LoggingMessages {
     try {
       if(
           (process.env.NODE_ENV.trim() != 'production') &&
-          (String(process.env.LOGGING_ENABLE) === 'true')
+          (String(process.env.APP_LOGGING_ENABLE) === 'true')
       ) {
     
         var repeat = '-';

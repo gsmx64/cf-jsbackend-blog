@@ -3,16 +3,27 @@ import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { IPaginationOptions, Pagination,
+  paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
+import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { UsersEntity } from '../entities/users.entity';
-import { UserDTO } from '../dto/user.dto';
+import { UserCreateDTO } from '../dto/user.create.dto';
 import { UserUpdateDTO } from '../dto/user.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { IUseToken } from '../../auth/interfaces/auth.interface';
 import { useToken } from '../../utils/use.token';
-import { USER_STATUS } from '../../constants/userStatus';
+import { USER_STATUS } from '../../constants/user.status';
 import { ROLES } from '../../constants/roles';
 import { LoggingMessages } from '../../utils/logging.messages';
+import {
+  USERS_FILTER_CONFIG,
+  USERS_FILTER_CONFIG_LOW
+} from '../filters/users.filter';
+import {
+  USERS_SEARCH_CONFIG,
+  USERS_SEARCH_CONFIG_LOW
+} from '../filters/users.search';
 
 
 @Injectable()
@@ -32,7 +43,7 @@ export class UsersService {
   }
 
   public async createUser(
-    body: UserDTO
+    body: UserCreateDTO
   ): Promise<UsersEntity> {
     try {
       const statusOverride = 'PENDING' as USER_STATUS;
@@ -52,7 +63,7 @@ export class UsersService {
       if(!user) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se creó el usuario.'
+          message: 'Error while creating the user.'
         });
       }
 
@@ -73,7 +84,7 @@ export class UsersService {
       if(user.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se actualizó el usuario'
+          message: 'Error while updating the user.'
         });
       }
 
@@ -93,7 +104,7 @@ export class UsersService {
       if(user.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se eliminó el usuario'
+          message: 'Error while deleting the user.'
         });
       }
 
@@ -104,13 +115,20 @@ export class UsersService {
     }
   }
 
-  public async findBy({ key, value }: { key: keyof UserDTO; value: any }) {
+  public async findBy({ key, value }: { key: keyof UserCreateDTO; value: any }) {
     try {
       const user: UsersEntity = await this.userRepository
         .createQueryBuilder('user')
         .addSelect('user.password')
         .where({ [key]: value })
         .getOne();
+
+        if(!user) {
+          throw new ErrorManager({
+            type: 'BAD_REQUEST',
+            message: 'Key,Value for user data not found.'
+          });
+        }
 
         LoggingMessages.log(user, 'UsersService.findBy({key, value}) -> user', this.cTokenForLog);
         return user;
@@ -132,7 +150,7 @@ export class UsersService {
       if(!user) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró el usuario.'
+          message: 'User not found by Id.'
         });
       }
 
@@ -159,7 +177,7 @@ export class UsersService {
       if(!user) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró el usuario.'
+          message: 'User not found.'
         });
       }
 
@@ -170,7 +188,7 @@ export class UsersService {
     }
   }
 
-  public async findOwnProfile(request: any): Promise<any> {
+  public async findOwnProfile(request: any): Promise<UsersEntity> {
     const currentToken = request.headers['access_token'];
     const manageToken: IUseToken | string = useToken(currentToken); 
     const id = manageToken.sub;
@@ -188,7 +206,7 @@ export class UsersService {
       if(!user) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró el usuario.'
+          message: 'Error while loading your user data.'
         });
       }
 
@@ -199,18 +217,82 @@ export class UsersService {
     }
   }
 
-  public async findAllUsers(): Promise<UsersEntity[]> {
+  public async findAllUsers(
+    options: IPaginationOptions 
+  ): Promise<Pagination<UsersEntity>> {
     try {
-      const users: UsersEntity[] = await this.userRepository.find();
+      const queryBuilder = this.userRepository
+          .createQueryBuilder('users')
+          .orderBy('users.created_at', 'DESC');
 
-      if(users.length === 0) {
+      const users = await paginate_ntp<UsersEntity>(queryBuilder, options);
+
+      if(Object.keys(users.items).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontraron usuarios.'
+          message: 'No users found.'
         });
       }
 
       LoggingMessages.log(users, 'UsersService.findAllUsers() -> users', this.cTokenForLog);
+      return users;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async searchUsers(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<UsersEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const users = await paginate(
+        query,
+        this.userRepository,
+        (roleUser == ROLES.BASIC ? USERS_SEARCH_CONFIG_LOW : USERS_SEARCH_CONFIG)
+      )
+
+      if(Object.keys(users.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No users found.'
+        });
+      }
+
+      LoggingMessages.log(users, 'UsersService.searchUsers() -> users', this.cTokenForLog);
+      return users;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async filterUsers(
+    query: PaginateQuery,
+    request: any
+  ): Promise<Paginated<UsersEntity>> {
+    try {
+      const currentToken = request.headers['access_token'];
+      const manageToken: any = useToken(currentToken); 
+      const roleUser = manageToken.role;
+
+      const users = await paginate(
+        query,
+        this.userRepository,
+        (roleUser == ROLES.BASIC ? USERS_FILTER_CONFIG_LOW : USERS_FILTER_CONFIG)
+      )
+
+      if(Object.keys(users.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No users found.'
+        });
+      }
+
+      LoggingMessages.log(users, 'UsersService.filterUsers() -> users', this.cTokenForLog);
       return users;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

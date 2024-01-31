@@ -11,12 +11,14 @@ declare namespace NodeJS {
         APP_AUTH_GOOGLE_SECRET: string;
         APP_AUTH_TWITTER_KEY: string;
         APP_AUTH_TWITTER_SECRET: string;        
-        DB_HOST: string;
-        DB_PORT: number;
-        DB_NAME: string;
-        DB_SCHEMA: string;
-        DB_USER: string;
-        DB_PASSWORD: string;
-        LOGGING_ENABLE: string;
+        APP_DB_HOST: string;
+        APP_DB_PORT: number;
+        APP_DB_NAME: string;
+        APP_DB_SCHEMA: string;
+        APP_DB_USER: string;
+        APP_DB_PASSWORD: string;
+        APP_PAGINATION_DEFAULT_LIMIT: number;
+        APP_PAGINATION_MAX_LIMIT: number;
+        APP_LOGGING_ENABLE: string;
     }
 }

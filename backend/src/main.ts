@@ -1,15 +1,18 @@
 import { NestFactory, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
-import * as morgan from 'morgan';
-import * as session from 'express-session';
-import { CORS } from './constants';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as session from 'express-session';
+import * as morgan from 'morgan';
+
+import { AppModule } from './app.module';
+import { CORS } from './constants';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true
   });
-  
+
   app.use(morgan('dev'));
 
   app.useGlobalPipes(
@@ -35,6 +38,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
+  const config = new DocumentBuilder()
+    .setTitle('CF-Blog API')
+    .setDescription('CF Blog API description for JS In Backend Bootcamp')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
+
   await app.listen(process.env.APP_PORT, '0.0.0.0');
 
   var decor = '-';
@@ -44,4 +55,5 @@ async function bootstrap() {
   console.log(` >>> ENVIRONMENT: ${process.env.NODE_ENV}`);
   console.log(decor.repeat(36) + ` \n`);
 }
+
 bootstrap();

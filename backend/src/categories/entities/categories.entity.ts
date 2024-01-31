@@ -4,7 +4,7 @@ import { ICategory } from "../interfaces/category.interface";
 import { BaseEntity } from "../../config/base.entity";
 import { PostsEntity } from "../../posts/entities/posts.entity";
 import { UsersEntity } from "../../users/entities/users.entity";
-import { PUBLISH_STATUS } from "../../constants/publishStatus";
+import { PUBLISH_STATUS } from "../../constants/publish.status";
 
 
 @Entity({ name: 'categories' })

@@ -7,7 +7,7 @@ import { UsersService } from '../users/services/users.service';
 import { UsersModule } from '../users/users.module';
 
 import { FacebookStrategy } from './strategies/facebook.strategy';
-import { GoogleStrategy } from './strategies/google-oauth.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { TwitterStrategy } from './strategies/twitter.strategy';

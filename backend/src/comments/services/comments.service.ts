@@ -2,13 +2,17 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IPaginationOptions, Pagination,
+  paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
+import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { CommentsEntity } from '../entities/comments.entity';
-import { CommentDTO } from '../dto/comment.dto';
+import { CommentCreateDTO } from '../dto/comment.create.dto';
 import { CommentUpdateDTO } from '../dto/comment.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { LoggingMessages } from '../../utils/logging.messages';
-
+import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
+import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 
 @Injectable()
 export class CommentsService {
@@ -27,7 +31,7 @@ export class CommentsService {
   }
 
   public async createComment(
-    body: CommentDTO
+    body: CommentCreateDTO
   ): Promise<CommentsEntity> {
     try{
       const comment: CommentsEntity = await this.commentRepository.save(body);
@@ -35,7 +39,7 @@ export class CommentsService {
       if(!comment) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se creó el comentario'
+          message: 'Error while creating the comment.'
         });
       }
 
@@ -56,7 +60,7 @@ export class CommentsService {
       if(comment.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se actualizó el comentario'
+          message: 'Error while updating the comment.'
         });
       }
 
@@ -76,7 +80,7 @@ export class CommentsService {
       if(comment.affected === 0){
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se eliminó el comentario'
+          message: 'Error while deleting the comment.'
         });
       }
 
@@ -103,7 +107,7 @@ export class CommentsService {
       if(!comment) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontró el comentario'
+          message: 'Comment not found.'
         });
       }
 
@@ -114,18 +118,73 @@ export class CommentsService {
     }
   }
 
-  public async findAllComments(): Promise<CommentsEntity[]> {
-    try{
-      const comments: CommentsEntity[] = await this.commentRepository.find();
+  public async findAllComments(
+    options: IPaginationOptions 
+  ): Promise<Pagination<CommentsEntity>> {
+    try {
+      const queryBuilder = this.commentRepository
+          .createQueryBuilder('comments')
+          .orderBy('comments.created_at', 'DESC');
 
-      if(comments.length === 0) {
+      const comments = await paginate_ntp<CommentsEntity>(queryBuilder, options);
+
+      if(Object.keys(comments.items).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontraron comentarios'
+          message: 'No comments found.'
         });
       }
 
       LoggingMessages.log(comments, 'CommentsService.findAllComments() -> comments', this.cTokenForLog);
+      return comments;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async searchComments(
+    query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    try {
+
+      const comments = await paginate(
+        query,
+        this.commentRepository,
+        COMMENTS_SEARCH_CONFIG
+      )
+
+      if(Object.keys(comments.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No comments found.'
+        });
+      }
+
+      LoggingMessages.log(comments, 'CommentsService.searchComments() -> comments', this.cTokenForLog);
+      return comments;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async filterComments(
+    query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    try {
+      const comments = await paginate(
+        query,
+        this.commentRepository,
+        COMMENTS_FILTER_CONFIG
+      )
+
+      if(Object.keys(comments.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No comments found.'
+        });
+      }
+
+      LoggingMessages.log(comments, 'CommentsService.filterComments() -> comments', this.cTokenForLog);
       return comments;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

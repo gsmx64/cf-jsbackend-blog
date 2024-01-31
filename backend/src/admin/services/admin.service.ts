@@ -8,9 +8,10 @@ import { PostsEntity } from '../../posts/entities/posts.entity';
 import { PostUpdateDTO } from '../../posts/dto/post.update.dto';
 import { PostsService } from '../../posts/services/posts.service';
 import { CategoriesEntity } from '../../categories/entities/categories.entity';
-import { CategoryDTO } from '../../categories/dto/category.dto';
+import { CategoryCreateDTO } from '../../categories/dto/category.create.dto';
 import { CategoryUpdateDTO } from '../../categories/dto/category.update.dto';
 import { CategoriesService } from '../../categories/services/categories.service';
+import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 
 
 @Injectable()
@@ -49,12 +50,14 @@ export class AdminService {
     return await this.userService.findOwnProfile(request);
   }
 
-  public async findAllUsers(): Promise<UsersEntity[]> {
-    return await this.userService.findAllUsers();
+  public async findAllUsers(
+    options: IPaginationOptions
+  ): Promise<Pagination<UsersEntity>> {
+    return await this.userService.findAllUsers(options);
   }
 
   public async createCategory(
-    body: CategoryDTO
+    body: CategoryCreateDTO
   ): Promise<CategoriesEntity> {
     return await this.categoryService.createCategory(body);
   }
@@ -78,8 +81,10 @@ export class AdminService {
     return await this.categoryService.findOneCategory(id);
   }
 
-  public async findAllCategories(): Promise<CategoriesEntity[]> {
-    return await this.categoryService.findAllCategories();
+  public async findAllCategories(
+    options: IPaginationOptions
+  ): Promise<Pagination<CategoriesEntity>> {
+    return await this.categoryService.findAllCategories(options);
   }
 
   public async updatePost(
@@ -101,7 +106,9 @@ export class AdminService {
     return await this.postService.findOnePost(id);
   }
 
-  public async findAllPosts(): Promise<PostsEntity[]> {
-    return await this.postService.findAllPosts();
+  public async findAllPosts(
+    options: IPaginationOptions
+  ): Promise<Pagination<PostsEntity>> {
+    return await this.postService.findAllPosts(options);
   }
 }

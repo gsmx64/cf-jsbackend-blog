@@ -1,7 +1,11 @@
 import { Controller, Request, UseGuards, Get, HttpStatus } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
+
 import { AuthService } from '../services/auth.service';
 import { FacebookAuthGuard } from '../guards/facebook-auth.guard';
 
+
+@ApiTags('Auth-Facebook')
 @Controller()
 export class FacebookAuthController {
   constructor(private authService: AuthService) {}

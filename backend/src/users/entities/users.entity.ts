@@ -7,7 +7,7 @@ import { BaseEntity } from "../../config/base.entity";
 import { CommentsEntity } from "../../comments/entities/comments.entity";
 import { PostsEntity } from "../../posts/entities/posts.entity";
 import { CategoriesEntity } from "../../categories/entities/categories.entity";
-import { USER_STATUS } from "../../constants/userStatus";
+import { USER_STATUS } from "../../constants/user.status";
 
 
 @Entity({ name: 'users' })
