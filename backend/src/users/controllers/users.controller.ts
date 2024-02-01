@@ -1,6 +1,6 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
           Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
@@ -18,6 +18,8 @@ import { UsersEntity } from '../entities/users.entity';
 import { paginationRoute } from '../../utils/pagination.route';
 import { USERS_SEARCH_CONFIG } from '../filters/users.search';
 import { USERS_FILTER_CONFIG } from '../filters/users.filter';
+import { SWAGGER_ID_EXAMPLE, SWAGGER_TOKEN_EXAMPLE,
+  SWAGGER_USER_BODY_EXAMPLE } from '../../constants/swagger.examples';
 
 
 @ApiTags('Users')
@@ -30,9 +32,7 @@ export class UsersController {
     name: 'body',
     type: 'string',
     required: true,
-    example: '{ "username": "user", "password": "password123", "status": "PENDING", "role": "ADMIN", \
-      "firstName": "User", "lastName": "Tester", "email": "admin@tester.com", "age": 25, \
-      "city": "City", "country": "Country", "avatar": "https://url.com/avatar.png", "karma": 0 }',
+    example: SWAGGER_USER_BODY_EXAMPLE,
     description: 'The body data to create a comment.'
   })
   @PublicAccess()
@@ -43,21 +43,28 @@ export class UsersController {
     return this.usersService.createUser(body);
   }
 
+  @PublicAccess()
+  @Get('verify/username/:username')
+  public async usernameExist(@Param('username') username: string) {
+    return this.usersService.usernameExist(username);
+  }
+
+  @PublicAccess()
+  @Get('verify/email/:email')
+  public async emailExist(@Param('email') email: string) {
+    return this.usersService.emailExist(email);
+  }
+
   @ApiParam({
     name: 'id',
     type: 'string',
-    required: false,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The user uuid to edit their data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
-  @Put('edit/:id')
+  @Put('edit/:id')  
   public async updateUser(
     @Param('id') id: string, 
     @Body() body: UserUpdateDTO
@@ -68,16 +75,11 @@ export class UsersController {
   @ApiParam({
     name: 'id',
     type: 'string',
-    required: false,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The user uuid to delete their data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Delete('delete/:id')
   public async deleteUser(
@@ -90,15 +92,10 @@ export class UsersController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The user uuid to search their data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('view/:id')
@@ -108,14 +105,9 @@ export class UsersController {
     return this.usersService.findOneUser(id);
   }
 
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
-  @Roles('MODERATOR', 'EDITOR', 'BASIC')
+  @Roles('MODERATOR', 'EDITOR', 'BASIC')  
   @Get('profile')
   public async findOwnProfile(@Request() request: Request) {
     return this.usersService.findOwnProfile(request);
@@ -135,12 +127,7 @@ export class UsersController {
     example: 10,
     description: 'The numbers of items to return.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Get('list')
@@ -165,6 +152,7 @@ export class UsersController {
     USERS_SEARCH_CONFIG,
   )
   @ApiPaginationQuery(USERS_SEARCH_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
@@ -180,6 +168,7 @@ export class UsersController {
     USERS_FILTER_CONFIG,
   )
   @ApiPaginationQuery(USERS_FILTER_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')

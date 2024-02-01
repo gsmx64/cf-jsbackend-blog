@@ -21,7 +21,7 @@ export class UsersEntity extends BaseEntity implements IUser {
 
     @Column({
         type: 'varchar',
-        width: 255,
+        width: 254,
         unique: true
     })
     email: string;

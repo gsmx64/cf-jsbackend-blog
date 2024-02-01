@@ -24,6 +24,7 @@ import {
   USERS_SEARCH_CONFIG,
   USERS_SEARCH_CONFIG_LOW
 } from '../filters/users.search';
+import { VALID_EMAIL_REGEX, VALID_USERNAME_REGEX } from 'src/constants/validations';
 
 
 @Injectable()
@@ -115,7 +116,7 @@ export class UsersService {
     }
   }
 
-  public async findBy({ key, value }: { key: keyof UserCreateDTO; value: any }) {
+  public async findLoginBy({ key, value }: { key: keyof UserCreateDTO; value: any }) {
     try {
       const user: UsersEntity = await this.userRepository
         .createQueryBuilder('user')
@@ -123,16 +124,53 @@ export class UsersService {
         .where({ [key]: value })
         .getOne();
 
-        if(!user) {
-          throw new ErrorManager({
-            type: 'BAD_REQUEST',
-            message: 'Key,Value for user data not found.'
-          });
-        }
-
         LoggingMessages.log(user, 'UsersService.findBy({key, value}) -> user', this.cTokenForLog);
         return user;
     } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async usernameExist(
+    username: string
+  ): Promise<any> {
+    try {
+        if(username.match(VALID_USERNAME_REGEX)) {
+  
+          const response: UsersEntity = await this.userRepository
+              .createQueryBuilder('user')
+              .select(['user.username'])
+              .where("user.username = :userUsername", { userUsername: username })
+              .getOne();
+
+          LoggingMessages.log(response, 'UsersService.usernameExist(username) -> response', this.cTokenForLog);
+          return response ? true : false;
+        }
+
+        return false;
+      } catch(error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async emailExist(
+    email: string
+  ): Promise<any> {
+    try {
+      if(email.match(VALID_EMAIL_REGEX)) {
+
+        const response: UsersEntity = await this.userRepository
+            .createQueryBuilder('user')
+            .select(['user.email'])
+            .where("user.email = :userEmail", { userEmail: email })
+            .getOne();
+
+        LoggingMessages.log(response, 'UsersService.emailExist(email) -> response', this.cTokenForLog);
+        return response ? true : false;
+      }
+
+      return false;
+    } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
     }
   }

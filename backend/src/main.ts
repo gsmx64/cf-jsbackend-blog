@@ -42,9 +42,22 @@ async function bootstrap() {
     .setTitle('CF-Blog API')
     .setDescription('CF Blog API description for JS In Backend Bootcamp')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'apiKey',
+        name: 'access_token',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'access_token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('docs', app, document, {
+    swaggerOptions: {
+        persistAuthorization: true,
+    },
+  });
 
   await app.listen(process.env.APP_PORT, '0.0.0.0');
 

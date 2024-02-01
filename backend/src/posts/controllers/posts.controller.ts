@@ -1,6 +1,6 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
          Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
@@ -18,6 +18,8 @@ import { paginationRoute } from '../../utils/pagination.route';
 import { PostsEntity } from '../entities/posts.entity';
 import { POSTS_FILTER_CONFIG } from '../filters/posts.filter';
 import { POSTS_SEARCH_CONFIG } from '../filters/posts.search';
+import { SWAGGER_ID_EXAMPLE,
+  SWAGGER_POST_BODY_EXAMPLE } from '../../constants/swagger.examples';
 
 
 @ApiTags('Posts')
@@ -30,17 +32,10 @@ export class PostsController {
     name: 'body',
     type: 'string',
     required: true,
-    example: '{ "title": "Test title", "description": "Test description.", "https://url.com/avatar.png", \
-      "content": "Testing content.", "status": "PUBLISHED", "author": "f68b3d30-e04a-4a19-b211-b3c809c2ded9", \
-      "category": "c1180585-8ab8-4f85-9316-6ab1960abf92", "posts": [], "comments": [] }',
+    example: SWAGGER_POST_BODY_EXAMPLE,
     description: 'The body data to create a post.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR')
   @Post('create')
@@ -54,15 +49,10 @@ export class PostsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The post uuid to edit its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR')
   @Put('edit/:id')
@@ -77,15 +67,10 @@ export class PostsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The post uuid to delete its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Delete('delete/:id')
@@ -99,9 +84,10 @@ export class PostsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The post uuid to search its data.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('view/:id')
   public async findOnePost(
@@ -124,6 +110,7 @@ export class PostsController {
     example: 10,
     description: 'The numbers of items to return.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllPosts(
@@ -147,6 +134,7 @@ export class PostsController {
     POSTS_SEARCH_CONFIG,
   )
   @ApiPaginationQuery(POSTS_SEARCH_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
@@ -162,6 +150,7 @@ export class PostsController {
     POSTS_FILTER_CONFIG,
   )
   @ApiPaginationQuery(POSTS_FILTER_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')

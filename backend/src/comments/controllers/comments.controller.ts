@@ -1,6 +1,6 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
           Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
@@ -18,6 +18,8 @@ import { paginationRoute } from '../../utils/pagination.route';
 import { CommentsEntity } from '../entities/comments.entity';
 import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
+import { SWAGGER_COMMENT_BODY_EXAMPLE,
+  SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
 
 
 @ApiTags('Comments')
@@ -30,15 +32,10 @@ export class CommentsController {
     name: 'body',
     type: 'string',
     required: true,
-    example: '{ "message": "Testing message.", "reaction": "", "author": "f68b3d30-e04a-4a19-b211-b3c809c2ded9", "posts": [] }',
+    example: SWAGGER_COMMENT_BODY_EXAMPLE,
     description: 'The body data to create a comment.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Post('create')
@@ -52,15 +49,10 @@ export class CommentsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The comment uuid to edit its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Put('edit/:id')
@@ -75,15 +67,10 @@ export class CommentsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The comment uuid to delete its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Delete('delete/:id')
@@ -97,9 +84,10 @@ export class CommentsController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The comment uuid to search its data.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('view/:id')
   public async findOneComment(
@@ -122,6 +110,7 @@ export class CommentsController {
     example: 10,
     description: 'The numbers of items to return.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllComments(
@@ -145,6 +134,7 @@ export class CommentsController {
     COMMENTS_SEARCH_CONFIG,
   )
   @ApiPaginationQuery(COMMENTS_SEARCH_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
@@ -159,6 +149,7 @@ export class CommentsController {
     COMMENTS_FILTER_CONFIG,
   )
   @ApiPaginationQuery(COMMENTS_FILTER_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')

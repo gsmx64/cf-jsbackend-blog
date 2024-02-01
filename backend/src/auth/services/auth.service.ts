@@ -21,11 +21,11 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<UsersEntity | null> {
-    const userByUsername = await this.userService.findBy({
+    const userByUsername = await this.userService.findLoginBy({
       key: 'username',
       value: username,
     });
-    const userByEmail = await this.userService.findBy({
+    const userByEmail = await this.userService.findLoginBy({
       key: 'email',
       value: username,
     });

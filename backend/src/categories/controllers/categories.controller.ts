@@ -1,6 +1,6 @@
 import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
           Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
@@ -18,6 +18,8 @@ import { paginationRoute } from '../../utils/pagination.route';
 import { CategoriesEntity } from '../entities/categories.entity';
 import { CATEGORIES_SEARCH_CONFIG } from '../filters/categories.search';
 import { CATEGORIES_FILTER_CONFIG } from '../filters/categories.filter';
+import { SWAGGER_CATEGORY_BODY_EXAMPLE,
+  SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
 
 
 @ApiTags('Categories')
@@ -30,17 +32,10 @@ export class CategoriesController {
     name: 'body',
     type: 'string',
     required: true,
-    example: '{ "title": "Default Category", "description": "Default Category description.", \
-    "image": "https://url.com/avatar.png", "author": "f68b3d30-e04a-4a19-b211-b3c809c2ded9", \
-    "status": "PUBLISHED", "posts": [] }',
+    example: SWAGGER_CATEGORY_BODY_EXAMPLE,
     description: 'The body data to create a category.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Post('create')
@@ -54,15 +49,10 @@ export class CategoriesController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The category uuid to edit its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Put('edit/:id')
@@ -77,15 +67,10 @@ export class CategoriesController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The category uuid to delete its data.'
   })
-  @ApiHeader({
-    name: 'access_token',
-    required: true,
-    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU',
-    description: 'The user\'s Jwt token.'
-  })
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Delete('delete/:id')
   public async deleteCategory(
@@ -98,9 +83,10 @@ export class CategoriesController {
     name: 'id',
     type: 'string',
     required: true,
-    example: 'f68b3d30-e04a-4a19-b211-b3c809c2ded9',
+    example: SWAGGER_ID_EXAMPLE,
     description: 'The category uuid to search its data.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('view/:id')
   public async findOneCategory(
@@ -123,6 +109,7 @@ export class CategoriesController {
     example: 10,
     description: 'The numbers of items to return.'
   })
+  @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllCategories(
@@ -146,6 +133,7 @@ export class CategoriesController {
     CATEGORIES_SEARCH_CONFIG,
   )
   @ApiPaginationQuery(CATEGORIES_SEARCH_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
@@ -161,6 +149,7 @@ export class CategoriesController {
     CATEGORIES_FILTER_CONFIG,
   )
   @ApiPaginationQuery(CATEGORIES_FILTER_CONFIG)
+  @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')
