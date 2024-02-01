@@ -8,10 +8,6 @@ import { UsersEntity } from '../../users/entities/users.entity';
 import { CategoriesEntity } from '../../categories/entities/categories.entity';
 import { PostsEntity } from '../../posts/entities/posts.entity';
 import { CommentsEntity } from '../../comments/entities/comments.entity';
-import { UsersService } from '../../users/services/users.service';
-import { CategoriesService } from '../../categories/services/categories.service';
-import { PostsService } from '../../posts/services/posts.service';
-import { CommentsService } from '../../comments/services/comments.service';
 import { LoggingMessages } from '../../utils/logging.messages';
 import { ErrorManager } from '../../utils/error.manager';
 import { SEARCH_USERS_CONFIG } from '../filters/search.users';
@@ -32,13 +28,13 @@ export class SearchService {
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
 
-    @InjectRepository(UsersEntity)
+    @InjectRepository(CategoriesEntity)
     private readonly categoryRepository: Repository<CategoriesEntity>,
 
     @InjectRepository(PostsEntity)
     private readonly postRepository: Repository<PostsEntity>,
 
-    @InjectRepository(UsersEntity)
+    @InjectRepository(CommentsEntity)
     private readonly commentRepository: Repository<CommentsEntity>,
   ) {
     this.cTokenForLog = (

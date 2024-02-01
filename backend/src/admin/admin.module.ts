@@ -10,8 +10,10 @@ import { PostsEntity } from '../posts/entities/posts.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { UsersService } from '../users/services/users.service';
-import { PostsService } from 'src/posts/services/posts.service';
-import { CategoriesService } from 'src/categories/services/categories.service';
+import { PostsService } from '../posts/services/posts.service';
+import { CategoriesService } from '../categories/services/categories.service';
+import { CommentsService } from '../comments/services/comments.service';
+import { SearchService } from '../search/services/search.service';
 
 
 @Module({
@@ -29,7 +31,9 @@ import { CategoriesService } from 'src/categories/services/categories.service';
     AdminService,
     UsersService,
     CategoriesService,
-    PostsService
+    PostsService,
+    CommentsService,
+    SearchService
   ],
   controllers: [AdminController],
   exports: [AdminService, TypeOrmModule]

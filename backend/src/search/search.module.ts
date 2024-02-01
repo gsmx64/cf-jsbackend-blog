@@ -6,7 +6,6 @@ import { SearchController } from './controllers/search.controller';
 import { AuthService } from '../auth/services/auth.service';
 import { UsersService } from '../users/services/users.service';
 import { SearchService } from './services/search.service';
-
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsEntity } from '../posts/entities/posts.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';

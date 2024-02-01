@@ -18,7 +18,7 @@ import { UsersEntity } from '../entities/users.entity';
 import { paginationRoute } from '../../utils/pagination.route';
 import { USERS_SEARCH_CONFIG } from '../filters/users.search';
 import { USERS_FILTER_CONFIG } from '../filters/users.filter';
-import { SWAGGER_ID_EXAMPLE, SWAGGER_TOKEN_EXAMPLE,
+import { SWAGGER_ID_EXAMPLE, 
   SWAGGER_USER_BODY_EXAMPLE } from '../../constants/swagger.examples';
 
 
@@ -43,12 +43,26 @@ export class UsersController {
     return this.usersService.createUser(body);
   }
 
+  @ApiParam({
+    name: 'username',
+    type: 'string',
+    required: true,
+    example: 'tester',
+    description: 'The username to validate if exists in users database.'
+  })
   @PublicAccess()
   @Get('verify/username/:username')
   public async usernameExist(@Param('username') username: string) {
     return this.usersService.usernameExist(username);
   }
 
+  @ApiParam({
+    name: 'email',
+    type: 'string',
+    required: true,
+    example: 'email@domain.com',
+    description: 'The email to validate if exists in users database.'
+  })
   @PublicAccess()
   @Get('verify/email/:email')
   public async emailExist(@Param('email') email: string) {
@@ -138,8 +152,8 @@ export class UsersController {
     ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
     @Request() req: ExpressRequest
   ): Promise<Pagination<UsersEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
+    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
+      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
     return this.usersService.findAllUsers({
       page,
       limit,

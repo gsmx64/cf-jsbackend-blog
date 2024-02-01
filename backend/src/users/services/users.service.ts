@@ -24,7 +24,7 @@ import {
   USERS_SEARCH_CONFIG,
   USERS_SEARCH_CONFIG_LOW
 } from '../filters/users.search';
-import { VALID_EMAIL_REGEX, VALID_USERNAME_REGEX } from 'src/constants/validations';
+import { VALID_EMAIL_REGEX, VALID_USERNAME_REGEX } from '../../constants/validations';
 
 
 @Injectable()
@@ -207,9 +207,8 @@ export class UsersService {
           .createQueryBuilder('user')
           .where({id})
           .leftJoinAndSelect('user.posts', 'posts')
-          .leftJoinAndSelect('posts.author', 'author')
           .leftJoinAndSelect('user.comments', 'comments')
-          .leftJoinAndSelect('comments.author', 'authorcom')
+          .orderBy('user.created_at', 'DESC')
           .getOne();
 
       if(!user) {
@@ -236,9 +235,8 @@ export class UsersService {
           .createQueryBuilder('user')
           .where({id})
           .leftJoinAndSelect('user.posts', 'posts')
-          .leftJoinAndSelect('posts.author', 'author_users')
           .leftJoinAndSelect('user.comments', 'comments')
-          .leftJoinAndSelect('comments.author', 'author_comments')
+          .orderBy('user.created_at', 'DESC')
           .getOne();
 
       if(!user) {
@@ -261,6 +259,11 @@ export class UsersService {
     try {
       const queryBuilder = this.userRepository
           .createQueryBuilder('users')
+          .leftJoinAndSelect('users.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'author_users')
+          .leftJoinAndSelect('posts.category', 'category_posts')
+          .leftJoinAndSelect('users.comments', 'comments')
+          .leftJoinAndSelect('comments.post', 'comments_post')
           .orderBy('users.created_at', 'DESC');
 
       const users = await paginate_ntp<UsersEntity>(queryBuilder, options);

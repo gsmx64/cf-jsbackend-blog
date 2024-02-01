@@ -96,6 +96,50 @@ export class PostsController {
     return this.postsService.findOnePost(id);
   }
 
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
+    description: 'The user uuid to search his/her posts.'
+  })
+  @ApiQuery({
+    name: 'page',
+    type: 'integer',
+    required: false,
+    example: 1,
+    description: 'The number of items to skip before starting to collect the result set.'
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: 'integer',
+    required: false,
+    example: 10,
+    description: 'The numbers of items to return.'
+  })
+  @ApiBearerAuth('access_token')
+  @PublicAccess()
+  @Get('user/:id')
+  public async findPostsByUser(
+    @Param('id') id: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(
+      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
+    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
+    @Request() req: ExpressRequest
+  ) {
+    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
+      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
+    return this.postsService.findPostsByUser(
+      id,
+      {
+        page,
+        limit,
+        route: paginationRoute(req),
+      }
+    );
+  }
+
   @ApiQuery({
     name: 'page',
     type: 'integer',
@@ -120,8 +164,8 @@ export class PostsController {
     ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
     @Request() req: ExpressRequest
   ): Promise<Pagination<PostsEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
+    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
+      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
     return this.postsService.findAllPosts({
       page,
       limit,

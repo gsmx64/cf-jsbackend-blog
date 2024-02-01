@@ -42,7 +42,7 @@ export class LocalRolesGuard implements CanActivate {
       } else if (roleUser === ROLES.EDITOR) {
         return true;    
       } else {
-        throw new UnauthorizedException('No tienes permisos para esta operación.');
+        throw new UnauthorizedException('No permissions for this operation.');
       }
     }
 
@@ -57,7 +57,7 @@ export class LocalRolesGuard implements CanActivate {
     const isAuth = roles.some((role) => role === roleUser);
 
     if (!isAuth) {
-      throw new UnauthorizedException('No tienes permisos para esta operación');
+      throw new UnauthorizedException('No permissions for this operation.');
     }
     return true;
   }

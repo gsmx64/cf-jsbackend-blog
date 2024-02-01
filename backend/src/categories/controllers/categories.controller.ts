@@ -119,8 +119,8 @@ export class CategoriesController {
     ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
     @Request() req: ExpressRequest
   ): Promise<Pagination<CategoriesEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
+    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
+      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
     return this.categoriesService.findAllCategories({
       page,
       limit,

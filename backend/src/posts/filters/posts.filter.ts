@@ -11,7 +11,7 @@ export const POSTS_FILTER_CONFIG = {
     nullSort: 'last',
     defaultSortBy: [['createAt', 'DESC']],
     select: [
-        'id', 'title', 'description', 'image', 'status', 'content', 'author',
+        'id', 'title', 'description', 'status', 'content', 'author',
         'category', 'createAt', 'updateAt'
     ],
     filterableColumns: {

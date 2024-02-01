@@ -31,10 +31,10 @@ export class AdminService {
     @Inject(PostsService)
     private readonly postService: PostsService,
 
-    @Inject(PostsService)
+    @Inject(CommentsService)
     private readonly commentService: CommentsService,
 
-    @Inject(PostsService)
+    @Inject(SearchService)
     private readonly searchService: SearchService
   ) {}
 

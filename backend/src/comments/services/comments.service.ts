@@ -99,9 +99,8 @@ export class CommentsService {
           .createQueryBuilder('comment')
           .where({id})
           .leftJoinAndSelect('comment.author', 'author')
-          .leftJoinAndSelect('author.comments', 'comment_user')
           .leftJoinAndSelect('comment.post', 'post')
-          .leftJoinAndSelect('post.comments', 'post_comment')
+          .orderBy('comment.created_at', 'DESC')
           .getOne();
 
       if(!comment) {
@@ -124,6 +123,8 @@ export class CommentsService {
     try {
       const queryBuilder = this.commentRepository
           .createQueryBuilder('comments')
+          .leftJoinAndSelect('comment.author', 'author')
+          .leftJoinAndSelect('comment.post', 'post')
           .orderBy('comments.created_at', 'DESC');
 
       const comments = await paginate_ntp<CommentsEntity>(queryBuilder, options);

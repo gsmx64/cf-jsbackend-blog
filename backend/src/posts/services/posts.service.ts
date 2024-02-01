@@ -15,7 +15,6 @@ import { POSTS_FILTER_CONFIG, POSTS_FILTER_CONFIG_LOW } from '../filters/posts.f
 import { POSTS_SEARCH_CONFIG, POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
 import { ROLES } from '../../constants/roles';
 import { useToken } from '../../utils/use.token';
-import { IUseToken } from '../../auth/interfaces/auth.interface';
 
 
 @Injectable()
@@ -105,11 +104,9 @@ export class PostsService {
           .createQueryBuilder('post')
           .where({id})
           .leftJoinAndSelect('post.author', 'author')
-          .leftJoinAndSelect('author.posts', 'posts_users')
           .leftJoinAndSelect('post.category', 'category')
-          .leftJoinAndSelect('category.posts', 'posts_category')
           .leftJoinAndSelect('post.comments', 'comments')
-          .leftJoinAndSelect('comments.post', 'comment')
+          .orderBy('post.created_at', 'DESC')
           .getOne();
 
       if(!post) {
@@ -126,12 +123,44 @@ export class PostsService {
     }
   }
 
-  public async findAllPosts(
-    options: IPaginationOptions 
+  public async findPostsByUser(
+    id: string,
+    options: IPaginationOptions
   ): Promise<Pagination<PostsEntity>> {
     try {
       const queryBuilder = this.postRepository
           .createQueryBuilder('posts')
+          .where('posts.author = :userId', { userId: id })
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments')
+          .orderBy('posts.created_at', 'DESC');
+
+      const posts = await paginate_ntp<PostsEntity>(queryBuilder, options);
+
+      if(Object.keys(posts.items).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No posts found.'
+        });
+      }
+
+      LoggingMessages.log(posts, 'PostsService.findPostsByUser(id) -> posts', this.cTokenForLog);
+      return posts;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async findAllPosts(
+    options: IPaginationOptions
+  ): Promise<Pagination<PostsEntity>> {
+    try {
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments')
           .orderBy('posts.created_at', 'DESC');
 
       const posts = await paginate_ntp<PostsEntity>(queryBuilder, options);

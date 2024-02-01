@@ -12,7 +12,6 @@ import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { ROLES } from '../../constants/roles';
 import { useToken } from '../../utils/use.token';
-import { IUseToken } from '../../auth/interfaces/auth.interface';
 import { PUBLISH_STATUS } from '../../constants/publish.status';
 import { LoggingMessages } from '../../utils/logging.messages';
 import {
@@ -112,9 +111,9 @@ export class CategoriesService {
           .createQueryBuilder('category')
           .where({id})
           .leftJoinAndSelect('category.author', 'author')
-          .leftJoinAndSelect('author.categories', 'category_user')
           .leftJoinAndSelect('category.posts', 'posts')
-          .leftJoinAndSelect('posts.category', 'category_posts')
+          .leftJoinAndSelect('posts.author', 'posts_author')
+          .orderBy('category.created_at', 'DESC')
           .getOne();
 
       if(!category) {
@@ -137,6 +136,9 @@ export class CategoriesService {
     try {
       const queryBuilder = this.categoryRepository
           .createQueryBuilder('categories')
+          .leftJoinAndSelect('categories.author', 'author')
+          .leftJoinAndSelect('categories.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'posts_author')
           .orderBy('categories.created_at', 'DESC');
 
       const categories = await paginate_ntp<CategoriesEntity>(queryBuilder, options);

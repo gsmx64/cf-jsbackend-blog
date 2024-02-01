@@ -19,14 +19,14 @@ export class LocalAuthController {
     type: 'string',
     required: true,
     example: 'admin123',
-    description: 'The user uuid to delete their data.'
+    description: 'The user password for login.'
   })
   @ApiParam({
     name: 'username',
     type: 'string',
     required: true,
     example: 'admin',
-    description: 'The user uuid to delete their data.'
+    description: 'The username for login.'
   })
   @PublicAccess()
   @Post('login')
