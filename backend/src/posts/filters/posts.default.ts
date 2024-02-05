@@ -8,8 +8,6 @@ export const POSTS_DEFAULT_CONFIG = {
     sortableColumns: ['updateAt'],
     nullSort: 'last',
     defaultSortBy: [['updateAt', 'DESC']],
-    searchableColumns: [],
-    select: [],
     defaultLimit: process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
     maxLimit: process.env.APP_PAGINATION_MAX_LIMIT || 100,
     withDeleted: false,
