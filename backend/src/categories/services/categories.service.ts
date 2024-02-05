@@ -2,42 +2,40 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IPaginationOptions, Pagination,
-  paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
 import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { CategoriesEntity } from '../entities/categories.entity';
 import { CategoryCreateDTO } from '../dto/category.create.dto';
 import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
-import { ROLES } from '../../constants/roles';
-import { useToken } from '../../utils/use.token';
 import { PUBLISH_STATUS } from '../../constants/publish.status';
+import { UsersService } from '../../users/services/users.service';
+import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
 import {
   CATEGORIES_FILTER_CONFIG,
-  CATEGORIES_FILTER_CONFIG_LOW
-} from '../filters/categories.filter';
+  CATEGORIES_FILTER_CONFIG_LOW } from '../filters/categories.filter';
 import {
   CATEGORIES_SEARCH_CONFIG,
-  CATEGORIES_SEARCH_CONFIG_LOW
-} from '../filters/categories.search';
+  CATEGORIES_SEARCH_CONFIG_LOW } from '../filters/categories.search';
+import {
+  CATEGORIES_DEFAULT_CONFIG,
+  CATEGORIES_DEFAULT_CONFIG_LOW } from '../filters/categories.default';
 
 
 @Injectable()
 export class CategoriesService {
-  private cTokenForLog: string;
+  private dataForLog: TypeUserRoleforLogging;
 
   constructor(
     @Inject(REQUEST) private request: Request,
 
     @InjectRepository(CategoriesEntity)
     private readonly categoryRepository: Repository<CategoriesEntity>,
+
+    private userService: UsersService
   ) {
-    this.cTokenForLog = (
-      (process.env.NODE_ENV.trim() != 'production') &&
-      (String(process.env.LOGGING_ENABLE) === 'true')
-    ) ? request.headers['access_token'] : null;
+    this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
   public async createCategory(
@@ -55,7 +53,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(category, 'CategoriesService.createCategory(body) -> category', this.cTokenForLog);
+      LoggingMessages.log(category, 'CategoriesService.createCategory(body) -> category', this.dataForLog);
       return category;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -76,7 +74,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(category, 'CategoriesService.updateCategory(body, id) -> category', this.cTokenForLog);
+      LoggingMessages.log(category, 'CategoriesService.updateCategory(body, id) -> category', this.dataForLog);
       return category;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -96,7 +94,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(category, 'CategoriesService.deleteCategory(id) -> category', this.cTokenForLog);
+      LoggingMessages.log(category, 'CategoriesService.deleteCategory(id) -> category', this.dataForLog);
       return category;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -110,9 +108,22 @@ export class CategoriesService {
       const category: CategoriesEntity = await this.categoryRepository
           .createQueryBuilder('category')
           .where({id})
-          .leftJoinAndSelect('category.author', 'author')
-          .leftJoinAndSelect('category.posts', 'posts')
-          .leftJoinAndSelect('posts.author', 'posts_author')
+          .andWhere(this.userService.onlyPublished('categories', this.request))
+          //.leftJoinAndSelect('category.author', 'author')
+          //.leftJoinAndSelect('category.posts', 'posts')
+          //.leftJoinAndSelect('posts.author', 'posts_author')
+          //.leftJoin('categories.author', 'author')
+          .addSelect([
+            'author.id', 'author.updateAt', 'author.username', 'author.email',
+            'author.status', 'author.role', 'author.karma', 'author.avatar',
+            'author.firstName', 'author.lastName', 'author.age', 'author.city',
+            'author.country'
+          ])
+          .leftJoin('categories.posts', 'posts')
+          .addSelect([
+            'posts.id', 'posts.title', 'posts.description', 'posts.updateAt'
+          ])
+          .where(this.userService.onlyPublished('posts', this.request))
           .orderBy('category.created_at', 'DESC')
           .getOne();
 
@@ -123,7 +134,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(category, 'CategoriesService.findOneCategory(id) -> category', this.cTokenForLog);
+      LoggingMessages.log(category, 'CategoriesService.findOneCategory(id) -> category', this.dataForLog);
       return category;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -131,26 +142,46 @@ export class CategoriesService {
   }
 
   public async findAllCategories(
-    options: IPaginationOptions 
-  ): Promise<Pagination<CategoriesEntity>> {
+    query: PaginateQuery
+  ): Promise<Paginated<CategoriesEntity>> {
     try {
       const queryBuilder = this.categoryRepository
           .createQueryBuilder('categories')
-          .leftJoinAndSelect('categories.author', 'author')
-          .leftJoinAndSelect('categories.posts', 'posts')
-          .leftJoinAndSelect('posts.author', 'posts_author')
-          .orderBy('categories.created_at', 'DESC');
+          .where(this.userService.onlyPublished('categories', this.request))
+          //.leftJoinAndSelect('categories.author', 'author')
+          //.leftJoinAndSelect('categories.posts', 'posts')
+          //.leftJoinAndSelect('posts.author', 'posts_author')
+          .leftJoin('categories.author', 'author')
+          .addSelect([
+            'author.id', 'author.updateAt', 'author.username', 'author.email',
+            'author.status', 'author.role', 'author.karma', 'author.avatar',
+            'author.firstName', 'author.lastName', 'author.age', 'author.city',
+            'author.country'
+          ])
+          .leftJoin('categories.posts', 'posts')
+          .addSelect([
+            'posts.id', 'posts.title', 'posts.description', 'posts.updateAt'
+          ])
+          .where(this.userService.onlyPublished('posts', this.request));
 
-      const categories = await paginate_ntp<CategoriesEntity>(queryBuilder, options);
+      const categories = await paginate(
+        query,
+        queryBuilder,
+        (
+          this.userService.isRoleBasic(this.request) ?
+          CATEGORIES_DEFAULT_CONFIG_LOW
+          : CATEGORIES_DEFAULT_CONFIG
+        )
+      )
 
-      if(Object.keys(categories.items).length === 0) {
+      if(Object.keys(categories.data).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No categories found.'
+          message: 'Categories not found.'
         });
       }
 
-      LoggingMessages.log(categories, 'CategoriesService.findAllCategories() -> categories', this.cTokenForLog);
+      LoggingMessages.log(categories, 'CategoriesService.findAllCategories() -> categories', this.dataForLog);
       return categories;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -158,18 +189,20 @@ export class CategoriesService {
   }
 
   public async searchCategories(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+      const queryBuilder = this.categoryRepository
+          .createQueryBuilder('categories')
+          .where(this.userService.onlyPublished('categories', this.request))
+          .leftJoinAndSelect('categories.author', 'author')
+          .leftJoinAndSelect('categories.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'posts_author');
 
       const categories = await paginate(
         query,
-        this.categoryRepository,
-        (roleUser == ROLES.BASIC ? CATEGORIES_SEARCH_CONFIG_LOW : CATEGORIES_SEARCH_CONFIG)
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? CATEGORIES_SEARCH_CONFIG_LOW : CATEGORIES_SEARCH_CONFIG)
       )
 
       if(Object.keys(categories.data).length === 0) {
@@ -179,7 +212,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(categories, 'CategoriesService.searchCategories() -> categories', this.cTokenForLog);
+      LoggingMessages.log(categories, 'CategoriesService.searchCategories() -> categories', this.dataForLog);
       return categories;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -187,18 +220,20 @@ export class CategoriesService {
   }
 
   public async filterCategories(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+      const queryBuilder = this.categoryRepository
+          .createQueryBuilder('categories')
+          .where(this.userService.onlyPublished('categories', this.request))
+          .leftJoinAndSelect('categories.author', 'author')
+          .leftJoinAndSelect('categories.posts', 'posts')
+          .leftJoinAndSelect('posts.author', 'posts_author');
 
       const categories = await paginate(
         query,
-        this.categoryRepository,
-        (roleUser == ROLES.BASIC ? CATEGORIES_FILTER_CONFIG_LOW : CATEGORIES_FILTER_CONFIG)
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? CATEGORIES_FILTER_CONFIG_LOW : CATEGORIES_FILTER_CONFIG)
       )
 
       if(Object.keys(categories.data).length === 0) {
@@ -208,7 +243,7 @@ export class CategoriesService {
         });
       }
 
-      LoggingMessages.log(categories, 'CategoriesService.filterCategories() -> categories', this.cTokenForLog);
+      LoggingMessages.log(categories, 'CategoriesService.filterCategories() -> categories', this.dataForLog);
       return categories;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

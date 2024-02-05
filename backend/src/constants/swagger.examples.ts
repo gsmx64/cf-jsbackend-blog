@@ -1,5 +1,3 @@
-export const SWAGGER_TOKEN_EXAMPLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyt2xlIjoiQJRNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljHmRlZDkeLCJpYXQiOjE3MDY1NTg1NTksImV4cCI6MGcwNjU1ODU2Mn0.Udvy-Obf-FpstpTeE5W1F0PynN_RXLDhOeUfdkqgtXU';
-
 export const SWAGGER_ID_EXAMPLE = 'f68b3d30-e04a-4a19-b211-b3c809c2ded9';
 
 export const SWAGGER_USER_BODY_EXAMPLE = '{ "username": "user", \

@@ -1,7 +1,6 @@
 import { FilterOperator, FilterSuffix, PaginateConfig } from "nestjs-paginate";
 
 import { CommentsEntity } from "../entities/comments.entity";
-import { PUBLISH_STATUS } from "../../constants/publish.status";
 
 
 export const COMMENTS_FILTER_CONFIG = {
@@ -9,7 +8,7 @@ export const COMMENTS_FILTER_CONFIG = {
         'id', 'message', 'author', 'post', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     select: [
         'id', 'message', 'reaction', 'author', 'post',
         'createAt', 'updateAt'

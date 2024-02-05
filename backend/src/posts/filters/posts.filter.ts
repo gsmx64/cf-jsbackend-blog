@@ -9,10 +9,10 @@ export const POSTS_FILTER_CONFIG = {
         'id', 'title', 'status', 'author', 'category', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     select: [
         'id', 'title', 'description', 'status', 'content', 'author',
-        'category', 'createAt', 'updateAt'
+        'category', 'comments', 'createAt', 'updateAt'
     ],
     filterableColumns: {
         id: true,
@@ -41,9 +41,9 @@ export const POSTS_FILTER_CONFIG = {
     maxLimit: process.env.APP_PAGINATION_MAX_LIMIT || 100,
     withDeleted: false,
     relations: {
-        author: { posts: true },
-        category: { posts: true },
-        comments: { post: true }
+        author: {},
+        category: {},
+        comments: {}
     },
     loadEagerRelations: false,
     relativePath: false,

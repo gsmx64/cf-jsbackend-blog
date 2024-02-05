@@ -51,10 +51,9 @@ export class SearchController {
     @Roles('MODERATOR', 'EDITOR', 'BASIC')
     @Get('categories')
     public async searchCategories(
-      @Paginate() query: PaginateQuery,
-      @Request() request: Request
+      @Paginate() query: PaginateQuery
     ): Promise<Paginated<CategoriesEntity>> {
-      return this.searchService.searchCategories(query, request);
+      return this.searchService.searchCategories(query);
     }
 
     @ApiOkPaginatedResponse(
@@ -67,10 +66,9 @@ export class SearchController {
     @Roles('MODERATOR', 'EDITOR', 'BASIC')
     @Get('posts')
     public async searchPosts(
-      @Paginate() query: PaginateQuery,
-      @Request() request: Request
+      @Paginate() query: PaginateQuery
     ): Promise<Paginated<PostsEntity>> {
-      return this.searchService.searchPosts(query, request);
+      return this.searchService.searchPosts(query);
     }
 
     @ApiOkPaginatedResponse(

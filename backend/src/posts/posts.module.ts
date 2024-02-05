@@ -30,4 +30,5 @@ import { CommentsEntity } from '../comments/entities/comments.entity';
   ],
   controllers: [PostsController]
 })
+
 export class PostsModule {}

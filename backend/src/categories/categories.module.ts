@@ -8,8 +8,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { UsersService } from '../users/services/users.service';
 import { CategoriesEntity } from './entities/categories.entity';
 import { UsersEntity } from '../users/entities/users.entity';
-import { PostsEntity } from 'src/posts/entities/posts.entity';
-import { CommentsEntity } from 'src/comments/entities/comments.entity';
+import { PostsEntity } from '../posts/entities/posts.entity';
 
 
 @Module({
@@ -28,4 +27,5 @@ import { CommentsEntity } from 'src/comments/entities/comments.entity';
   ],
   controllers: [CategoriesController]
 })
+
 export class CategoriesModule {}

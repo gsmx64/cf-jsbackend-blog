@@ -10,7 +10,7 @@ export const USERS_FILTER_CONFIG = {
         'age', 'city', 'country', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     select: [
         'id', 'username', 'email', 'status', 'rol', 'karma', 'avatar',
         'firstName', 'lastName', 'age', 'city', 'country', 'createAt',

@@ -8,19 +8,21 @@ import { UsersEntity } from '../../users/entities/users.entity';
 import { CategoriesEntity } from '../../categories/entities/categories.entity';
 import { PostsEntity } from '../../posts/entities/posts.entity';
 import { CommentsEntity } from '../../comments/entities/comments.entity';
+import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
 import { ErrorManager } from '../../utils/error.manager';
 import { SEARCH_USERS_CONFIG } from '../filters/search.users';
 import { SEARCH_COMMENTS_CONFIG } from '../filters/search.comments';
-import { useToken } from '../../utils/use.token';
-import { ROLES } from '../../constants/roles';
-import { SEARCH_POSTS_CONFIG, SEARCH_POSTS_CONFIG_LOW } from '../filters/search.posts';
-import { SEARCH_CATEGORIES_CONFIG, SEARCH_CATEGORIES_CONFIG_LOW } from '../filters/search.categories';
+import { UsersService } from '../../users/services/users.service';
+import { SEARCH_POSTS_CONFIG,
+  SEARCH_POSTS_CONFIG_LOW } from '../filters/search.posts';
+import { SEARCH_CATEGORIES_CONFIG,
+  SEARCH_CATEGORIES_CONFIG_LOW } from '../filters/search.categories';
 
 
 @Injectable()
 export class SearchService {
-  private cTokenForLog: string;
+  private dataForLog: TypeUserRoleforLogging;
 
   constructor(
     @Inject(REQUEST) private request: Request,
@@ -36,11 +38,10 @@ export class SearchService {
 
     @InjectRepository(CommentsEntity)
     private readonly commentRepository: Repository<CommentsEntity>,
+
+    private userService: UsersService
   ) {
-    this.cTokenForLog = (
-      (process.env.NODE_ENV.trim() != 'production') &&
-      (String(process.env.LOGGING_ENABLE) === 'true')
-    ) ? request.headers['access_token'] : null;
+    this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
   public async searchUsers(
@@ -60,7 +61,7 @@ export class SearchService {
         });
       }
 
-      LoggingMessages.log(users, 'SearchService.searchUsers() -> users', this.cTokenForLog);
+      LoggingMessages.log(users, 'SearchService.searchUsers() -> users', this.dataForLog);
       return users;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -68,18 +69,19 @@ export class SearchService {
   }
 
   public async searchCategories(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+      const queryBuilder = this.categoryRepository
+          .createQueryBuilder('categories')
+          .where(this.userService.onlyPublished('categories', this.request))
+          .leftJoinAndSelect('categories.author', 'author')
+          .leftJoinAndSelect('categories.posts', 'posts');
 
       const categories = await paginate(
         query,
-        this.categoryRepository,
-        (roleUser == ROLES.BASIC ? SEARCH_CATEGORIES_CONFIG_LOW : SEARCH_CATEGORIES_CONFIG)
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? SEARCH_CATEGORIES_CONFIG_LOW : SEARCH_CATEGORIES_CONFIG)
       )
 
       if(Object.keys(categories.data).length === 0) {
@@ -89,7 +91,7 @@ export class SearchService {
         });
       }
 
-      LoggingMessages.log(categories, 'SearchService.searchCategories() -> categories', this.cTokenForLog);
+      LoggingMessages.log(categories, 'SearchService.searchCategories() -> categories', this.dataForLog);
       return categories;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -97,18 +99,20 @@ export class SearchService {
   }
 
   public async searchPosts(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .where(this.userService.onlyPublished('posts', this.request))
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments');
 
       const posts = await paginate(
         query,
-        this.postRepository,
-        (roleUser == ROLES.BASIC ? SEARCH_POSTS_CONFIG_LOW : SEARCH_POSTS_CONFIG)
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? SEARCH_POSTS_CONFIG_LOW : SEARCH_POSTS_CONFIG)
       )
 
       if(Object.keys(posts.data).length === 0) {
@@ -118,7 +122,7 @@ export class SearchService {
         });
       }
 
-      LoggingMessages.log(posts, 'SearchService.searchPosts() -> posts', this.cTokenForLog);
+      LoggingMessages.log(posts, 'SearchService.searchPosts() -> posts', this.dataForLog);
       return posts;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -129,9 +133,14 @@ export class SearchService {
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {
     try {  
+      const queryBuilder = this.commentRepository
+          .createQueryBuilder('comments')
+          .leftJoinAndSelect('comments.author', 'author')
+          .leftJoinAndSelect('comments.post', 'post');
+
       const comments = await paginate(
         query,
-        this.commentRepository,
+        queryBuilder,
         SEARCH_COMMENTS_CONFIG
       )
 
@@ -142,7 +151,7 @@ export class SearchService {
         });
       }
 
-      LoggingMessages.log(comments, 'SearchService.searchComments() -> comments', this.cTokenForLog);
+      LoggingMessages.log(comments, 'SearchService.searchComments() -> comments', this.dataForLog);
       return comments;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

@@ -1,8 +1,6 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
-          Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiHeader, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Request as ExpressRequest } from 'express';
+import { Body, Controller, Delete, Get, Param,
+          Post, Put, Request, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
 
@@ -15,11 +13,11 @@ import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { UsersEntity } from '../entities/users.entity';
-import { paginationRoute } from '../../utils/pagination.route';
 import { USERS_SEARCH_CONFIG } from '../filters/users.search';
 import { USERS_FILTER_CONFIG } from '../filters/users.filter';
 import { SWAGGER_ID_EXAMPLE, 
   SWAGGER_USER_BODY_EXAMPLE } from '../../constants/swagger.examples';
+import { USERS_DEFAULT_CONFIG } from '../filters/users.default';
 
 
 @ApiTags('Users')
@@ -77,13 +75,14 @@ export class UsersController {
     description: 'The user uuid to edit their data.'
   })
   @ApiBearerAuth('access_token')
-  @AdminAccess()
+  @UseGuards(LocalAuthGuard)    
   @Put('edit/:id')  
   public async updateUser(
     @Param('id') id: string, 
-    @Body() body: UserUpdateDTO
+    @Body() body: UserUpdateDTO,
+    @Request() request: Request
   ) {
-    return this.usersService.updateUser(body, id);
+    return this.usersService.updateUser(body, id, request);
   }
 
   @ApiParam({
@@ -127,38 +126,19 @@ export class UsersController {
     return this.usersService.findOwnProfile(request);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    UserUpdateDTO,
+    USERS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(USERS_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR')
   @Get('list')
   public async findAllUsers(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<UsersEntity>> {
-    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
-      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
-    return this.usersService.findAllUsers({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<UsersEntity>> {
+    return this.usersService.findAllUsers(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -171,10 +151,9 @@ export class UsersController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
   public async searchUsers(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<UsersEntity>> {
-    return this.usersService.searchUsers(query, request);
+    return this.usersService.searchUsers(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -187,9 +166,8 @@ export class UsersController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')
   public async filterUsers(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<UsersEntity>> {
-    return this.usersService.filterUsers(query, request);
+    return this.usersService.filterUsers(query);
   }
 }

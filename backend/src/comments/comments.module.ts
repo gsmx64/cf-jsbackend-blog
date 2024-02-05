@@ -27,4 +27,5 @@ import { PostsEntity } from '../posts/entities/posts.entity';
   ],
   controllers: [CommentsController]
 })
+
 export class CommentsModule {}

@@ -29,3 +29,8 @@ export interface IUseToken {
   sub:  string;
   isExpired: boolean
 }
+
+export interface TypeUserRoleforLogging {
+  user: string;
+  role: string;
+}

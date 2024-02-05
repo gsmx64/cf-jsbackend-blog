@@ -1,8 +1,6 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
-          Post, Put, Query, Request, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Request as ExpressRequest } from 'express';
+import { Body, Controller, Delete, Get, Param,
+          Post, Put, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
 
@@ -14,12 +12,12 @@ import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { paginationRoute } from '../../utils/pagination.route';
 import { CategoriesEntity } from '../entities/categories.entity';
 import { CATEGORIES_SEARCH_CONFIG } from '../filters/categories.search';
 import { CATEGORIES_FILTER_CONFIG } from '../filters/categories.filter';
 import { SWAGGER_CATEGORY_BODY_EXAMPLE,
   SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
+import { CATEGORIES_DEFAULT_CONFIG } from '../filters/categories.default';
 
 
 @ApiTags('Categories')
@@ -95,37 +93,18 @@ export class CategoriesController {
     return this.categoriesService.findOneCategory(id);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    CategoryUpdateDTO,
+    CATEGORIES_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(CATEGORIES_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllCategories(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<CategoriesEntity>> {
-    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
-      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
-    return this.categoriesService.findAllCategories({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<CategoriesEntity>> {
+    return this.categoriesService.findAllCategories(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -138,10 +117,9 @@ export class CategoriesController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
   public async searchCategories(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
-    return this.categoriesService.searchCategories(query, request);
+    return this.categoriesService.searchCategories(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -154,9 +132,8 @@ export class CategoriesController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')
   public async filterCategories(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
-    return this.categoriesService.filterCategories(query, request);
+    return this.categoriesService.filterCategories(query);
   }
 }

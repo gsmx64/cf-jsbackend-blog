@@ -9,7 +9,7 @@ export const COMMENTS_SEARCH_CONFIG = {
         'id', 'message', 'author', 'post', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     searchableColumns: ['message'],
     select: [
         'id', 'message', 'reaction', 'author', 'post',

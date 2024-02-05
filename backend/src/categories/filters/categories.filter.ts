@@ -9,7 +9,7 @@ export const CATEGORIES_FILTER_CONFIG = {
         'id', 'title', 'status', 'author', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     select: [
         'id', 'title', 'description', 'image', 'status', 'author',
         'posts', 'createAt', 'updateAt'

@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DeleteResult, UpdateResult } from 'typeorm';
-import { IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 import { PaginateQuery, Paginated } from 'nestjs-paginate';
 
 import { UsersEntity } from '../../users/entities/users.entity';
@@ -41,8 +40,9 @@ export class AdminService {
   public async updateUser(
     body: UserUpdateDTO,
     id: string,
+    request: any
   ): Promise<UpdateResult | undefined>{
-    return await this.userService.updateUser(body, id);
+    return await this.userService.updateUser(body, id, request);
   }
 
   public async deleteUser(
@@ -62,9 +62,9 @@ export class AdminService {
   }
 
   public async findAllUsers(
-    options: IPaginationOptions
-  ): Promise<Pagination<UsersEntity>> {
-    return await this.userService.findAllUsers(options);
+    query: PaginateQuery
+  ): Promise<Paginated<UsersEntity>> {
+    return await this.userService.findAllUsers(query);
   }
 
   public async createCategory(
@@ -93,9 +93,9 @@ export class AdminService {
   }
 
   public async findAllCategories(
-    options: IPaginationOptions
-  ): Promise<Pagination<CategoriesEntity>> {
-    return await this.categoryService.findAllCategories(options);
+    query: PaginateQuery
+  ): Promise<Paginated<CategoriesEntity>> {
+    return await this.categoryService.findAllCategories(query);
   }
 
   public async updatePost(
@@ -117,10 +117,17 @@ export class AdminService {
     return await this.postService.findOnePost(id);
   }
 
+  public async findPostsByUser(
+    id: string,
+    query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return await this.postService.findPostsByUser(id, query);
+  }
+
   public async findAllPosts(
-    options: IPaginationOptions
-  ): Promise<Pagination<PostsEntity>> {
-    return await this.postService.findAllPosts(options);
+    query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return await this.postService.findAllPosts(query);
   }
 
   public async updateComment(
@@ -143,9 +150,9 @@ export class AdminService {
   }
 
   public async findAllComments(
-    options: IPaginationOptions
-  ): Promise<Pagination<CommentsEntity>> {
-    return await this.commentService.findAllComments(options);
+    query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    return await this.commentService.findAllComments(query);
   }
 
   public async searchUsers(
@@ -155,17 +162,15 @@ export class AdminService {
   }
 
   public async searchCategories(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
-    return await this.searchService.searchCategories(query, request);
+    return await this.searchService.searchCategories(query);
   }
 
   public async searchPosts(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
-    return await this.searchService.searchPosts(query, request);
+    return await this.searchService.searchPosts(query);
   }
 
   public async searchComments(

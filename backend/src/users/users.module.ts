@@ -28,4 +28,5 @@ import { CategoriesEntity } from '../categories/entities/categories.entity';
   controllers: [UsersController],
   exports: [UsersService, TypeOrmModule]
 })
+
 export class UsersModule {}

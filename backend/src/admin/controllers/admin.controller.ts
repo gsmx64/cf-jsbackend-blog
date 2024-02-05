@@ -1,15 +1,15 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put,
+  Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Request as ExpressRequest } from 'express'
-import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate, PaginateQuery, Paginated } from 'nestjs-paginate';
+import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
+  PaginateQuery, Paginated } from 'nestjs-paginate';
 
 import { UsersEntity } from '../../users/entities/users.entity';
 import { CategoriesEntity } from '../../categories/entities/categories.entity';
 import { PostsEntity } from '../../posts/entities/posts.entity';
 import { CommentsEntity } from '../../comments/entities/comments.entity';
 import { UserUpdateDTO } from '../../users/dto/user.update.dto';
-import { CategoryCreateDTO } from 'src/categories/dto/category.create.dto';
+import { CategoryCreateDTO } from '../../categories/dto/category.create.dto';
 import { CategoryUpdateDTO } from '../../categories/dto/category.update.dto';
 import { PostUpdateDTO } from '../../posts/dto/post.update.dto';
 import { CommentUpdateDTO } from '../../comments/dto/comment.update.dto';
@@ -17,13 +17,16 @@ import { AdminService } from '../services/admin.service';
 import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
 import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
-import { paginationRoute } from '../../utils/pagination.route';
 import { SEARCH_USERS_CONFIG } from '../../search/filters/search.users';
 import { SEARCH_CATEGORIES_CONFIG } from '../../search/filters/search.categories';
 import { SEARCH_POSTS_CONFIG } from '../../search/filters/search.posts';
 import { SEARCH_COMMENTS_CONFIG } from '../../search/filters/search.comments';
 import { SWAGGER_CATEGORY_BODY_EXAMPLE,
    SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
+import { POSTS_DEFAULT_CONFIG } from 'src/posts/filters/posts.default';
+import { USERS_DEFAULT_CONFIG } from 'src/users/filters/users.default';
+import { CATEGORIES_DEFAULT_CONFIG } from 'src/categories/filters/categories.default';
+import { COMMENTS_FILTER_CONFIG } from 'src/comments/filters/comments.filter';
 
 
 @ApiTags('Admin')
@@ -44,9 +47,10 @@ export class AdminController {
   @Put('users/edit/:id')
   public async updateUser(
     @Param('id') id: string, 
-    @Body() body: UserUpdateDTO
+    @Body() body: UserUpdateDTO,
+    @Request() request: Request
   ) {
-    return this.adminService.updateUser(body, id);
+    return this.adminService.updateUser(body, id, request);
   }
 
   @ApiParam({
@@ -88,37 +92,18 @@ export class AdminController {
     return this.adminService.findOwnProfile(request);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: true,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: true,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    UserUpdateDTO,
+    USERS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(USERS_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Get('users/list')
   public async findAllUsers(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<UsersEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
-    return this.adminService.findAllUsers({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<UsersEntity>> {
+    return this.adminService.findAllUsers(query);
   }
 
   @ApiParam({
@@ -186,37 +171,18 @@ export class AdminController {
     return this.adminService.findOneCategory(id);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: true,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: true,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    CategoryUpdateDTO,
+    CATEGORIES_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(CATEGORIES_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Get('categories/list')
   public async findAllCategories(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<CategoriesEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
-    return this.adminService.findAllCategories({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<CategoriesEntity>> {
+    return this.adminService.findAllCategories(query);
   }
 
   @ApiParam({
@@ -268,37 +234,40 @@ export class AdminController {
     return this.adminService.findOnePost(id);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
+  @ApiParam({
+    name: 'id',
+    type: 'string',
     required: true,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
+    example: SWAGGER_ID_EXAMPLE,
+    description: 'The user uuid to search his/her posts.'
   })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: true,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    PostUpdateDTO,
+    POSTS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(POSTS_DEFAULT_CONFIG)
+  @ApiBearerAuth('access_token')
+  @AdminAccess()
+  @Get('posts/list2')
+  public async findPostsByUser(
+    @Param('id') id: string,
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return this.adminService.findPostsByUser(id, query);
+  }
+
+  @ApiOkPaginatedResponse(
+    PostUpdateDTO,
+    POSTS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(POSTS_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Get('posts/list')
   public async findAllPosts(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<PostsEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
-    return this.adminService.findAllPosts({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return this.adminService.findAllPosts(query);
   }
 
   @ApiParam({
@@ -350,36 +319,17 @@ export class AdminController {
     return this.adminService.findOneComment(id);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    CommentUpdateDTO,
+    COMMENTS_FILTER_CONFIG,
+  )
+  @ApiPaginationQuery(COMMENTS_FILTER_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
   public async findAllComments(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<CommentsEntity>> {
-    limit = limit > process.env.APP_PAGINATION_MAX_LIMIT || 100 ? 
-      process.env.APP_PAGINATION_MAX_LIMIT || 100 : limit;
-    return this.adminService.findAllComments({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    return this.adminService.findAllComments(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -405,10 +355,9 @@ export class AdminController {
   @AdminAccess()
   @Get('search/categories')
   public async searchCategories(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
-    return this.adminService.searchCategories(query, request);
+    return this.adminService.searchCategories(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -420,10 +369,9 @@ export class AdminController {
   @AdminAccess()
   @Get('search/posts')
   public async searchPosts(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
-    return this.adminService.searchPosts(query, request);
+    return this.adminService.searchPosts(query);
   }
 
   @ApiOkPaginatedResponse(

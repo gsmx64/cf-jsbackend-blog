@@ -2,35 +2,40 @@ import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IPaginationOptions, Pagination, paginate as paginate_ntp } from 'nestjs-typeorm-paginate';
-import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
+import { PaginateQuery, paginate, Paginated, PaginateConfig } from 'nestjs-paginate';
 
 import { PostsEntity } from '../entities/posts.entity';
 import { PostCreateDTO } from '../dto/post.create.dto';
 import { PostUpdateDTO } from '../dto/post.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { PUBLISH_STATUS } from '../../constants/publish.status';
+import { UsersService } from '../../users/services/users.service';
+import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
-import { POSTS_FILTER_CONFIG, POSTS_FILTER_CONFIG_LOW } from '../filters/posts.filter';
-import { POSTS_SEARCH_CONFIG, POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
-import { ROLES } from '../../constants/roles';
-import { useToken } from '../../utils/use.token';
+import {
+  POSTS_DEFAULT_CONFIG,
+  POSTS_DEFAULT_CONFIG_LOW } from '../filters/posts.default';
+import {
+  POSTS_FILTER_CONFIG,
+  POSTS_FILTER_CONFIG_LOW } from '../filters/posts.filter';
+import {
+  POSTS_SEARCH_CONFIG,
+  POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
 
 
 @Injectable()
 export class PostsService {
-  private cTokenForLog: string;
+  private dataForLog: TypeUserRoleforLogging;
 
   constructor(
     @Inject(REQUEST) private request: Request,
 
     @InjectRepository(PostsEntity)
     private readonly postRepository: Repository<PostsEntity>,
+
+    private userService: UsersService
   ) {
-    this.cTokenForLog = (
-      (process.env.NODE_ENV.trim() != 'production') &&
-      (String(process.env.LOGGING_ENABLE) === 'true')
-    ) ? request.headers['access_token'] : null;
+    this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
   public async createPost(
@@ -48,7 +53,7 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(post, 'PostsService.createPost(body) -> post', this.cTokenForLog);
+      LoggingMessages.log(post, 'PostsService.createPost(body) -> post', this.dataForLog);
       return post;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -69,7 +74,7 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(post, 'PostsService.updatePost(body, id) -> post', this.cTokenForLog);
+      LoggingMessages.log(post, 'PostsService.updatePost(body, id) -> post', this.dataForLog);
       return post;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -89,7 +94,7 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(post, 'PostsService.deletePost(id) -> post', this.cTokenForLog);
+      LoggingMessages.log(post, 'PostsService.deletePost(id) -> post', this.dataForLog);
       return post;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -103,6 +108,7 @@ export class PostsService {
       const post: PostsEntity = await this.postRepository
           .createQueryBuilder('post')
           .where({id})
+          .andWhere(this.userService.onlyPublished('post', this.request))
           .leftJoinAndSelect('post.author', 'author')
           .leftJoinAndSelect('post.category', 'category')
           .leftJoinAndSelect('post.comments', 'comments')
@@ -116,7 +122,7 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(post, 'PostsService.findOnePost(id) -> post', this.cTokenForLog);
+      LoggingMessages.log(post, 'PostsService.findOnePost(id) -> post', this.dataForLog);
       return post;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -125,73 +131,25 @@ export class PostsService {
 
   public async findPostsByUser(
     id: string,
-    options: IPaginationOptions
-  ): Promise<Pagination<PostsEntity>> {
+    query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
     try {
       const queryBuilder = this.postRepository
           .createQueryBuilder('posts')
           .where('posts.author = :userId', { userId: id })
+          .andWhere(this.userService.onlyPublished('posts', this.request))
           .leftJoinAndSelect('posts.author', 'author')
           .leftJoinAndSelect('posts.category', 'category')
-          .leftJoinAndSelect('posts.comments', 'comments')
-          .orderBy('posts.created_at', 'DESC');
-
-      const posts = await paginate_ntp<PostsEntity>(queryBuilder, options);
-
-      if(Object.keys(posts.items).length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No posts found.'
-        });
-      }
-
-      LoggingMessages.log(posts, 'PostsService.findPostsByUser(id) -> posts', this.cTokenForLog);
-      return posts;
-    } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
-    }
-  }
-
-  public async findAllPosts(
-    options: IPaginationOptions
-  ): Promise<Pagination<PostsEntity>> {
-    try {
-      const queryBuilder = this.postRepository
-          .createQueryBuilder('posts')
-          .leftJoinAndSelect('posts.author', 'author')
-          .leftJoinAndSelect('posts.category', 'category')
-          .leftJoinAndSelect('posts.comments', 'comments')
-          .orderBy('posts.created_at', 'DESC');
-
-      const posts = await paginate_ntp<PostsEntity>(queryBuilder, options);
-
-      if(Object.keys(posts.items).length === 0) {
-        throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No posts found.'
-        });
-      }
-
-      LoggingMessages.log(posts, 'PostsService.findAllPosts() -> posts', this.cTokenForLog);
-      return posts;
-    } catch(error){
-      throw ErrorManager.createSignatureError(error.message);
-    }
-  }
-
-  public async searchPosts(
-    query: PaginateQuery,
-    request: any
-  ): Promise<Paginated<PostsEntity>> {
-    try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+          .leftJoinAndSelect('posts.comments', 'comments');
 
       const posts = await paginate(
         query,
-        this.postRepository,
-        (roleUser == ROLES.BASIC ? POSTS_SEARCH_CONFIG_LOW : POSTS_SEARCH_CONFIG)
+        queryBuilder,
+        (
+          this.userService.isRoleBasic(this.request) ?
+          POSTS_DEFAULT_CONFIG_LOW
+          : POSTS_DEFAULT_CONFIG
+        )
       )
 
       if(Object.keys(posts.data).length === 0) {
@@ -201,7 +159,73 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(posts, 'PostsService.searchPosts() -> posts', this.cTokenForLog);
+      LoggingMessages.log(posts, 'PostsService.findAllPosts() -> posts', this.dataForLog);
+      return posts;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async findAllPosts(
+    query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    try {
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .where(this.userService.onlyPublished('posts', this.request))
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments');
+
+      const posts = await paginate(
+        query,
+        queryBuilder,
+        (
+          this.userService.isRoleBasic(this.request) ?
+          POSTS_DEFAULT_CONFIG_LOW
+          : POSTS_DEFAULT_CONFIG
+        )
+      )
+
+      if(Object.keys(posts.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Posts not found.'
+        });
+      }
+
+      LoggingMessages.log(posts, 'PostsService.findAllPosts() -> posts', this.dataForLog);
+      return posts;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  public async searchPosts(
+    query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    try {
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .where(this.userService.onlyPublished('posts', this.request))
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments');
+
+      const posts = await paginate(
+        query,
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? POSTS_SEARCH_CONFIG_LOW : POSTS_SEARCH_CONFIG)
+      )
+
+      if(Object.keys(posts.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'No se encontraron posts.'
+        });
+      }
+
+      LoggingMessages.log(posts, 'PostsService.searchPosts() -> posts', this.dataForLog);
       return posts;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);
@@ -209,18 +233,20 @@ export class PostsService {
   }
 
   public async filterPosts(
-    query: PaginateQuery,
-    request: any
+    query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken); 
-      const roleUser = manageToken.role;
+      const queryBuilder = this.postRepository
+          .createQueryBuilder('posts')
+          .where(this.userService.onlyPublished('posts', this.request))
+          .leftJoinAndSelect('posts.author', 'author')
+          .leftJoinAndSelect('posts.category', 'category')
+          .leftJoinAndSelect('posts.comments', 'comments');
 
       const posts = await paginate(
         query,
-        this.postRepository,
-        (roleUser == ROLES.BASIC ? POSTS_FILTER_CONFIG_LOW : POSTS_FILTER_CONFIG)
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? POSTS_FILTER_CONFIG_LOW : POSTS_FILTER_CONFIG)
       )
 
       if(Object.keys(posts.data).length === 0) {
@@ -230,7 +256,7 @@ export class PostsService {
         });
       }
 
-      LoggingMessages.log(posts, 'PostsService.filterPosts() -> posts', this.cTokenForLog);
+      LoggingMessages.log(posts, 'PostsService.filterPosts() -> posts', this.dataForLog);
       return posts;
     } catch(error){
       throw ErrorManager.createSignatureError(error.message);

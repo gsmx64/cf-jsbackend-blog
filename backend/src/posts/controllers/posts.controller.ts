@@ -1,8 +1,6 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
-         Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param,
+         Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
 
@@ -14,12 +12,12 @@ import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { paginationRoute } from '../../utils/pagination.route';
 import { PostsEntity } from '../entities/posts.entity';
 import { POSTS_FILTER_CONFIG } from '../filters/posts.filter';
 import { POSTS_SEARCH_CONFIG } from '../filters/posts.search';
 import { SWAGGER_ID_EXAMPLE,
   SWAGGER_POST_BODY_EXAMPLE } from '../../constants/swagger.examples';
+import { POSTS_DEFAULT_CONFIG } from '../filters/posts.default';
 
 
 @ApiTags('Posts')
@@ -103,74 +101,33 @@ export class PostsController {
     example: SWAGGER_ID_EXAMPLE,
     description: 'The user uuid to search his/her posts.'
   })
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    PostUpdateDTO,
+    POSTS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(POSTS_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('user/:id')
   public async findPostsByUser(
     @Param('id') id: string,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ) {
-    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
-      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
-    return this.postsService.findPostsByUser(
-      id,
-      {
-        page,
-        limit,
-        route: paginationRoute(req),
-      }
-    );
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return this.postsService.findPostsByUser(id, query);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    PostUpdateDTO,
+    POSTS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(POSTS_DEFAULT_CONFIG)
   @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllPosts(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<PostsEntity>> {
-    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
-      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
-    return this.postsService.findAllPosts({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<PostsEntity>> {
+    return this.postsService.findAllPosts(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -183,10 +140,9 @@ export class PostsController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('search')
   public async searchPosts(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
-    return this.postsService.searchPosts(query, request);
+    return this.postsService.searchPosts(query);
   }
 
   @ApiOkPaginatedResponse(
@@ -199,9 +155,8 @@ export class PostsController {
   @Roles('MODERATOR', 'EDITOR', 'BASIC')
   @Get('filter')
   public async filterPosts(
-    @Paginate() query: PaginateQuery,
-    @Request() request: Request
+    @Paginate() query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
-    return this.postsService.filterPosts(query, request);
+    return this.postsService.filterPosts(query);
   }
 }

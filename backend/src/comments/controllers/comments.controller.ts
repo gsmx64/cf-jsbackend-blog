@@ -1,8 +1,6 @@
-import { Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe,
-          Post, Put, Query, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param,
+          Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Pagination } from 'nestjs-typeorm-paginate';
-import { Request as ExpressRequest } from 'express';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
 
@@ -14,7 +12,6 @@ import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { paginationRoute } from '../../utils/pagination.route';
 import { CommentsEntity } from '../entities/comments.entity';
 import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
@@ -96,37 +93,18 @@ export class CommentsController {
     return this.commentsService.findOneComment(id);
   }
 
-  @ApiQuery({
-    name: 'page',
-    type: 'integer',
-    required: false,
-    example: 1,
-    description: 'The number of items to skip before starting to collect the result set.'
-  })
-  @ApiQuery({
-    name: 'limit',
-    type: 'integer',
-    required: false,
-    example: 10,
-    description: 'The numbers of items to return.'
-  })
+  @ApiOkPaginatedResponse(
+    CommentUpdateDTO,
+    COMMENTS_FILTER_CONFIG,
+  )
+  @ApiPaginationQuery(COMMENTS_FILTER_CONFIG)
   @ApiBearerAuth('access_token')
   @PublicAccess()
   @Get('list')
   public async findAllComments(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(
-      process.env.APP_PAGINATION_DEFAULT_LIMIT || 10), ParseIntPipe
-    ) limit: number = process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
-    @Request() req: ExpressRequest
-  ): Promise<Pagination<CommentsEntity>> {
-    limit = limit > (process.env.APP_PAGINATION_MAX_LIMIT || 100) ? 
-      (process.env.APP_PAGINATION_MAX_LIMIT || 100) : limit;
-    return this.commentsService.findAllComments({
-      page,
-      limit,
-      route: paginationRoute(req),
-    });
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    return this.commentsService.findAllComments(query);
   }
 
   @ApiOkPaginatedResponse(

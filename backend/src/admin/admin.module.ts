@@ -38,4 +38,5 @@ import { SearchService } from '../search/services/search.service';
   controllers: [AdminController],
   exports: [AdminService, TypeOrmModule]
 })
+
 export class AdminModule {}

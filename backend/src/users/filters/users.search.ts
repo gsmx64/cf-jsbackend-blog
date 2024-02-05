@@ -10,7 +10,7 @@ export const USERS_SEARCH_CONFIG = {
         'lastName', 'age', 'city', 'country', 'createAt', 'updateAt'
     ],
     nullSort: 'last',
-    defaultSortBy: [['createAt', 'DESC']],
+    defaultSortBy: [['updateAt', 'DESC']],
     searchableColumns: [
         'username', 'email', 'firstName', 'lastName', 'age', 'city',
         'country'
