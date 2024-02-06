@@ -1,0 +1,86 @@
+.postContainer {
+    display: flex;
+    margin: 24px 0px;
+    align-items: start;
+}
+
+.postContentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin-left: 14px;
+}
+
+.postTitle {
+    margin: 0;
+    font-size: 22px;
+}
+
+.postContent {
+    text-align: left;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+
+.seeMoreBtnInfoContainer {
+    margin-top: 8px;
+    width: 100%;
+    display: flex;
+}
+
+.seeMoreBtnContainer {
+    flex: 1;
+    display: flex;
+}
+
+.postInfoContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 14px;
+    white-space:nowrap;
+}
+
+.postCategory {
+    margin: 0 6px;
+    padding-right: 5px;
+}
+
+.postAuthor {
+    margin: 0 6px;
+    display: list-item;
+    padding-right: 5px;
+}
+
+.postStatus {
+    margin: 0 6px;
+    display: list-item;
+    padding-right: 5px;
+}
+
+.postUpdateAt {
+    margin: 0 6px;
+    display: list-item;
+}
+
+.seeMoreBtn {
+    margin: 0;
+}
+
+.imageContainer {
+    position: relative;
+}
+
+.hearthImage {
+    position: absolute;
+    width: 25px;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    cursor: pointer;
+}

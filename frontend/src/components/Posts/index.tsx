@@ -1,22 +1,51 @@
-import React from "react";
+import React from "react";//, { useState }
+import { useNavigate } from "react-router-dom";
+
 import PostItem from "./components/PostItem";
-import data from '../../data/posts.json';
+import styles from "./Posts.module.css";
 
-const { _embedded: { posts }} = data;
 
-const Posts: React.FC<{}> = () => {
-    const postsComponent = posts.map((postItem) => (
-        <PostItem
-            key={`post-item-${postItem.id}`}
-            image={postItem.image}
-            name={postItem.name}
-            content={postItem.content}
-        />
-    ));
+const Posts = ({searchTerm, posts}: any): React.JSX.Element => {
+    const navigate = useNavigate();
+
+    const handlePostItemClick = (id: any) => {
+        navigate(`/post/view/${id}`);
+    };
+
+    const renderPosts = () => {
+        let postsFiltered = posts;
+
+        if(searchTerm.length > 0) {
+            postsFiltered = postsFiltered.filter(
+                (item: any) => item.title.toLocaleLowerCase()
+                                   .includes(searchTerm)
+            );
+        }
+
+        return postsFiltered.map((postItem: any) => (
+            <PostItem
+                key={`post-item-${postItem.id}`}
+                image={postItem.image}
+                title={postItem.title}
+                content={postItem.content}
+                status={postItem.status}
+                author={postItem.author.username}
+                category={postItem.category.title}
+                updateAt={postItem.updateAt}
+                onPostClick={handlePostItemClick}
+                id={postItem.id}
+            />
+        ));
+    }
+
     return (
         <div>
-            Posts
-            {postsComponent}
+            <div className={styles.postsContainerTitleText}>
+                Posts
+            </div>
+            <div>
+                {renderPosts()}
+            </div>
         </div>
     );
 };

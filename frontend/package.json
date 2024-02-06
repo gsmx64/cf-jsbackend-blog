@@ -4,17 +4,28 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "start:dev": "export NODE_ENV=development && vite",
+    "start:debug": "export NODE_ENV=testing && vite",
+    "start:prod": "export NODE_ENV=production && tsc && vite build",
+    "startw:dev": "set NODE_ENV=development && vite",
+    "startw:debug": "set NODE_ENV=testing && vite",
+    "startw:prod": "set NODE_ENV=production && tsc && vite build",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
+    "axios": "^1.6.5",
+    "formik": "^2.4.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.3",
+    "yup": "^1.3.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.43",
+    "@types/node": "^20.11.16",
+    "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
