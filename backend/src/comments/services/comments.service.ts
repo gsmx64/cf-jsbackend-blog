@@ -130,6 +130,40 @@ export class CommentsService {
     }
   }
 
+  public async findCommentsByUser(
+    id: string,
+    query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    try {
+      const queryBuilder = this.commentRepository
+          .createQueryBuilder('comments')
+          .where('comments.author = :userId', { userId: id })
+          .leftJoin('comments.post', 'post')
+          .addSelect([
+            'post.id', 'post.title', 'post.description', 'post.updateAt'
+          ])
+          .where(this.userService.onlyPublished('post', this.request));
+
+      const comments = await paginate(
+        query,
+        queryBuilder,
+        COMMENTS_DEFAULT_CONFIG
+      )
+
+      if(Object.keys(comments.data).length === 0) {
+        throw new ErrorManager({
+          type: 'BAD_REQUEST',
+          message: 'Comments not found for this user.'
+        });
+      }
+
+      LoggingMessages.log(comments, 'CommentsService.findCommentsByUser() -> comments', this.dataForLog);
+      return comments;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
   public async findAllComments(
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {

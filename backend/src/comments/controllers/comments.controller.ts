@@ -13,6 +13,7 @@ import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { PublicAccess } from '../../auth/decorators/public.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CommentsEntity } from '../entities/comments.entity';
+import { COMMENTS_DEFAULT_CONFIG } from '../filters/comments.default';
 import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
 import { SWAGGER_COMMENT_BODY_EXAMPLE,
@@ -91,6 +92,28 @@ export class CommentsController {
     @Param('id') id: string
   ) {
     return this.commentsService.findOneComment(id);
+  }
+
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
+    description: 'The user uuid to search his/her comments.'
+  })
+  @ApiOkPaginatedResponse(
+    CommentUpdateDTO,
+    COMMENTS_DEFAULT_CONFIG,
+  )
+  @ApiPaginationQuery(COMMENTS_DEFAULT_CONFIG)
+  @ApiBearerAuth('access_token')
+  @PublicAccess()
+  @Get('user/:id')
+  public async findCommentsByUser(
+    @Param('id') id: string,
+    @Paginate() query: PaginateQuery
+  ): Promise<Paginated<CommentsEntity>> {
+    return this.commentsService.findCommentsByUser(id, query);
   }
 
   @ApiOkPaginatedResponse(

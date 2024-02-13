@@ -155,7 +155,7 @@ export class PostsService {
       if(Object.keys(posts.data).length === 0) {
         throw new ErrorManager({
           type: 'BAD_REQUEST',
-          message: 'No se encontraron posts.'
+          message: 'Post not found for this user.'
         });
       }
 

@@ -108,20 +108,26 @@ export class CategoriesService {
       const category: CategoriesEntity = await this.categoryRepository
           .createQueryBuilder('category')
           .where({id})
-          .andWhere(this.userService.onlyPublished('categories', this.request))
+          .andWhere(this.userService.onlyPublished('category', this.request))
           //.leftJoinAndSelect('category.author', 'author')
           //.leftJoinAndSelect('category.posts', 'posts')
           //.leftJoinAndSelect('posts.author', 'posts_author')
           //.leftJoin('categories.author', 'author')
+          .leftJoinAndSelect('category.author', 'author')
           .addSelect([
             'author.id', 'author.updateAt', 'author.username', 'author.email',
             'author.status', 'author.role', 'author.karma', 'author.avatar',
             'author.firstName', 'author.lastName', 'author.age', 'author.city',
             'author.country'
           ])
-          .leftJoin('categories.posts', 'posts')
+          .leftJoin('category.posts', 'posts')
           .addSelect([
-            'posts.id', 'posts.title', 'posts.description', 'posts.updateAt'
+            'posts.id', 'posts.title', 'posts.description', 'posts.image',
+            'posts.author', 'posts.status', 'posts.updateAt'
+          ])
+          .leftJoin('posts.author', 'posts_author')
+          .addSelect([
+            'posts_author.id', 'posts_author.username', 'posts_author.status'
           ])
           .where(this.userService.onlyPublished('posts', this.request))
           .orderBy('category.created_at', 'DESC')
