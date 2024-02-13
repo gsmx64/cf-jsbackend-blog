@@ -1,7 +1,7 @@
-const Users = () => {
-    return (
-        <div>Users</div>
-    )
+const UsersView = () => {
+  return (
+    <div>Users</div>
+  )
 }
 
-export default Users;
+export default UsersView;

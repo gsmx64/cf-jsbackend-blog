@@ -1,36 +1,67 @@
-import axios from "axios";
+import api from "../utils/useApi";
+import UsersService from "./users.service";
+import IUser from "../interfaces/user.interface";
+import { AuthBody } from "../interfaces/auth.interface";
 
 
-export const register = (username: string, email: string, password: string) => {
-    return axios.post(import.meta.env.API_AUTH_URL + 'signup', {
-        username,
-        email,
-        password,
+const authHeader = () => {
+  const userStr = localStorage.getItem('user');
+
+  let user = null;
+
+  if (userStr)
+  user = JSON.parse(userStr);
+
+  console.log(user.access_token);
+
+  if (user && user.access_token) {
+      return { 'access_token':`${user.access_token}` };
+  } else {
+      return { access_token: user.access_token };
+  }
+}
+
+const register = (body: IUser) => {
+    return UsersService.register(body);
+};
+
+const login = async (username: AuthBody, password: AuthBody) => {
+  return api
+    .post('auth/login', {
+      username,
+      password,
+    })
+    .then((response: any) => {
+      if (response.data.access_token) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+      }
+
+      return response.data;
     });
 };
 
-export const login = (username: string, password: string) => {
-    return axios
-        .post(import.meta.env.API_AUTH_URL + 'signin', {
-            username,
-            password,
-        })
-        .then((response) => {
-            if (response.data.accessToken) {
-                localStorage.setItem('user', JSON.stringify(response.data));
-            }
-
-            return response.data;
-        });
+const logout = () => {
+  localStorage.removeItem('user');
 };
 
-export const logout = () => {
-    localStorage.removeItem('user');
+const isLoggedIn = () => {
+  return (localStorage.getItem('user') != null);
+}
+
+const getCurrentUser = () => { //AuthResponse
+  const userStr = localStorage.getItem('user');
+  if (userStr) return JSON.parse(userStr);
+
+  return null;
 };
 
-export const getCurrentUser = () => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) return JSON.parse(userStr);
-
-    return null;
+const AuthService = {
+  authHeader,
+  register,
+  login,
+  logout,
+  isLoggedIn,
+  getCurrentUser
 };
+
+export default AuthService;
