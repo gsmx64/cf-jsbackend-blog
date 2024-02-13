@@ -1,8 +1,8 @@
-# 📝 Blog project for Bootcamp JavaScript in Backend (CodigoFacilito.com)
+# 📝 Blog project for Bootcamp JavaScript in Backend and Bootcamp de React (CodigoFacilito.com)
 
 ### Backend ![Version](https://img.shields.io/badge/v0.0.1-alpha_(backend)-blue)
 
-[![NestJS](https://img.shields.io/static/v1?style=for-the-badge&message=Passport&color=222222&logo=Passport&logoColor=34E27A&label=)](https://nestjs.com/)
+[![NestJS](https://img.shields.io/static/v1?style=for-the-badge&message=NestJS&color=E0234E&logo=NestJS&logoColor=FFFFFF&label=)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)](https://jwt.io/)
@@ -18,8 +18,11 @@
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
 ## Description
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
+This is the merge of two final projects of bootcamps from Codigofacilito.com:
+* the backend it's for [Bootcamp de JavaScript en el Backend](https://codigofacilito.com/bootcamps/javascript-backend/);
+* the frontend it's for [Bootcamp de React (G3)](https://codigofacilito.com/bootcamps/react-g3/);
+* and some CI/CD will be added too.
+The project is a Blog site, with posts, categories, users with administrators, moderators and editors, and some other stuff that will be added in near future.
 
 ### Backend - Set env constants
 Rename the required file and complete the constants:
@@ -125,4 +128,4 @@ docker-compose up -d --build
 
 
 ## License
-Nest is [MIT licensed](LICENSE).
+This Blog is [GPL-3.0-1 licensed](https://github.com/gsmx64/cf-jsbackend-blog?tab=GPL-3.0-1-ov-file#readme).
