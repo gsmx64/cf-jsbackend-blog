@@ -1,15 +1,15 @@
 # 📝 Blog project for Bootcamp JavaScript in Backend (CodigoFacilito.com)
 
-### Backend
-[![Version](https://img.shields.io/badge/v0.0.1-alpha_(backend)-blue)
+### Backend ![Version](https://img.shields.io/badge/v0.0.1-alpha_(backend)-blue)
+
 [![NestJS](https://img.shields.io/static/v1?style=for-the-badge&message=Passport&color=222222&logo=Passport&logoColor=34E27A&label=)](https://nestjs.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)](https://jwt.io/)
 [![Passport](https://img.shields.io/static/v1?style=for-the-badge&message=Passport&color=222222&logo=Passport&logoColor=34E27A&label=)](https://www.passportjs.org/)
 
-### Frontend
-[![Version](https://img.shields.io/badge/v0.0.1-alpha_(frontend)-blue)](https://nestjs.com/)
+### Frontend ![Version](https://img.shields.io/badge/v0.0.1-alpha_(frontend)-blue)
+
 [![Vite](https://img.shields.io/static/v1?style=for-the-badge&message=Vite&color=646CFF&logo=Vite&logoColor=FFFFFF&label=)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
