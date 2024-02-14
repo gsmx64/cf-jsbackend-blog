@@ -18,12 +18,12 @@
 [![Bootstrap](https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
 ## Description
-This is the merge of two final projects of bootcamps from Codigofacilito.com:
+This is a merge of two final projects of bootcamps from Codigofacilito.com:
 * the backend it's for [Bootcamp de JavaScript en el Backend](https://codigofacilito.com/bootcamps/javascript-backend/);
 * the frontend it's for [Bootcamp de React (G3)](https://codigofacilito.com/bootcamps/react-g3/);
 * and some CI/CD will be added too.
 
-The project is a Blog site, with posts, categories, users with administrators, moderators and editors, and some other stuff that will be added in near future.
+The project is a Blog site, with posts, categories, users with roles as administrators, moderators and editors, and some other stuff that will be added in near future.
 
 ### Backend - Set env constants
 Rename the required file and complete the constants:
