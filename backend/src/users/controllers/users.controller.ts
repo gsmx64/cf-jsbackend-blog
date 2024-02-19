@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the users related API endpoints.
+ */
 import { Body, Controller, Delete, Get, Param,
           Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -20,12 +23,20 @@ import { SWAGGER_ID_EXAMPLE,
 import { USERS_DEFAULT_CONFIG } from '../filters/users.default';
 
 
+/**
+ * Controller responsible for handling users operations.
+ */
 @ApiTags('Users')
 @Controller('users')
 @UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  /**
+   * Creates a new user.
+   * @param body - The user data to be created.
+   * @returns The created user.
+   */
   @ApiParam({
     name: 'body',
     type: 'string',
@@ -41,6 +52,11 @@ export class UsersController {
     return this.usersService.createUser(body);
   }
 
+  /**
+   * Checks if a username exists in the database.
+   * @param username - The username to check.
+   * @returns If the username exists, false otherwise.
+   */
   @ApiParam({
     name: 'username',
     type: 'string',
@@ -54,6 +70,11 @@ export class UsersController {
     return this.usersService.usernameExist(username);
   }
 
+  /**
+   * Checks if an email exists in the database.
+   * @param email - The email to check.
+   * @returns If the email exists, false otherwise.
+   */
   @ApiParam({
     name: 'email',
     type: 'string',
@@ -67,6 +88,13 @@ export class UsersController {
     return this.usersService.emailExist(email);
   }
 
+  /**
+   * Update a user's data.
+   * @param id - The user uuid to edit their data.
+   * @param body - The updated user data.
+   * @param request - The request object.
+   * @returns The updated user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -85,6 +113,11 @@ export class UsersController {
     return this.usersService.updateUser(body, id, request);
   }
 
+  /**
+   * Delete a user's data.
+   * @param id - The user uuid to delete their data.
+   * @returns The deleted user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -101,6 +134,11 @@ export class UsersController {
     return this.usersService.deleteUser(id);
   }
 
+  /**
+   * Find a user's data.
+   * @param id - The user uuid to search their data.
+   * @returns The found user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -118,6 +156,11 @@ export class UsersController {
     return this.usersService.findOneUser(id);
   }
 
+  /**
+   * Find the profile of the currently logged-in admin user.
+   * @param request - The request object.
+   * @returns The user's profile.
+   */
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Roles('MODERATOR', 'EDITOR', 'BASIC')  
@@ -126,6 +169,11 @@ export class UsersController {
     return this.usersService.findOwnProfile(request);
   }
 
+  /**
+   * Find all users with pagination.
+   * @param query - The pagination query parameters.
+   * @returns A paginated list of users.
+   */
   @ApiOkPaginatedResponse(
     UserUpdateDTO,
     USERS_DEFAULT_CONFIG,
@@ -141,6 +189,11 @@ export class UsersController {
     return this.usersService.findAllUsers(query);
   }
 
+  /**
+   * Searches for users based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of users.
+   */
   @ApiOkPaginatedResponse(
     UserUpdateDTO,
     USERS_SEARCH_CONFIG,
@@ -156,6 +209,11 @@ export class UsersController {
     return this.usersService.searchUsers(query);
   }
 
+  /**
+   * Filters for users based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of users.
+   */
   @ApiOkPaginatedResponse(
     UserUpdateDTO,
     USERS_FILTER_CONFIG,

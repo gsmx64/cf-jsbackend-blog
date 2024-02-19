@@ -1,3 +1,7 @@
+/**
+ * Represents the main module of the application.
+ * This module is responsible for importing and configuring all the necessary modules and dependencies.
+ */
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';

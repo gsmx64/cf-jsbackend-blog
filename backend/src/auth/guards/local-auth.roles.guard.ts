@@ -5,10 +5,19 @@ import { Observable } from 'rxjs';
 import { ROLES } from '../../constants/roles';
 import { PUBLIC_KEY, ADMIN_KEY, ROLES_KEY } from '../../constants/key.decorators';
 
+/**
+ * A guard that checks the roles of the authenticated user to determine if they have permission to access a route.
+ */
 @Injectable()
 export class LocalRolesGuard implements CanActivate {
   constructor(private readonly reflector: Reflector) {}
 
+  /**
+   * Determines if the user has permission to access the route.
+   * @param context - The execution context.
+   * @returns A boolean indicating if the user has permission to access the route.
+   * @throws UnauthorizedException if the user does not have permission to access the route.
+   */
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {

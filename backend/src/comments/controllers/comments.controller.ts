@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the comments related API endpoints.
+ */
 import { Body, Controller, Delete, Get, Param,
           Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -20,12 +23,20 @@ import { SWAGGER_COMMENT_BODY_EXAMPLE,
   SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
 
 
+/**
+ * Controller responsible for handling comments operations.
+ */
 @ApiTags('Comments')
 @Controller('comments')
 @UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  /**
+   * Creates a new comment.
+   * @param body - The data for creating the comment.
+   * @returns A Promise that resolves to the created comment.
+   */
   @ApiParam({
     name: 'body',
     type: 'string',
@@ -43,6 +54,12 @@ export class CommentsController {
     return this.commentsService.createComment(body);
   }
 
+   /**
+   * Updates a comment.
+   * @param id - The ID of the comment to update.
+   * @param body - The updated comment data.
+   * @returns The updated comment.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -61,6 +78,11 @@ export class CommentsController {
     return this.commentsService.updateComment(body, id);
   }
 
+  /**
+   * Deletes a comment by its ID.
+   * @param id The ID of the comment to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -78,6 +100,11 @@ export class CommentsController {
     return this.commentsService.deleteComment(id);
   }
 
+  /**
+   * Retrieves a single comment by its ID.
+   * @param id The ID of the comment to retrieve.
+   * @returns The comment.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -94,6 +121,12 @@ export class CommentsController {
     return this.commentsService.findOneComment(id);
   }
 
+  /**
+   * Finds comments by user.
+   * @param id - The ID of the user.
+   * @param query - The pagination query.
+   * @returns A paginated list of comments.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -116,6 +149,11 @@ export class CommentsController {
     return this.commentsService.findCommentsByUser(id, query);
   }
 
+  /**
+   * Retrieves all comments with pagination.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of comments.
+   */
   @ApiOkPaginatedResponse(
     CommentUpdateDTO,
     COMMENTS_FILTER_CONFIG,
@@ -130,6 +168,11 @@ export class CommentsController {
     return this.commentsService.findAllComments(query);
   }
 
+  /**
+   * Searches for comments based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of comments.
+   */
   @ApiOkPaginatedResponse(
     CommentUpdateDTO,
     COMMENTS_SEARCH_CONFIG,
@@ -145,6 +188,11 @@ export class CommentsController {
     return this.commentsService.searchComments(query);
   }
 
+  /**
+   * Filters for comments based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of comments.
+   */
   @ApiOkPaginatedResponse(
     CommentUpdateDTO,
     COMMENTS_FILTER_CONFIG,

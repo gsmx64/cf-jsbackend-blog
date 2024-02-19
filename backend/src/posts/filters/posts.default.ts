@@ -4,7 +4,10 @@ import { PostsEntity } from "../entities/posts.entity";
 import { PUBLISH_STATUS } from "../../constants/publish.status";
 
 
-export const POSTS_DEFAULT_CONFIG = {
+/**
+ * Default configuration for paginating and filtering posts.
+ */
+export const POSTS_DEFAULT_CONFIG: PaginateConfig<PostsEntity> = {
   sortableColumns: ['updateAt'],
   nullSort: 'last',
   defaultSortBy: [['updateAt', 'DESC']],
@@ -18,9 +21,12 @@ export const POSTS_DEFAULT_CONFIG = {
   },
   loadEagerRelations: false,
   relativePath: false,
-}  satisfies PaginateConfig<PostsEntity>
+};
 
-export const POSTS_DEFAULT_CONFIG_LOW = {
+/**
+ * Default configuration for paginating and filtering published posts.
+ */
+export const POSTS_DEFAULT_CONFIG_LOW: PaginateConfig<PostsEntity> = {
   ...POSTS_DEFAULT_CONFIG,
   where: { status: PUBLISH_STATUS.PUBLISHED },
-}  satisfies PaginateConfig<PostsEntity>
+};

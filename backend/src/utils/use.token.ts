@@ -1,6 +1,12 @@
 import { AuthTokenResult, IUseToken } from '../auth/interfaces/auth.interface';
 import * as jwt from 'jsonwebtoken';
 
+
+/**
+ * Parses the provided token and returns the decoded information.
+ * @param token - The token to be parsed.
+ * @returns An object containing the decoded token information, or a string indicating that the token is invalid.
+ */
 export const useToken = (token: string): IUseToken | string => {
   try {
     const decode = jwt.decode(token) as AuthTokenResult;

@@ -8,6 +8,9 @@ import { useToken } from '../../utils/use.token';
 import { IUseToken } from '../interfaces/auth.interface';
 
 
+/**
+ * Guard that implements CanActivate interface to handle local authentication.
+ */
 @Injectable()
 export class LocalAuthGuard implements CanActivate {
     constructor(
@@ -15,6 +18,12 @@ export class LocalAuthGuard implements CanActivate {
         private readonly reflector: Reflector
     ) {}
 
+    /**
+     * Determines if the route can be activated.
+     * @param context - The execution context.
+     * @returns A boolean indicating if the route can be activated.
+     * @throws UnauthorizedException if the token is invalid, expired, or the user is invalid.
+     */
     async canActivate(context: ExecutionContext) {
         const isPublic = this.reflector.get<boolean>(
             PUBLIC_KEY,

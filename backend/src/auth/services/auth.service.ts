@@ -1,3 +1,6 @@
+/**
+ * Service responsible for handling authentication operations.
+ */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -17,6 +20,12 @@ export class AuthService {
       private readonly jwtService: JwtService
     ) {}
 
+  /**
+   * Validates a user's credentials.
+   * @param username - The username or email of the user.
+   * @param password - The password of the user.
+   * @returns The user entity if the credentials are valid, otherwise null.
+   */
   public async validateUser(
     username: string,
     password: string,
@@ -43,6 +52,13 @@ export class AuthService {
     return null;
   }
 
+  /**
+   * Signs a JSON Web Token (JWT) with the provided payload, secret, and expiration time.
+   * @param payload - The payload of the JWT.
+   * @param secret - The secret key used to sign the JWT.
+   * @param expires - The expiration time of the JWT.
+   * @returns The signed JWT.
+   */
   public signJWT({
     payload,
     secret,
@@ -55,6 +71,11 @@ export class AuthService {
     return jwt.sign(payload, secret, { expiresIn: expires });
   }
 
+  /**
+   * Generates a JWT for the provided user.
+   * @param user - The user entity.
+   * @returns An object containing the access token and the user entity.
+   */
   public async generateJWT(user: UsersEntity): Promise<AuthResponse> {
     const getUser = await this.userService.findIdRoleOnly(user.id);
 
@@ -73,6 +94,13 @@ export class AuthService {
     };
   }
 
+  /**
+   * Logs in a user with the provided username and password.
+   * @param username - The username or email of the user.
+   * @param password - The password of the user.
+   * @returns The generated JWT.
+   * @throws UnauthorizedException if the credentials are not valid.
+   */
   async login({ username, password }: AuthDTO) {
     const userValidate = await this.validateUser(
       username,

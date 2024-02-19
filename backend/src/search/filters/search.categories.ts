@@ -5,12 +5,18 @@ import { CategoriesEntity } from "../../categories/entities/categories.entity";
 import { PUBLISH_STATUS } from "../../constants/publish.status";
 
 
-export const SEARCH_CATEGORIES_CONFIG = {
+/**
+ * Configuration object for searching categories.
+ */
+export const SEARCH_CATEGORIES_CONFIG: PaginateConfig<CategoriesEntity> = {
     ...CATEGORIES_FILTER_CONFIG,
     searchableColumns: ['title', 'description'],
-}  satisfies PaginateConfig<CategoriesEntity>
+};
 
-export const SEARCH_CATEGORIES_CONFIG_LOW = {
+/**
+ * Configuration object for low roles for searching categories.
+ */
+export const SEARCH_CATEGORIES_CONFIG_LOW: PaginateConfig<CategoriesEntity> = {
     ...SEARCH_CATEGORIES_CONFIG,
     where: { status: PUBLISH_STATUS.PUBLISHED },
-}  satisfies PaginateConfig<CategoriesEntity>
+};

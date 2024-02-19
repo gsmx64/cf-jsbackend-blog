@@ -3,6 +3,10 @@ import { PassportStrategy } from '@nestjs/passport';
 import { AuthService } from '../services/auth.service';
 import { Strategy } from '@superfaceai/passport-twitter-oauth2';
 
+
+/**
+ * Passport strategy for Twitter authentication.
+ */
 @Injectable()
 export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
   constructor(private authService: AuthService) {
@@ -14,8 +18,15 @@ export class TwitterStrategy extends PassportStrategy(Strategy, 'twitter') {
     });
   }
 
+  /**
+   * Validates the Twitter authentication token and returns the user profile.
+   * @param token - The Twitter authentication token.
+   * @param secret - The Twitter authentication secret.
+   * @param profile - The user profile obtained from Twitter.
+   * @returns The validated user profile.
+   * @throws UnauthorizedException if the user profile is not available.
+   */
   async validate(token: string, secret: string, profile: any): Promise<any> {
-
     if (!profile) {
       throw new UnauthorizedException();
     }

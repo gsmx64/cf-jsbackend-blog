@@ -2,6 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Profile, Strategy } from "passport-facebook";
 
+
+/**
+ * Passport strategy for Facebook authentication.
+ */
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
   constructor() {
@@ -14,6 +18,14 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
     });
   }
 
+  /**
+   * Validates the Facebook authentication and returns the user information.
+   * @param accessToken - The access token provided by Facebook.
+   * @param refreshToken - The refresh token provided by Facebook.
+   * @param profile - The user profile returned by Facebook.
+   * @param done - The callback function to be called when validation is complete.
+   * @returns A Promise that resolves to the user information and access token.
+   */
   async validate(
     accessToken: string,
     refreshToken: string,

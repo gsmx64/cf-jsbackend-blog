@@ -8,12 +8,21 @@ import { PublicAccess } from '../decorators/public.decorator';
 import { SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
 
 
+/**
+ * Controller for local authentication.
+ * Handles login requests using username and password.
+ */
 @ApiTags('Auth-Local')
 @Controller('auth')
 @UseGuards(LocalAuthGuard)
 export class LocalAuthController {
   constructor(private readonly authService: AuthService) {}
 
+  /**
+   * Logs in a user with the provided username and password.
+   * @param {AuthDTO} body - The request body containing the username and password.
+   * @returns {Promise<any>} - The result of the login operation.
+   */
   @ApiParam({
     name: 'password',
     type: 'string',
@@ -30,7 +39,7 @@ export class LocalAuthController {
   })
   @PublicAccess()
   @Post('login')
-  async login(@Body() { username, password }: AuthDTO) {
+  async login(@Body() { username, password }: AuthDTO): Promise<any> {
     return this.authService.login({ username, password });
   }
 }

@@ -1,3 +1,8 @@
+/**
+ * This module handles authentication-related functionality.
+ * It provides services, strategies, and controllers for various authentication methods such as JWT, local, Facebook, Google, and Twitter.
+ * The module is global, meaning it can be used across multiple modules in the application.
+ */
 import { Global, Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';

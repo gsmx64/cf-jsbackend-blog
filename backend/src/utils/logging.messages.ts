@@ -1,4 +1,13 @@
+/**
+ * Utility class for logging messages.
+ */
 export class LoggingMessages {
+  /**
+   * Logs a message with the specified code and optional data.
+   * @param message - The message to be logged.
+   * @param code - The code associated with the message.
+   * @param dataForLog - Optional data to be included in the log.
+   */
   public static log(message: any, code: string, dataForLog=null) {
     try {
       if(

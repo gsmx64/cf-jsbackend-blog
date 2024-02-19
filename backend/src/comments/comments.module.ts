@@ -1,3 +1,6 @@
+/**
+ * Module for the comments functionality.
+ */
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';

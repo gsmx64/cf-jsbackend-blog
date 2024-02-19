@@ -1,3 +1,6 @@
+/**
+ * Module for the categories functionality.
+ */
 import { Module } from '@nestjs/common';
 import { CategoriesService } from './services/categories.service';
 import { TypeOrmModule } from '@nestjs/typeorm';

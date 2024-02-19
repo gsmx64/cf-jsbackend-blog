@@ -4,7 +4,10 @@ import { UsersEntity } from "../entities/users.entity";
 import { USER_STATUS } from "../../constants/user.status";
 
 
-export const USERS_DEFAULT_CONFIG = {
+/**
+ * Default configuration for users pagination.
+ */
+export const USERS_DEFAULT_CONFIG: PaginateConfig<UsersEntity> = {
     sortableColumns: ['updateAt'],
     nullSort: 'last',
     defaultSortBy: [['updateAt', 'DESC']],
@@ -13,9 +16,12 @@ export const USERS_DEFAULT_CONFIG = {
     withDeleted: false,
     loadEagerRelations: false,
     relativePath: false,
-}  satisfies PaginateConfig<UsersEntity>
+};
 
-export const USERS_DEFAULT_CONFIG_LOW = {
+/**
+ * Default configuration for users pagination with low status.
+ */
+export const USERS_DEFAULT_CONFIG_LOW: PaginateConfig<UsersEntity> = {
     ...USERS_DEFAULT_CONFIG,
     where: { status: USER_STATUS.ENABLED },
-}  satisfies PaginateConfig<UsersEntity>
+};

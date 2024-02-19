@@ -8,6 +8,12 @@ import { AppModule } from './app.module';
 import { CORS } from './constants';
 
 
+/**
+ * The main entry point of the application.
+ * Initializes the NestJS application, sets up middleware, global pipes, interceptors, and CORS.
+ * Configures the Swagger documentation for the API.
+ * Starts the application server and logs the app URL and environment.
+ */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true

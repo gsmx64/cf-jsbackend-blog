@@ -1,3 +1,6 @@
+/**
+ * Service responsible for handling posts operations.
+ */
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -23,6 +26,9 @@ import {
   POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
 
 
+/**
+ * Service class for handling posts operations.
+ */
 @Injectable()
 export class PostsService {
   private dataForLog: TypeUserRoleforLogging;
@@ -38,6 +44,12 @@ export class PostsService {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
+  /**
+   * Creates a new post.
+   * @param body - The data for creating the post.
+   * @returns A promise that resolves to the created post.
+   * @throws An error if there was an issue creating the post.
+   */
   public async createPost(
     body: PostCreateDTO
   ): Promise<PostsEntity> {
@@ -60,6 +72,12 @@ export class PostsService {
     }
   }
 
+  /**
+   * Updates a post.
+   * @param body - The updated post data.
+   * @param id - The ID of the post to update.
+   * @returns The update result.
+   */
   public async updatePost(
     body: PostUpdateDTO,
     id: string,
@@ -81,6 +99,11 @@ export class PostsService {
     }
   }
 
+  /**
+   * Deletes a post.
+   * @param id - The ID of the post to delete.
+   * @returns The delete result.
+   */
   public async deletePost(
     id: string,
   ): Promise<DeleteResult | undefined>{
@@ -101,6 +124,11 @@ export class PostsService {
     }
   }
 
+  /**
+   * Finds a post by ID.
+   * @param id - The ID of the post to find.
+   * @returns The found post.
+   */
   public async findOnePost(
     id: string
   ): Promise<PostsEntity> {
@@ -129,6 +157,12 @@ export class PostsService {
     }
   }
 
+  /**
+   * Finds all posts by a user.
+   * @param id - The ID of the user.
+   * @param query - The pagination query.
+   * @returns The paginated list of posts.
+   */
   public async findPostsByUser(
     id: string,
     query: PaginateQuery
@@ -166,6 +200,11 @@ export class PostsService {
     }
   }
 
+  /**
+   * Finds all posts.
+   * @param query - The pagination query.
+   * @returns The paginated list of posts.
+   */
   public async findAllPosts(
     query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
@@ -201,6 +240,12 @@ export class PostsService {
     }
   }
 
+  /**
+   * Searches for posts based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of posts.
+   * @throws An error if no posts are found.
+   */
   public async searchPosts(
     query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
@@ -232,6 +277,12 @@ export class PostsService {
     }
   }
 
+  /**
+   * Filters for posts based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of posts.
+   * @throws An error if no posts are found.
+   */
   public async filterPosts(
     query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {

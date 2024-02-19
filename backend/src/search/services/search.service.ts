@@ -1,3 +1,6 @@
+/**
+ * Service responsible for handling searches operations.
+ */
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,7 +14,7 @@ import { CommentsEntity } from '../../comments/entities/comments.entity';
 import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
 import { ErrorManager } from '../../utils/error.manager';
-import { SEARCH_USERS_CONFIG } from '../filters/search.users';
+import { SEARCH_USERS_CONFIG, SEARCH_USERS_CONFIG_LOW } from '../filters/search.users';
 import { SEARCH_COMMENTS_CONFIG } from '../filters/search.comments';
 import { UsersService } from '../../users/services/users.service';
 import { SEARCH_POSTS_CONFIG,
@@ -20,6 +23,9 @@ import { SEARCH_CATEGORIES_CONFIG,
   SEARCH_CATEGORIES_CONFIG_LOW } from '../filters/search.categories';
 
 
+/**
+ * Service class for handling searches operations.
+ */
 @Injectable()
 export class SearchService {
   private dataForLog: TypeUserRoleforLogging;
@@ -44,14 +50,43 @@ export class SearchService {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
+  /**
+   * Searches for users based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of users.
+   */
   public async searchUsers(
     query: PaginateQuery
   ): Promise<Paginated<UsersEntity>> {
     try {  
+      const queryBuilder = this.userRepository
+        .createQueryBuilder('users')
+        .where(this.userService.onlyEnabledUsers(this.request))
+        .leftJoin('users.posts', 'posts')
+        .addSelect([
+          'posts.id', 'posts.updateAt', 'posts.title',
+          'posts.description', 'posts.status', 'posts.category'
+        ])
+        .where(this.userService.onlyPublished('posts', this.request))
+        .leftJoin('posts.category', 'posts_category')
+        .addSelect([
+          'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
+          'posts_category.description', 'posts_category.status'
+        ])
+        .where(this.userService.onlyPublished('posts_category', this.request))
+        .leftJoin('users.comments', 'comments')
+        .addSelect([
+          'comments.id', 'comments.message', 'comments.post'
+        ])
+        .leftJoin('comments.post', 'comments_post')
+        .addSelect([
+          'comments_post.id', 'comments_post.title', 'comments_post.updateAt'
+        ]);
+
       const users = await paginate(
         query,
-        this.userRepository,
-        SEARCH_USERS_CONFIG
+        queryBuilder,
+        (this.userService.isRoleBasic(this.request) ? SEARCH_USERS_CONFIG_LOW : SEARCH_USERS_CONFIG)
       )
 
       if(Object.keys(users.data).length === 0) {
@@ -68,6 +103,11 @@ export class SearchService {
     }
   }
 
+  /**
+   * Searches for categories based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of users.
+   */
   public async searchCategories(
     query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
@@ -98,6 +138,11 @@ export class SearchService {
     }
   }
 
+  /**
+   * Searches for posts based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of users.
+   */
   public async searchPosts(
     query: PaginateQuery
   ): Promise<Paginated<PostsEntity>> {
@@ -129,6 +174,11 @@ export class SearchService {
     }
   }
 
+  /**
+   * Searches for comments based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of users.
+   */
   public async searchComments(
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {

@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the searches related API endpoints.
+ */
 import { Controller, Get, Request } from '@nestjs/common';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
@@ -20,12 +23,20 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 
+/**
+ * Controller responsible for handling searches operations.
+ */
 @Controller('search')
 export class SearchController {
     constructor(
         private readonly searchService: SearchService
     ) {}
 
+    /**
+     * Searches for users based on the provided query parameters.
+     * @param query The pagination query parameters.
+     * @returns A paginated list of users.
+     */
     @ApiOkPaginatedResponse(
       UserUpdateDTO,
       SEARCH_USERS_CONFIG,
@@ -41,6 +52,11 @@ export class SearchController {
       return this.searchService.searchUsers(query);
     }
 
+    /**
+     * Filters for categories based on the provided query parameters.
+     * @param query The pagination query parameters.
+     * @returns A paginated list of categories.
+     */
     @ApiOkPaginatedResponse(
       CategoryUpdateDTO,
       SEARCH_CATEGORIES_CONFIG,
@@ -56,6 +72,11 @@ export class SearchController {
       return this.searchService.searchCategories(query);
     }
 
+    /**
+     * Searches for posts based on the provided query parameters.
+     * @param query The pagination query parameters.
+     * @returns A paginated list of posts.
+     */
     @ApiOkPaginatedResponse(
       PostUpdateDTO,
       SEARCH_POSTS_CONFIG,
@@ -71,6 +92,11 @@ export class SearchController {
       return this.searchService.searchPosts(query);
     }
 
+    /**
+     * Searches for comments based on the provided query parameters.
+     * @param query The pagination query parameters.
+     * @returns A paginated list of comments.
+     */
     @ApiOkPaginatedResponse(
       CommentUpdateDTO,
       SEARCH_COMMENTS_CONFIG,

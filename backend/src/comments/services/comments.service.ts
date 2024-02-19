@@ -1,3 +1,6 @@
+/**
+ * Service responsible for handling comments operations.
+ */
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -16,6 +19,9 @@ import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_DEFAULT_CONFIG } from '../filters/comments.default';
 
 
+/**
+ * Service class for handling comments operations.
+ */
 @Injectable()
 export class CommentsService {
   private dataForLog: TypeUserRoleforLogging;
@@ -31,6 +37,12 @@ export class CommentsService {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
+  /**
+   * Creates a new comment.
+   * @param body - The data for the comment to be created.
+   * @returns A promise that resolves to the created comment.
+   * @throws An error if there was an issue creating the comment.
+   */
   public async createComment(
     body: CommentCreateDTO
   ): Promise<CommentsEntity> {
@@ -51,6 +63,12 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Updates a comment.
+   * @param body - The updated comment data.
+   * @param id - The ID of the comment to update.
+   * @returns The update result.
+   */
   public async updateComment(
     body: CommentUpdateDTO,
     id: string,
@@ -72,6 +90,11 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Deletes a comment.
+   * @param id - The ID of the comment to delete.
+   * @returns The delete result.
+   */
   public async deleteComment(
     id: string,
   ): Promise<DeleteResult | undefined>{
@@ -92,6 +115,11 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Finds a comment by ID.
+   * @param id - The ID of the comment to find.
+   * @returns The found comment.
+   */
   public async findOneComment(
     id: string
   ): Promise<CommentsEntity> {
@@ -130,6 +158,13 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Finds comments by user.
+   * @param id - The ID of the user.
+   * @param query - The pagination query.
+   * @returns A promise that resolves to a paginated list of comments.
+   * @throws An error if comments are not found for the user.
+   */
   public async findCommentsByUser(
     id: string,
     query: PaginateQuery
@@ -164,6 +199,11 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Finds all comments.
+   * @param query - The pagination query.
+   * @returns The paginated list of comments.
+   */
   public async findAllComments(
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {
@@ -205,6 +245,12 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Searches for comments based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of comments.
+   * @throws An error if no comments are found.
+   */
   public async searchComments(
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {
@@ -234,6 +280,12 @@ export class CommentsService {
     }
   }
 
+  /**
+   * Filters for comments based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of comments.
+   * @throws An error if no comments are found.
+   */
   public async filterComments(
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {

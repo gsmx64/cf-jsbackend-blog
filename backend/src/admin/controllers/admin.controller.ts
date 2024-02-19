@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the administrative related API endpoints.
+ */
 import { Body, Controller, Delete, Get, Param, Post, Put,
   Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -29,12 +32,22 @@ import { CATEGORIES_DEFAULT_CONFIG } from 'src/categories/filters/categories.def
 import { COMMENTS_FILTER_CONFIG } from 'src/comments/filters/comments.filter';
 
 
+/**
+ * Controller responsible for handling administrative operations.
+ */
 @ApiTags('Admin')
 @Controller('admin')
 @UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  /**
+   * Update a user's data.
+   * @param id - The user uuid to edit their data.
+   * @param body - The updated user data.
+   * @param request - The request object.
+   * @returns The updated user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -53,6 +66,11 @@ export class AdminController {
     return this.adminService.updateUser(body, id, request);
   }
 
+  /**
+   * Delete a user's data.
+   * @param id - The user uuid to delete their data.
+   * @returns The deleted user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -69,6 +87,11 @@ export class AdminController {
     return this.adminService.deleteUser(id);
   }
 
+  /**
+   * Find a user's data.
+   * @param id - The user uuid to search their data.
+   * @returns The found user.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -85,6 +108,11 @@ export class AdminController {
     return this.adminService.findOneUser(id);
   }
 
+  /**
+   * Find the profile of the currently logged-in admin user.
+   * @param request - The request object.
+   * @returns The admin user's profile.
+   */
   @ApiBearerAuth('access_token')
   @AdminAccess()
   @Get('users/profile')
@@ -92,6 +120,11 @@ export class AdminController {
     return this.adminService.findOwnProfile(request);
   }
 
+  /**
+   * Find all users with pagination.
+   * @param query - The pagination query parameters.
+   * @returns A paginated list of users.
+   */
   @ApiOkPaginatedResponse(
     UserUpdateDTO,
     USERS_DEFAULT_CONFIG,
@@ -106,6 +139,11 @@ export class AdminController {
     return this.adminService.findAllUsers(query);
   }
 
+  /**
+   * Creates a new category.
+   * @param body - The category data.
+   * @returns The created category.
+   */
   @ApiParam({
     name: 'body',
     type: 'string',
@@ -122,6 +160,12 @@ export class AdminController {
     return this.adminService.createCategory(body);
   }
 
+  /**
+   * Updates a category.
+   * @param id - The ID of the category to update.
+   * @param body - The updated category data.
+   * @returns The updated category.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -139,6 +183,11 @@ export class AdminController {
     return this.adminService.updateCategory(body, id);
   }
 
+  /**
+   * Deletes a category by its ID.
+   * @param id The ID of the category to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -155,6 +204,11 @@ export class AdminController {
     return this.adminService.deleteCategory(id);
   }
 
+  /**
+   * Retrieves a single category data by its ID.
+   * @param id - The ID of the category.
+   * @returns The category.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -171,6 +225,11 @@ export class AdminController {
     return this.adminService.findOneCategory(id);
   }
 
+  /**
+   * Retrieves all categories with pagination.
+   * @param query - The pagination query parameters.
+   * @returns A paginated list of categories.
+   */
   @ApiOkPaginatedResponse(
     CategoryUpdateDTO,
     CATEGORIES_DEFAULT_CONFIG,
@@ -185,6 +244,12 @@ export class AdminController {
     return this.adminService.findAllCategories(query);
   }
 
+  /**
+   * Updates a post with the specified ID.
+   * @param id - The ID of the post to update.
+   * @param body - The updated post data.
+   * @returns The updated post.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -202,6 +267,11 @@ export class AdminController {
     return this.adminService.updatePost(body, id);
   }
 
+  /**
+   * Deletes a post by its ID.
+   * @param id - The ID of the post to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -218,6 +288,11 @@ export class AdminController {
     return this.adminService.deletePost(id);
   }
 
+  /**
+   * Retrieves a single post by its ID.
+   * @param id - The ID of the post to retrieve.
+   * @returns The post.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -234,28 +309,12 @@ export class AdminController {
     return this.adminService.findOnePost(id);
   }
 
-  @ApiParam({
-    name: 'id',
-    type: 'string',
-    required: true,
-    example: SWAGGER_ID_EXAMPLE,
-    description: 'The user uuid to search his/her posts.'
-  })
-  @ApiOkPaginatedResponse(
-    PostUpdateDTO,
-    POSTS_DEFAULT_CONFIG,
-  )
-  @ApiPaginationQuery(POSTS_DEFAULT_CONFIG)
-  @ApiBearerAuth('access_token')
-  @AdminAccess()
-  @Get('posts/list2')
-  public async findPostsByUser(
-    @Param('id') id: string,
-    @Paginate() query: PaginateQuery
-  ): Promise<Paginated<PostsEntity>> {
-    return this.adminService.findPostsByUser(id, query);
-  }
-
+  /**
+   * Finds posts by user.
+   * @param id - The user ID.
+   * @param query - The pagination query.
+   * @returns A paginated list of posts.
+   */
   @ApiOkPaginatedResponse(
     PostUpdateDTO,
     POSTS_DEFAULT_CONFIG,
@@ -270,6 +329,12 @@ export class AdminController {
     return this.adminService.findAllPosts(query);
   }
 
+  /**
+   * Updates a comment.
+   * @param id - The ID of the comment to update.
+   * @param body - The updated comment data.
+   * @returns The updated comment.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -287,6 +352,11 @@ export class AdminController {
     return this.adminService.updateComment(body, id);
   }
 
+  /**
+   * Deletes a comment by its ID.
+   * @param id The ID of the comment to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -303,6 +373,11 @@ export class AdminController {
     return this.adminService.deleteComment(id);
   }
 
+  /**
+   * Retrieves a single comment by its ID.
+   * @param id The ID of the comment to retrieve.
+   * @returns The comment.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -319,6 +394,11 @@ export class AdminController {
     return this.adminService.findOneComment(id);
   }
 
+  /**
+   * Retrieves all comments with pagination.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of comments.
+   */
   @ApiOkPaginatedResponse(
     CommentUpdateDTO,
     COMMENTS_FILTER_CONFIG,
@@ -332,6 +412,11 @@ export class AdminController {
     return this.adminService.findAllComments(query);
   }
 
+  /**
+   * Searches for users based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of users.
+   */
   @ApiOkPaginatedResponse(
     UserUpdateDTO,
     SEARCH_USERS_CONFIG,
@@ -346,6 +431,11 @@ export class AdminController {
     return this.adminService.searchUsers(query);
   }
 
+  /**
+   * Searches for categories based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of categories.
+   */
   @ApiOkPaginatedResponse(
     CategoryUpdateDTO,
     SEARCH_CATEGORIES_CONFIG,
@@ -360,6 +450,11 @@ export class AdminController {
     return this.adminService.searchCategories(query);
   }
 
+  /**
+   * Searches for posts based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of posts.
+   */
   @ApiOkPaginatedResponse(
     PostUpdateDTO,
     SEARCH_POSTS_CONFIG,
@@ -374,6 +469,11 @@ export class AdminController {
     return this.adminService.searchPosts(query);
   }
 
+  /**
+   * Searches for comments based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of comments.
+   */
   @ApiOkPaginatedResponse(
     CommentUpdateDTO,
     SEARCH_COMMENTS_CONFIG,

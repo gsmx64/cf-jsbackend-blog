@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the categories related API endpoints.
+ */
 import { Body, Controller, Delete, Get, Param,
           Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -20,12 +23,20 @@ import { SWAGGER_CATEGORY_BODY_EXAMPLE,
 import { CATEGORIES_DEFAULT_CONFIG } from '../filters/categories.default';
 
 
+/**
+ * Controller responsible for handling categories operations.
+ */
 @ApiTags('Categories')
 @Controller('categories')
 @UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  /**
+   * Creates a new category.
+   * @param body - The category data.
+   * @returns The created category.
+   */
   @ApiParam({
     name: 'body',
     type: 'string',
@@ -43,6 +54,12 @@ export class CategoriesController {
     return this.categoriesService.createCategory(body);
   }
 
+  /**
+   * Updates a category.
+   * @param id - The ID of the category to update.
+   * @param body - The updated category data.
+   * @returns The updated category.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -61,6 +78,11 @@ export class CategoriesController {
     return this.categoriesService.updateCategory(body, id);
   }
 
+  /**
+   * Deletes a category by its ID.
+   * @param id The ID of the category to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -77,6 +99,11 @@ export class CategoriesController {
     return this.categoriesService.deleteCategory(id);
   }
 
+  /**
+   * Retrieves a single category data by its ID.
+   * @param id - The ID of the category.
+   * @returns The category.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -93,6 +120,12 @@ export class CategoriesController {
     return this.categoriesService.findOneCategory(id);
   }
 
+  /**
+   * Retrieves all categories with pagination.
+   *
+   * @param query - The pagination query parameters.
+   * @returns A paginated list of categories.
+   */
   @ApiOkPaginatedResponse(
     CategoryUpdateDTO,
     CATEGORIES_DEFAULT_CONFIG,
@@ -107,6 +140,11 @@ export class CategoriesController {
     return this.categoriesService.findAllCategories(query);
   }
 
+  /**
+   * Searches for categories based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of categories.
+   */
   @ApiOkPaginatedResponse(
     CategoryUpdateDTO,
     CATEGORIES_SEARCH_CONFIG,
@@ -122,6 +160,11 @@ export class CategoriesController {
     return this.categoriesService.searchCategories(query);
   }
 
+  /**
+   * Filters for categories based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A paginated list of categories.
+   */
   @ApiOkPaginatedResponse(
     CategoryUpdateDTO,
     CATEGORIES_FILTER_CONFIG,

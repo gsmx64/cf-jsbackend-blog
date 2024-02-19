@@ -1,3 +1,6 @@
+/**
+ * Service responsible for handling categories operations.
+ */
 import { Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -23,6 +26,9 @@ import {
   CATEGORIES_DEFAULT_CONFIG_LOW } from '../filters/categories.default';
 
 
+/**
+ * Service class for handling categories operations.
+ */
 @Injectable()
 export class CategoriesService {
   private dataForLog: TypeUserRoleforLogging;
@@ -38,6 +44,11 @@ export class CategoriesService {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
   }
 
+  /**
+   * Creates a new category.
+   * @param body - The category data.
+   * @returns The created category.
+   */
   public async createCategory(
     body: CategoryCreateDTO
   ): Promise<CategoriesEntity> {
@@ -60,6 +71,12 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Updates a category.
+   * @param body - The updated category data.
+   * @param id - The ID of the category to update.
+   * @returns The update result.
+   */
   public async updateCategory(
     body: CategoryUpdateDTO,
     id: string,
@@ -81,6 +98,11 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Deletes a category.
+   * @param id - The ID of the category to delete.
+   * @returns The delete result.
+   */
   public async deleteCategory(
     id: string,
   ): Promise<DeleteResult | undefined>{
@@ -101,6 +123,11 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Finds a category by ID.
+   * @param id - The ID of the category to find.
+   * @returns The found category.
+   */
   public async findOneCategory(
     id: string
   ): Promise<CategoriesEntity> {
@@ -147,6 +174,11 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Finds all categories.
+   * @param query - The pagination query.
+   * @returns The paginated list of categories.
+   */
   public async findAllCategories(
     query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
@@ -194,6 +226,12 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Searches for categories based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of categories.
+   * @throws An error if no categories are found.
+   */
   public async searchCategories(
     query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {
@@ -225,6 +263,12 @@ export class CategoriesService {
     }
   }
 
+  /**
+   * Filters for categories based on the provided query parameters.
+   * @param query - The query parameters for pagination.
+   * @returns A promise that resolves to a paginated list of categories.
+   * @throws An error if no categories are found.
+   */
   public async filterCategories(
     query: PaginateQuery
   ): Promise<Paginated<CategoriesEntity>> {

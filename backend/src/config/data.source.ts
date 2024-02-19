@@ -1,3 +1,6 @@
+/**
+ * Configuration file for the data source.
+ */
 import { ConfigModule } from '@nestjs/config';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
@@ -8,10 +11,16 @@ import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
 
 
+/**
+ * Load environment variables from the specified file.
+ */
 ConfigModule.forRoot({
   envFilePath: `.${process.env.NODE_ENV.trim()}.env`,
 });
 
+/**
+ * Configuration options for the data source.
+ */
 export const DataSourceConfig: DataSourceOptions = {
   migrationsTableName: 'migrations',
   type: 'postgres',
@@ -31,4 +40,7 @@ export const DataSourceConfig: DataSourceOptions = {
   namingStrategy: new SnakeNamingStrategy()
 };
 
+/**
+ * The data source instance.
+ */
 export const AppDS = new DataSource(DataSourceConfig);

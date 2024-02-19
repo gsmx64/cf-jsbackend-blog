@@ -1,3 +1,6 @@
+/**
+ * Controller responsible for handling the posts related API endpoints.
+ */
 import { Body, Controller, Delete, Get, Param,
          Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -20,12 +23,20 @@ import { SWAGGER_ID_EXAMPLE,
 import { POSTS_DEFAULT_CONFIG } from '../filters/posts.default';
 
 
+/**
+ * Controller responsible for handling posts operations.
+ */
 @ApiTags('Posts')
 @Controller('posts')
 @UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  /**
+   * Creates a new post.
+   * @param body - The data for creating the post.
+   * @returns The created post.
+   */
   @ApiParam({
     name: 'body',
     type: 'string',
@@ -43,6 +54,12 @@ export class PostsController {
     return this.postsService.createPost(body);
   }
 
+  /**
+   * Updates a post with the specified ID.
+   * @param id - The ID of the post to update.
+   * @param body - The updated post data.
+   * @returns The updated post.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -61,6 +78,11 @@ export class PostsController {
     return this.postsService.updatePost(body, id);
   }
 
+  /**
+   * Deletes a post by its ID.
+   * @param id - The ID of the post to delete.
+   * @returns The result of the delete operation.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -78,6 +100,11 @@ export class PostsController {
     return this.postsService.deletePost(id);
   }
 
+  /**
+   * Retrieves a single post by its ID.
+   * @param id - The ID of the post to retrieve.
+   * @returns The post.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -94,6 +121,12 @@ export class PostsController {
     return this.postsService.findOnePost(id);
   }
 
+  /**
+   * Finds all posts by a user.
+   * @param id - The ID of the user.
+   * @param query - The pagination query.
+   * @returns The paginated list of posts.
+   */
   @ApiParam({
     name: 'id',
     type: 'string',
@@ -116,6 +149,12 @@ export class PostsController {
     return this.postsService.findPostsByUser(id, query);
   }
 
+  /**
+   * Finds posts by user.
+   * @param id - The user ID.
+   * @param query - The pagination query.
+   * @returns A paginated list of posts.
+   */
   @ApiOkPaginatedResponse(
     PostUpdateDTO,
     POSTS_DEFAULT_CONFIG,
@@ -130,6 +169,11 @@ export class PostsController {
     return this.postsService.findAllPosts(query);
   }
 
+  /**
+   * Searches for posts based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A promise that resolves to a paginated list of posts.
+   */
   @ApiOkPaginatedResponse(
     PostUpdateDTO,
     POSTS_SEARCH_CONFIG,
@@ -145,6 +189,11 @@ export class PostsController {
     return this.postsService.searchPosts(query);
   }
 
+  /**
+   * Filters for posts based on the provided query parameters.
+   * @param query The pagination query parameters.
+   * @returns A promise that resolves to a paginated list of posts.
+   */
   @ApiOkPaginatedResponse(
     PostUpdateDTO,
     POSTS_FILTER_CONFIG,
