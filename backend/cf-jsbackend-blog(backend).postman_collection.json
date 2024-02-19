@@ -1,0 +1,2228 @@
+{
+	"info": {
+		"_postman_id": "d91e9eb1-ed11-4b26-80ce-47ff7a6183b6",
+		"name": "cf-jsbackend-blog (backend)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26311497"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"abc12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJpZCI6MTAsImlhdCI6MTcwMjc2MDkzOSwiZXhwIjoxNzAyNzYwOTU5fQ.2cg9guZn9U5OrF_NI7-Or2Tw6FWjoCl41QK5a-tXgmQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Tester2\",\r\n    \"password\": \"abc12345\",\r\n    \"status\": \"PENDING\",\r\n    \"role\": \"BASIC\",\r\n    \"firstName\": \"Tester2\",\r\n    \"lastName\": \"UserTester2\",\r\n    \"email\": \"tester2@tester.com\",\r\n    \"age\": 31,\r\n    \"city\": \"Salta\",\r\n    \"country\": \"Argentina\",\r\n    \"avatar\": \"image.jpg\",\r\n    \"karma\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"register"
+							]
+						},
+						"description": "Blog - Register"
+					},
+					"response": []
+				},
+				{
+					"name": "Own Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/profile/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Verify Exists Username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/verify/username/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"verify",
+								"username",
+								"admin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Exists Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/verify/email/tester@tester.com",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"verify",
+								"email",
+								"tester@tester.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": 41\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8c7b3b7e-5dc0-4fa2-961a-494b48869735"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View User Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/search/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "tester"
+								},
+								{
+									"key": "select",
+									"value": "id,username,email,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/filter/?sortBy=updateAt:DESC&select=id,username,email,city,updateAt&filter.role=BASIC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"filter",
+								""
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "updateAt:DESC"
+								},
+								{
+									"key": "select",
+									"value": "id,username,email,city,updateAt"
+								},
+								{
+									"key": "filter.role",
+									"value": "BASIC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Default Category\",\r\n    \"description\": \"Default Category description\",\r\n    \"image\": \"https://getlorem.com/static/images/cicero2.jpg\",\r\n    \"author\": \"f68b3d30-e04a-4a19-b211-b3c809c2ded9\",\r\n    \"status\": \"PUBLISHED\",\r\n    \"posts\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Category Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Default Category (Updated!)\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "c1180585-8ab8-4f85-9316-6ab1960abf92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Category By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/categories/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8c7b3b7e-5dc0-4fa2-961a-494b48869735"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Category Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "c1180585-8ab8-4f85-9316-6ab1960abf92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categories/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories/search/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "Default"
+								},
+								{
+									"key": "select",
+									"value": "id,title,description,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/categories/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,title,description,updateAt",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categories",
+								"filter",
+								""
+							],
+							"query": [
+								{
+									"key": "filter.author",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt:DESC"
+								},
+								{
+									"key": "select",
+									"value": "id,title,description,updateAt"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "Create Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Prueba 09\",\r\n    \"description\": \"Posteo de Prueba 09\",\r\n    \"image\": \"https://getlorem.com/static/images/cicero2.jpg\",\r\n    \"content\": \"Lorem ipsum dolor sit amet consectetur adipiscing elit curabitur sollicitudin dignissim, eget auctor facilisis platea consequat bibendum senectus gravida. Nam suscipit turpis eleifend dis praesent facilisi rhoncus lacinia habitasse pulvinar, phasellus gravida magna tincidunt ligula cubilia lectus consequat vitae, tempor vulputate integer felis eget suspendisse inceptos condimentum libero. Risus placerat fringilla enim cursus pulvinar sapien purus cum, id consequat morbi nisl turpis sodales donec mus ad, taciti fermentum ut rhoncus vel nec metus. Felis habitant nibh nunc arcu id velit dis cras ligula sociis cubilia proin commodo ridiculus ut feugiat, quis suscipit tempus justo a cum odio at mauris molestie mi inceptos nascetur netus. Nostra euismod quam aenean feugiat habitant ornare a platea luctus est, parturient nullam pharetra justo lacinia et ac curae. Magnis scelerisque mi himenaeos at arcu integer nibh quis massa morbi, torquent felis suspendisse dictum nulla consequat mattis vehicula class tellus, neque maecenas platea malesuada aenean metus vitae erat dignissim.\",\r\n    \"status\": \"PUBLISHED\",\r\n    \"author\": \"f68b3d30-e04a-4a19-b211-b3c809c2ded9\",\r\n    \"category\": \"c1180585-8ab8-4f85-9316-6ab1960abf92\",\r\n    \"comments\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title for post 08\",\r\n    \"description\": \"New Description for post 08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/posts/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Post Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/posts/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "82096d06-9942-4539-a908-20205b51b8db"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View User's Post",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/posts/user/:id?limit=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"user",
+								":id"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/posts/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/posts/search/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "sollicitudin"
+								},
+								{
+									"key": "select",
+									"value": "id,content,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/posts/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&filter.category=c1180585-8ab8-4f85-9316-6ab1960abf92&sortBy=updateAt:DESC&select=id,title,description,updateAt",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"posts",
+								"filter",
+								""
+							],
+							"query": [
+								{
+									"key": "filter.author",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								},
+								{
+									"key": "filter.category",
+									"value": "c1180585-8ab8-4f85-9316-6ab1960abf92"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt:DESC"
+								},
+								{
+									"key": "select",
+									"value": "id,title,description,updateAt"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "Create Commentary",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"message\": \"Este es un mensaje de prueba 06\",\r\n    \"reaction\": \":D\",\r\n    \"author\": \"f68b3d30-e04a-4a19-b211-b3c809c2ded9\",\r\n    \"posts\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title for post 08\",\r\n    \"description\": \"New Description for post 08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comment By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Commentary By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/comments/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e43b138f-94dc-4256-b20a-4355105fd088"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View User's Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/comments/user/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"user",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Comentaries",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/comments/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/comments/search/?searchBy=prueba&select=message&sortBy=message%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"search",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "prueba"
+								},
+								{
+									"key": "select",
+									"value": "message"
+								},
+								{
+									"key": "sortBy",
+									"value": "message%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/comments/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,message,updateAt",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"filter",
+								""
+							],
+							"query": [
+								{
+									"key": "filter.author",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt:DESC"
+								},
+								{
+									"key": "select",
+									"value": "id,message,updateAt"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Admin - Update User Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": 41\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Delete User By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8c7b3b7e-5dc0-4fa2-961a-494b48869735"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Own Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/profile/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"profile",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - View User Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f68b3d30-e04a-4a19-b211-b3c809c2ded9"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - List Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/users/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"users",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Default Category\",\r\n    \"description\": \"Default Category description\",\r\n    \"image\": \"https://getlorem.com/static/images/cicero2.jpg\",\r\n    \"author\": \"f68b3d30-e04a-4a19-b211-b3c809c2ded9\",\r\n    \"status\": \"PUBLISHED\",\r\n    \"posts\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories/create",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Update Category Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Default Category (Updated!)\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "c1180585-8ab8-4f85-9316-6ab1960abf92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Delete Category By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8c7b3b7e-5dc0-4fa2-961a-494b48869735"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - View Category Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "c1180585-8ab8-4f85-9316-6ab1960abf92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - List Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/categories/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"categories",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Update Post Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title for post 08\",\r\n    \"description\": \"New Description for post 08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/posts/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"posts",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Delete Post By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/posts/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"posts",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - View Post Data By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/posts/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"posts",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "82096d06-9942-4539-a908-20205b51b8db"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - List Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/posts/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"posts",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Update Comment Data By Id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"New title for post 08\",\r\n    \"description\": \"New Description for post 08\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/edit/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"edit",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Delete Comment By Id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/comments/delete/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"delete",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "165e124a-54c5-42a9-981f-f3a2f6620b11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - View Commentary By Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/comments/view/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"comments",
+								"view",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "e43b138f-94dc-4256-b20a-4355105fd088"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - List Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/comments/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"comments",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Search Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"search",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "tester"
+								},
+								{
+									"key": "select",
+									"value": "id,username,email,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Search Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"search",
+								"categories",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "Default"
+								},
+								{
+									"key": "select",
+									"value": "id,title,description,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Search Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"search",
+								"posts",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "sollicitudin"
+								},
+								{
+									"key": "select",
+									"value": "id,content,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin - Search Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"search",
+								"comments",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "prueba"
+								},
+								{
+									"key": "select",
+									"value": "message"
+								},
+								{
+									"key": "sortBy",
+									"value": "message%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Seach",
+			"item": [
+				{
+					"name": "Search Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "tester"
+								},
+								{
+									"key": "select",
+									"value": "id,username,email,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"categories",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "Default"
+								},
+								{
+									"key": "select",
+									"value": "id,title,description,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Posts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"posts",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "sollicitudin"
+								},
+								{
+									"key": "select",
+									"value": "id,content,updateAt"
+								},
+								{
+									"key": "sortBy",
+									"value": "updateAt%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "access_token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"search",
+								"comments",
+								""
+							],
+							"query": [
+								{
+									"key": "searchBy",
+									"value": "prueba"
+								},
+								{
+									"key": "select",
+									"value": "message"
+								},
+								{
+									"key": "sortBy",
+									"value": "message%3ADESC"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJmNjhiM2QzMC1lMDRhLTRhMTktYjIxMS1iM2M4MDljMmRlZDkiLCJpYXQiOjE3MDY0OTA2MjYsImV4cCI6MTcwNjQ5MDYyOX0.OE-6g8U74eO9AGPbiFmzwBhL-ravhUMh7msc6UhTz90",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "access_token",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001/api",
+			"type": "string"
+		}
+	]
+}
