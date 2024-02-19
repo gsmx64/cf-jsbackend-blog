@@ -127,8 +127,6 @@ export class CommentsService {
       const comment: CommentsEntity = await this.commentRepository
           .createQueryBuilder('comment')
           .where({id})
-          //.leftJoinAndSelect('comment.author', 'author')
-          //.leftJoinAndSelect('comment.post', 'post')
           .leftJoin('comment.author', 'author')
           .addSelect([
             'author.id', 'author.updateAt', 'author.username', 'author.email',
@@ -136,11 +134,10 @@ export class CommentsService {
             'author.firstName', 'author.lastName', 'author.age', 'author.city',
             'author.country'
           ])
-          .leftJoin('comment.post', 'post')
+          .leftJoin('comment.post', 'post', this.userService.onlyPublished('post', this.request))
           .addSelect([
             'post.id', 'post.title', 'post.description', 'post.updateAt'
           ])
-          .where(this.userService.onlyPublished('post', this.request))
           .orderBy('comment.updateAt', 'DESC')
           .getOne();
 
@@ -173,11 +170,10 @@ export class CommentsService {
       const queryBuilder = this.commentRepository
           .createQueryBuilder('comments')
           .where('comments.author = :userId', { userId: id })
-          .leftJoin('comments.post', 'post')
+          .leftJoin('comments.post', 'post', this.userService.onlyPublished('post', this.request))
           .addSelect([
             'post.id', 'post.title', 'post.description', 'post.updateAt'
-          ])
-          .where(this.userService.onlyPublished('post', this.request));
+          ]);
 
       const comments = await paginate(
         query,
@@ -210,8 +206,6 @@ export class CommentsService {
     try {
       const queryBuilder = this.commentRepository
           .createQueryBuilder('comments')
-          //.leftJoinAndSelect('comments.author', 'author')
-          //.leftJoinAndSelect('comments.post', 'post')
           .leftJoin('comments.author', 'author')
           .addSelect([
             'author.id', 'author.updateAt', 'author.username', 'author.email',
@@ -219,11 +213,10 @@ export class CommentsService {
             'author.firstName', 'author.lastName', 'author.age', 'author.city',
             'author.country'
           ])
-          .leftJoin('comments.post', 'post')
+          .leftJoin('comments.post', 'post', this.userService.onlyPublished('post', this.request))
           .addSelect([
             'post.id', 'post.title', 'post.description', 'post.updateAt'
-          ])
-          .where(this.userService.onlyPublished('post', this.request));
+          ]);
 
       const comments = await paginate(
         query,

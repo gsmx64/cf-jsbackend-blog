@@ -143,7 +143,7 @@ export class UsersController {
     name: 'id',
     type: 'string',
     required: true,
-    example: SWAGGER_ID_EXAMPLE,
+    //example: SWAGGER_ID_EXAMPLE,
     description: 'The user uuid to search their data.'
   })
   @ApiBearerAuth('access_token')

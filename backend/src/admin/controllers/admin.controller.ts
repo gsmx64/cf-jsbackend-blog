@@ -406,6 +406,7 @@ export class AdminController {
   @ApiPaginationQuery(COMMENTS_FILTER_CONFIG)
   @ApiBearerAuth('access_token')
   @AdminAccess()
+  @Get('comments/list')
   public async findAllComments(
     @Paginate() query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {

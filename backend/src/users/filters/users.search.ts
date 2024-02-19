@@ -18,7 +18,7 @@ export const USERS_SEARCH_CONFIG: PaginateConfig<UsersEntity> = {
     /**
      * Sort order for null values.
      */
-    nullSort: 'last',
+    //nullSort: 'last',
     /**
      * Default sorting criteria.
      */

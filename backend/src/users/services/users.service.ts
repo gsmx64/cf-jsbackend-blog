@@ -16,7 +16,7 @@ import { IUseToken, TypeUserRoleforLogging } from '../../auth/interfaces/auth.in
 import { useToken } from '../../utils/use.token';
 import { USER_STATUS } from '../../constants/user.status';
 import { ROLES } from '../../constants/roles';
-import { PUBLISH_STATUS } from '../../constants/publish.status'
+import { PUBLISH_STATUS } from '../../constants/publish.status';
 import { VALID_EMAIL_REGEX, VALID_USERNAME_REGEX } from '../../constants/validations';
 import { LoggingMessages } from '../../utils/logging.messages';
 import {
@@ -28,7 +28,6 @@ import {
 import {
   USERS_DEFAULT_CONFIG,
   USERS_DEFAULT_CONFIG_LOW } from '../filters/users.default';
-import { CommentsEntity } from 'src/comments/entities/comments.entity';
 
 
 /**
@@ -63,11 +62,10 @@ export class UsersService {
       const currentUserRole = manageToken.role;
 
       return (
-        ( currentUserRole == ROLES.ADMIN ||
-          currentUserRole == ROLES.MODERATOR ||
-          currentUserRole == ROLES.EDITOR
-        ) ? `${alias}.description != 'fake-query'`
-        : `${alias}.status = '${PUBLISH_STATUS.PUBLISHED}'`);
+        (this.isRoleBasic(request)) ?
+        `${alias}.status = '${PUBLISH_STATUS.PUBLISHED}'` :
+        `${alias}.description != 'fake-query'`
+      );
     } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -83,18 +81,11 @@ export class UsersService {
    */
   public onlyEnabledUsers(request: any) {
     try {
-      const currentToken = request.headers['access_token'];
-      const manageToken: any = useToken(currentToken);
-      const currentUserRole = manageToken.role;
-      console.log(currentToken);
-      console.log(`Current User Role: ${currentUserRole}`);
-
       return (
-        ( currentUserRole == ROLES.ADMIN ||
-          currentUserRole == ROLES.MODERATOR ||
-          currentUserRole == ROLES.EDITOR
-        ) ? `users.lastName != 'fake-query'`
-        : `users.status = '${USER_STATUS.ENABLED}'`);
+        ( this.isRoleBasic(request)) ?
+        `users.status = '${USER_STATUS.ENABLED}'` :
+        `users.lastName != 'fake-query'`
+      );
     } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -358,32 +349,28 @@ export class UsersService {
   ): Promise<UsersEntity> {
     try {
       const user: UsersEntity = await this.userRepository
-          .createQueryBuilder('user')
-          .where({id})
-          //.leftJoinAndSelect('user.posts', 'posts')
-          //.leftJoinAndSelect('user.comments', 'comments')
-          .leftJoin('user.posts', 'posts')
-          .addSelect([
-            'posts.id', 'posts.updateAt', 'posts.title',
-            'posts.description', 'posts.status', 'posts.category'
-          ])
-          .where(this.onlyPublished('posts', this.request))
-          .leftJoin('posts.category', 'posts_category')
-          .addSelect([
-            'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
-            'posts_category.description', 'posts_category.status'
-          ])
-          .where(this.onlyPublished('posts_category', this.request))
-          .leftJoin('user.comments', 'comments')
-          .addSelect([
-            'comments.id', 'comments.message', 'comments.post'
-          ])
-          .leftJoin('comments.post', 'comments_post')
-          .addSelect([
-            'comments_post.id', 'comments_post.title', 'comments_post.updateAt'
-          ])
-          .orderBy('user.created_at', 'DESC')
-          .getOne();
+        .createQueryBuilder('user')
+        .where({id})
+        .leftJoin('user.posts', 'posts', this.onlyPublished('posts', this.request))
+        .addSelect([
+          'posts.id', 'posts.updateAt', 'posts.title',
+          'posts.description', 'posts.status', 'posts.category'
+        ])
+        .leftJoin('posts.category', 'posts_category', this.onlyPublished('posts_category', this.request))
+        .addSelect([
+          'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
+          'posts_category.description', 'posts_category.status'
+        ])
+        .leftJoin('user.comments', 'comments')
+        .addSelect([
+          'comments.id', 'comments.message', 'comments.post'
+        ])
+        .leftJoin('comments.post', 'comments_post')
+        .addSelect([
+          'comments_post.id', 'comments_post.title', 'comments_post.updateAt'
+        ])
+        .orderBy('user.created_at', 'DESC')
+        .getOne();
 
       if(!user) {
         throw new ErrorManager({
@@ -413,20 +400,16 @@ export class UsersService {
       const user: UsersEntity = await this.userRepository
           .createQueryBuilder('user')
           .where({id})
-          //.leftJoinAndSelect('user.posts', 'posts')
-          //.leftJoinAndSelect('user.comments', 'comments')
-          .leftJoin('user.posts', 'posts')
+          .leftJoin('user.posts', 'posts', this.onlyPublished('posts', this.request))
           .addSelect([
             'posts.id', 'posts.updateAt', 'posts.title',
             'posts.description', 'posts.status', 'posts.category'
           ])
-          .where(this.onlyPublished('posts', this.request))
-          .leftJoin('posts.category', 'posts_category')
+          .leftJoin('posts.category', 'posts_category', this.onlyPublished('posts_category', this.request))
           .addSelect([
             'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
             'posts_category.description', 'posts_category.status'
           ])
-          .where(this.onlyPublished('posts_category', this.request))
           .leftJoin('user.comments', 'comments')
           .addSelect([
             'comments.id', 'comments.message', 'comments.post'
@@ -462,33 +445,26 @@ export class UsersService {
   ): Promise<Paginated<UsersEntity>> {
     try {
       const queryBuilder = this.userRepository
-          .createQueryBuilder('users')
-          .where(this.onlyEnabledUsers(this.request))
-          //.leftJoinAndSelect('users.posts', 'posts')
-          //.leftJoinAndSelect('posts.author', 'author_users')
-          //.leftJoinAndSelect('posts.category', 'category_posts')
-          //.leftJoinAndSelect('users.comments', 'comments')
-          //.leftJoinAndSelect('comments.post', 'comments_post');
-          .leftJoin('users.posts', 'posts')
-          .addSelect([
-            'posts.id', 'posts.updateAt', 'posts.title',
-            'posts.description', 'posts.status', 'posts.category'
-          ])
-          .where(this.onlyPublished('posts', this.request))
-          .leftJoin('posts.category', 'posts_category')
-          .addSelect([
-            'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
-            'posts_category.description', 'posts_category.status'
-          ])
-          .where(this.onlyPublished('posts_category', this.request))
-          .leftJoin('users.comments', 'comments')
-          .addSelect([
-            'comments.id', 'comments.message', 'comments.post'
-          ])
-          .leftJoin('comments.post', 'comments_post')
-          .addSelect([
-            'comments_post.id', 'comments_post.title', 'comments_post.updateAt'
-          ]);
+        .createQueryBuilder('users')
+        .where(this.onlyEnabledUsers(this.request))
+        .leftJoin('users.posts', 'posts', this.onlyPublished('posts', this.request))
+        .addSelect([
+          'posts.id', 'posts.updateAt', 'posts.title',
+          'posts.description', 'posts.status', 'posts.category'
+        ])
+        .leftJoin('posts.category', 'posts_category', this.onlyPublished('posts_category', this.request))
+        .addSelect([
+          'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
+          'posts_category.description', 'posts_category.status'
+        ])
+        .leftJoin('users.comments', 'comments')
+        .addSelect([
+          'comments.id', 'comments.message', 'comments.post'
+        ])
+        .leftJoin('comments.post', 'comments_post')
+        .addSelect([
+          'comments_post.id', 'comments_post.title', 'comments_post.updateAt'
+        ]);
 
       const users = await paginate(
         query,
@@ -527,18 +503,16 @@ export class UsersService {
       const queryBuilder = this.userRepository
         .createQueryBuilder('users')
         .where(this.onlyEnabledUsers(this.request))
-        .leftJoin('users.posts', 'posts')
+        .leftJoin('users.posts', 'posts', this.onlyPublished('posts', this.request))
         .addSelect([
           'posts.id', 'posts.updateAt', 'posts.title',
           'posts.description', 'posts.status', 'posts.category'
         ])
-        .where(this.onlyPublished('posts', this.request))
-        .leftJoin('posts.category', 'posts_category')
+        .leftJoin('posts.category', 'posts_category', this.onlyPublished('posts_category', this.request))
         .addSelect([
           'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
           'posts_category.description', 'posts_category.status'
         ])
-        .where(this.onlyPublished('posts_category', this.request))
         .leftJoin('users.comments', 'comments')
         .addSelect([
           'comments.id', 'comments.message', 'comments.post'
@@ -581,18 +555,16 @@ export class UsersService {
       const queryBuilder = this.userRepository
         .createQueryBuilder('users')
         .where(this.onlyEnabledUsers(this.request))
-        .leftJoin('users.posts', 'posts')
+        .leftJoin('users.posts', 'posts', this.onlyPublished('posts', this.request))
         .addSelect([
           'posts.id', 'posts.updateAt', 'posts.title',
           'posts.description', 'posts.status', 'posts.category'
         ])
-        .where(this.onlyPublished('posts', this.request))
-        .leftJoin('posts.category', 'posts_category')
+        .leftJoin('posts.category', 'posts_category', this.onlyPublished('posts_category', this.request))
         .addSelect([
           'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
           'posts_category.description', 'posts_category.status'
         ])
-        .where(this.onlyPublished('posts_category', this.request))
         .leftJoin('users.comments', 'comments')
         .addSelect([
           'comments.id', 'comments.message', 'comments.post'

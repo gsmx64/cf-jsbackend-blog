@@ -1,9 +1,10 @@
 /**
  * Controller responsible for handling the searches related API endpoints.
  */
-import { Controller, Get, Request } from '@nestjs/common';
+import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { ApiOkPaginatedResponse, ApiPaginationQuery, Paginate,
   PaginateQuery, Paginated } from 'nestjs-paginate';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { SearchService } from '../services/search.service';
 import { UsersEntity } from '../../users/entities/users.entity';
@@ -20,17 +21,18 @@ import { SEARCH_POSTS_CONFIG } from '../filters/search.posts';
 import { SEARCH_COMMENTS_CONFIG } from '../filters/search.comments';
 import { AdminAccess } from '../../auth/decorators/admin.decorator';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { LocalAuthGuard } from '../../auth/guards/local-auth.guard';
+import { LocalRolesGuard } from '../../auth/guards/local-auth.roles.guard';
 
 
 /**
  * Controller responsible for handling searches operations.
  */
+@ApiTags('Search')
 @Controller('search')
+@UseGuards(LocalAuthGuard, LocalRolesGuard)
 export class SearchController {
-    constructor(
-        private readonly searchService: SearchService
-    ) {}
+    constructor(private readonly searchService: SearchService) {}
 
     /**
      * Searches for users based on the provided query parameters.

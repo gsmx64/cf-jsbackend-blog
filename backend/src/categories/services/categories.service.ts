@@ -136,10 +136,6 @@ export class CategoriesService {
           .createQueryBuilder('category')
           .where({id})
           .andWhere(this.userService.onlyPublished('category', this.request))
-          //.leftJoinAndSelect('category.author', 'author')
-          //.leftJoinAndSelect('category.posts', 'posts')
-          //.leftJoinAndSelect('posts.author', 'posts_author')
-          //.leftJoin('categories.author', 'author')
           .leftJoinAndSelect('category.author', 'author')
           .addSelect([
             'author.id', 'author.updateAt', 'author.username', 'author.email',
@@ -152,11 +148,10 @@ export class CategoriesService {
             'posts.id', 'posts.title', 'posts.description', 'posts.image',
             'posts.author', 'posts.status', 'posts.updateAt'
           ])
-          .leftJoin('posts.author', 'posts_author')
+          .leftJoin('posts.author', 'posts_author', this.userService.onlyPublished('posts', this.request))
           .addSelect([
             'posts_author.id', 'posts_author.username', 'posts_author.status'
           ])
-          .where(this.userService.onlyPublished('posts', this.request))
           .orderBy('category.created_at', 'DESC')
           .getOne();
 
@@ -186,9 +181,6 @@ export class CategoriesService {
       const queryBuilder = this.categoryRepository
           .createQueryBuilder('categories')
           .where(this.userService.onlyPublished('categories', this.request))
-          //.leftJoinAndSelect('categories.author', 'author')
-          //.leftJoinAndSelect('categories.posts', 'posts')
-          //.leftJoinAndSelect('posts.author', 'posts_author')
           .leftJoin('categories.author', 'author')
           .addSelect([
             'author.id', 'author.updateAt', 'author.username', 'author.email',
@@ -196,11 +188,10 @@ export class CategoriesService {
             'author.firstName', 'author.lastName', 'author.age', 'author.city',
             'author.country'
           ])
-          .leftJoin('categories.posts', 'posts')
+          .leftJoin('categories.posts', 'posts', this.userService.onlyPublished('posts', this.request))
           .addSelect([
             'posts.id', 'posts.title', 'posts.description', 'posts.updateAt'
-          ])
-          .where(this.userService.onlyPublished('posts', this.request));
+          ]);
 
       const categories = await paginate(
         query,

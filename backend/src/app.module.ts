@@ -13,6 +13,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CommentsModule } from './comments/comments.module';
+import { SearchModule } from './search/search.module';
 
 
 @Module({
@@ -28,6 +29,7 @@ import { CommentsModule } from './comments/comments.module';
     PostsModule,
     CategoriesModule,
     CommentsModule,
+    SearchModule
   ]
 })
 

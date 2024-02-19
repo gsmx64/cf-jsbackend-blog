@@ -62,18 +62,16 @@ export class SearchService {
       const queryBuilder = this.userRepository
         .createQueryBuilder('users')
         .where(this.userService.onlyEnabledUsers(this.request))
-        .leftJoin('users.posts', 'posts')
+        .leftJoin('users.posts', 'posts', this.userService.onlyPublished('posts', this.request))
         .addSelect([
           'posts.id', 'posts.updateAt', 'posts.title',
           'posts.description', 'posts.status', 'posts.category'
         ])
-        .where(this.userService.onlyPublished('posts', this.request))
-        .leftJoin('posts.category', 'posts_category')
+        .leftJoin('posts.category', 'posts_category', this.userService.onlyPublished('posts_category', this.request))
         .addSelect([
           'posts_category.id', 'posts_category.updateAt', 'posts_category.title',
           'posts_category.description', 'posts_category.status'
         ])
-        .where(this.userService.onlyPublished('posts_category', this.request))
         .leftJoin('users.comments', 'comments')
         .addSelect([
           'comments.id', 'comments.message', 'comments.post'
