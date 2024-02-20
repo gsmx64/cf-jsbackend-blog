@@ -1106,7 +1106,7 @@
 					"response": []
 				},
 				{
-					"name": "List Comentaries",
+					"name": "List Comments",
 					"request": {
 						"method": "GET",
 						"header": [],

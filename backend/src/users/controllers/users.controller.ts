@@ -42,7 +42,7 @@ export class UsersController {
     type: 'string',
     required: true,
     example: SWAGGER_USER_BODY_EXAMPLE,
-    description: 'The body data to create a comment.'
+    description: 'The body data to create a user.'
   })
   @PublicAccess()
   @Post('register')
@@ -103,8 +103,8 @@ export class UsersController {
     description: 'The user uuid to edit their data.'
   })
   @ApiBearerAuth('access_token')
-  @UseGuards(LocalAuthGuard)    
-  @Put('edit/:id')  
+  @UseGuards(LocalAuthGuard)
+  @Put('edit/:id')
   public async updateUser(
     @Param('id') id: string, 
     @Body() body: UserUpdateDTO,
