@@ -1,8 +1,8 @@
 # CF-Backend-Blog - ENDPOINTS
-Here you can get information about all endpoint from the backend part of the blog.
+Here you can get information about all endpoints from the backend part of the blog.
 
 ## NOTE:
-Reeplace {{baseUrl}} with your local address, for example http://localhost:3001/api 
+Replace (baseUrl) with your local address, for example http://localhost:3001/ 
 
 ## Enums:
 * USER STATUS: ENABLED, PENDING, BANNED
@@ -14,7 +14,7 @@ Reeplace {{baseUrl}} with your local address, for example http://localhost:3001/
 ## End-point: Login
 ### Method: POST
 >```
->{{baseUrl}}/auth/login
+>(baseUrl) api/auth/login
 >```
 ### Body (**raw**):
 It have two parameters: the username and the user password for login:
@@ -35,7 +35,7 @@ A json with access_token and user data.
 ## End-point: Register
 ### Method: POST
 >```
->{{baseUrl}}/users/register
+>(baseUrl) api/users/register
 >```
 ### Body (**raw**)
 This is the body data to create a user:
@@ -66,7 +66,7 @@ The user data.
 ## End-point: Own Profile
 ### Method: GET
 >```
->{{baseUrl}}/users/profile/
+>(baseUrl) api/users/profile/
 >```
 ### Headers:
 Requires access_token.
@@ -84,7 +84,7 @@ Current user data.
 ## End-point: Verify if exists a Username
 ### Method: GET
 >```
->{{baseUrl}}/users/verify/username/testuser
+>(baseUrl) api/users/verify/username/testuser
 >```
 ### Headers:
 No required.
@@ -97,7 +97,7 @@ True or False.
 ## End-point: Verify if exists a Email
 ### Method: GET
 >```
->{{baseUrl}}/users/verify/email/tester@tester.com
+>(baseUrl) api/users/verify/email/tester@tester.com
 >```
 ### Headers:
 No required.
@@ -110,15 +110,15 @@ True or False.
 ## End-point: Update User Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/users/edit/:id
+>(baseUrl) api/users/edit/:id
 >```
-### Body (**raw**) - Example
+### Body (**raw**) - Example:
 ```json
 {
     "age": 41
 }
 ```
-### Body (**raw**) - Complete
+### Body (**raw**) - Complete:
 Complete list to update:
 ```json
 {
@@ -147,7 +147,7 @@ The updated user data.
 ## End-point: Delete User By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/users/delete/:id
+>(baseUrl) api/users/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -164,7 +164,7 @@ ADMIN
 ## End-point: View User Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/users/view/:id
+>(baseUrl) api/users/view/:id
 >```
 ### Headers:
 Requires access_token.
@@ -177,7 +177,7 @@ The user data.
 ## End-point: List Users
 ### Method: GET
 >```
->{{baseUrl}}/users/list
+>(baseUrl) api/users/list
 >```
 ### Query Params:
 |Param|value|
@@ -195,7 +195,7 @@ A list of users with pagination.
 ## End-point: Search Users
 ### Method: GET
 >```
->{{baseUrl}}/users/search/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/users/search/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -250,7 +250,7 @@ A list of users with pagination performed by a search.
 ## End-point: Filter Users
 ### Method: GET
 >```
->{{baseUrl}}/users/filter/?sortBy=updateAt:DESC&select=id,username,email,city,updateAt&filter.role=BASIC
+>(baseUrl) api/users/filter/?sortBy=updateAt:DESC&select=id,username,email,city,updateAt&filter.role=BASIC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -377,7 +377,7 @@ A filtered list of users with pagination.
 ## End-point: Create Category
 ### Method: POST
 >```
->{{baseUrl}}/categories/create
+>(baseUrl) api/categories/create
 >```
 ### Body (**raw**)
 The body data to create a category:
@@ -402,7 +402,7 @@ The created category.
 ## End-point: Update Category Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/categories/edit/:id
+>(baseUrl) api/categories/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -421,7 +421,7 @@ The updated category data.
 ## End-point: Delete Category By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/categories/delete/:id
+>(baseUrl) api/categories/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -439,7 +439,7 @@ ADMIN
 ## End-point: View Category Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/categories/view/:id
+>(baseUrl) api/categories/view/:id
 >```
 ### Headers:
 No required.
@@ -452,7 +452,7 @@ The category data.
 ## End-point: List Categories
 ### Method: GET
 >```
->{{baseUrl}}/categories/list
+>(baseUrl) api/categories/list
 >```
 ### Query Params:
 |Param|value|
@@ -470,7 +470,7 @@ A list of categories with pagination.
 ## End-point: Search Categories
 ### Method: GET
 >```
->{{baseUrl}}/categories/search/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/categories/search/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -525,7 +525,7 @@ A list of categories with pagination performed by a search.
 ## End-point: Filter Categories
 ### Method: GET
 >```
->{{baseUrl}}/categories/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,title,description,updateAt
+>(baseUrl) api/categories/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,title,description,updateAt
 >```
 ### Query Params - Example:
 |Param|value|
@@ -616,7 +616,7 @@ A filtered list of categories with pagination.
 ## End-point: Create Post
 ### Method: POST
 >```
->{{baseUrl}}/posts/create
+>(baseUrl) api/posts/create
 >```
 ### Body (**raw**)
 ```json
@@ -642,7 +642,7 @@ The created post data.
 ## End-point: Update Post Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/posts/edit/:id
+>(baseUrl) api/posts/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -662,7 +662,7 @@ The updated post data.
 ## End-point: Delete Post By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/posts/delete/:id
+>(baseUrl) api/posts/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -680,7 +680,7 @@ ADMIN, MODERATOR
 ## End-point: View Post Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/posts/view/:id
+>(baseUrl) api/posts/view/:id
 >```
 ### Headers:
 No required.
@@ -693,7 +693,7 @@ The post data.
 ## End-point: View User's Post
 ### Method: GET
 >```
->{{baseUrl}}/posts/user/:id?limit=5
+>(baseUrl) api/posts/user/:id?limit=5
 >```
 ### Query Params:
 |Param|value|
@@ -711,7 +711,7 @@ A list of posts with pagination from that user.
 ## End-point: List Posts
 ### Method: GET
 >```
->{{baseUrl}}/posts/list
+>(baseUrl) api/posts/list
 >```
 ### Query Params:
 |Param|value|
@@ -729,7 +729,7 @@ A list of posts with pagination.
 ## End-point: Search Posts
 ### Method: GET
 >```
->{{baseUrl}}/posts/search/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/posts/search/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -784,7 +784,7 @@ A list of posts with pagination performed by a search.
 ## End-point: Filter Posts
 ### Method: GET
 >```
->{{baseUrl}}/posts/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&filter.category=c1180585-8ab8-4f85-9316-6ab1960abf92&sortBy=updateAt:DESC&select=id,title,description,updateAt
+>(baseUrl) api/posts/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&filter.category=c1180585-8ab8-4f85-9316-6ab1960abf92&sortBy=updateAt:DESC&select=id,title,description,updateAt
 >```
 ### Query Params - Example:
 |Param|value|
@@ -888,7 +888,7 @@ A filtered list of posts with pagination.
 ## End-point: Create Commentary
 ### Method: POST
 >```
->{{baseUrl}}/comments/create
+>(baseUrl) api/comments/create
 >```
 ### Body (**raw**)
 ```json
@@ -910,7 +910,7 @@ The created comment data.
 ## End-point: Update Comment Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/comments/edit/:id
+>(baseUrl) api/comments/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -929,7 +929,7 @@ The edited comment data.
 ## End-point: Delete Comment By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/comments/delete/:id
+>(baseUrl) api/comments/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -947,7 +947,7 @@ ADMIN, MODERATOR
 ## End-point: View Comment By Id
 ### Method: GET
 >```
->{{baseUrl}}/comments/view/:id
+>(baseUrl) api/comments/view/:id
 >```
 ### Headers:
 No required.
@@ -960,7 +960,7 @@ The comment data.
 ## End-point: View User's Comments
 ### Method: GET
 >```
->{{baseUrl}}/comments/user/:id
+>(baseUrl) api/comments/user/:id
 >```
 ### Query Params:
 |Param|value|
@@ -978,7 +978,7 @@ A list of comments with pagination from that user.
 ## End-point: List of Coments
 ### Method: GET
 >```
->{{baseUrl}}/comments/list
+>(baseUrl) api/comments/list
 >```
 ### Query Params:
 |Param|value|
@@ -996,7 +996,7 @@ A list of comments with pagination.
 ## End-point: Search Comments
 ### Method: GET
 >```
->{{baseUrl}}/comments/search/?searchBy=prueba&select=message&sortBy=message%3ADESC
+>(baseUrl) api/comments/search/?searchBy=prueba&select=message&sortBy=message%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1051,7 +1051,7 @@ A list of comments with pagination performed by a search.
 ## End-point: Filter Comments
 ### Method: GET
 >```
->{{baseUrl}}/comments/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,message,updateAt
+>(baseUrl) api/comments/filter/?filter.author=f68b3d30-e04a-4a19-b211-b3c809c2ded9&sortBy=updateAt:DESC&select=id,message,updateAt
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1136,7 +1136,7 @@ A filtered list of comments with pagination.
 ## End-point: Search Users
 ### Method: GET
 >```
->{{baseUrl}}/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1269,7 +1269,7 @@ A list of comments with pagination performed by a search.
 ## End-point: Search Categories
 ### Method: GET
 >```
->{{baseUrl}}/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1366,7 +1366,7 @@ A list of comments with pagination performed by a search.
 ## End-point: Search Posts
 ### Method: GET
 >```
->{{baseUrl}}/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1475,7 +1475,7 @@ A list of comments with pagination performed by a search.
 ## End-point: Search Comments
 ### Method: GET
 >```
->{{baseUrl}}/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC
+>(baseUrl) api/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -1571,15 +1571,15 @@ A list of comments with pagination performed by a search.
 ## End-point: Admin - Update User Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/admin/users/edit/:id
+>(baseUrl) api/admin/users/edit/:id
 >```
-### Body (**raw**) - Example
+### Body (**raw**) - Example:
 ```json
 {
     "age": 41
 }
 ```
-### Body (**raw**) - Complete
+### Body (**raw**) - Complete:
 Complete list to update:
 ```json
 {
@@ -1607,7 +1607,7 @@ The updated user data.
 ## End-point: Admin - Delete User By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/admin/users/delete/:id
+>(baseUrl) api/admin/users/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1625,7 +1625,7 @@ ADMIN
 ## End-point: Admin - Own Profile
 ### Method: GET
 >```
->{{baseUrl}}/admin/users/profile/
+>(baseUrl) api/admin/users/profile/
 >```
 ### Headers:
 Requires access_token.
@@ -1638,7 +1638,7 @@ The current admin user data.
 ## End-point: Admin - View User Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/admin/users/view/:id
+>(baseUrl) api/admin/users/view/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1651,7 +1651,7 @@ The user data.
 ## End-point: Admin - List Users
 ### Method: GET
 >```
->{{baseUrl}}/admin/users/list
+>(baseUrl) api/admin/users/list
 >```
 ### Query Params:
 |Param|value|
@@ -1669,7 +1669,7 @@ A list of users with pagination.
 ## End-point: Admin - Create Category
 ### Method: POST
 >```
->{{baseUrl}}/admin/categories/create
+>(baseUrl) api/admin/categories/create
 >```
 ### Body (**raw**)
 ```json
@@ -1693,7 +1693,7 @@ The created category data.
 ## End-point: Admin - Update Category Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/admin/categories/edit/:id
+>(baseUrl) api/admin/categories/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -1712,7 +1712,7 @@ The updated category data.
 ## End-point: Admin - Delete Category By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/admin/categories/delete/:id
+>(baseUrl) api/admin/categories/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1730,7 +1730,7 @@ ADMIN
 ## End-point: Admin - View Category Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/admin/categories/view/:id
+>(baseUrl) api/admin/categories/view/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1743,7 +1743,7 @@ The category data.
 ## End-point: Admin - List Categories
 ### Method: GET
 >```
->{{baseUrl}}/admin/categories/list
+>(baseUrl) api/admin/categories/list
 >```
 ### Query Params:
 |Param|value|
@@ -1761,7 +1761,7 @@ A list of categories with pagination.
 ## End-point: Admin - Update Post Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/admin/posts/edit/:id
+>(baseUrl) api/admin/posts/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -1781,7 +1781,7 @@ The updated post data.
 ## End-point: Admin - Delete Post By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/admin/posts/delete/:id
+>(baseUrl) api/admin/posts/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1799,7 +1799,7 @@ ADMIN
 ## End-point: Admin - View Post Data By Id
 ### Method: GET
 >```
->{{baseUrl}}/admin/posts/view/:id
+>(baseUrl) api/admin/posts/view/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1812,7 +1812,7 @@ The post data.
 ## End-point: Admin - List Posts
 ### Method: GET
 >```
->{{baseUrl}}/admin/posts/list
+>(baseUrl) api/admin/posts/list
 >```
 ### Query Params:
 |Param|value|
@@ -1830,7 +1830,7 @@ A list of posts with pagination.
 ## End-point: Admin - Update Comment Data By Id
 ### Method: PUT
 >```
->{{baseUrl}}/comments/edit/:id
+>(baseUrl) api/comments/edit/:id
 >```
 ### Body (**raw**)
 ```json
@@ -1849,7 +1849,7 @@ The updated comment data.
 ## End-point: Admin - Delete Comment By Id
 ### Method: DELETE
 >```
->{{baseUrl}}/comments/delete/:id
+>(baseUrl) api/comments/delete/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1867,7 +1867,7 @@ ADMIN
 ## End-point: Admin - View Commentary By Id
 ### Method: GET
 >```
->{{baseUrl}}/comments/view/:id
+>(baseUrl) api/comments/view/:id
 >```
 ### Headers:
 Requires access_token.
@@ -1880,7 +1880,7 @@ The comment data.
 ## End-point: Admin - List Comments
 ### Method: GET
 >```
->{{baseUrl}}/admin/comments/list
+>(baseUrl) api/admin/comments/list
 >```
 ### Query Params:
 |Param|value|
@@ -1898,7 +1898,7 @@ A list of comments with pagination.
 ## End-point: Admin - Search Users
 ### Method: GET
 >```
->{{baseUrl}}/admin/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/admin/search/users/?searchBy=tester&select=id,username,email,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -2033,7 +2033,7 @@ A list of users with pagination performed by a search.
 ## End-point: Admin - Search Categories
 ### Method: GET
 >```
->{{baseUrl}}/admin/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/admin/search/categories/?searchBy=Default&select=id,title,description,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -2130,7 +2130,7 @@ A list of categories with pagination performed by a search.
 ## End-point: Admin - Search Posts
 ### Method: GET
 >```
->{{baseUrl}}/admin/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
+>(baseUrl) api/admin/search/posts/?searchBy=sollicitudin&select=id,content,updateAt&sortBy=updateAt%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
@@ -2239,7 +2239,7 @@ A list of posts with pagination performed by a search.
 ## End-point: Admin - Search Comments
 ### Method: GET
 >```
->{{baseUrl}}/admin/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC
+>(baseUrl) api/admin/search/comments/?searchBy=prueba&select=message&sortBy=message%3ADESC
 >```
 ### Query Params - Example:
 |Param|value|
