@@ -5,9 +5,9 @@ Here you can get information about all endpoint from the backend part of the blo
 Reeplace {{baseUrl}} with your local address, for example http://localhost:3001/api 
 
 ## Enums:
-USER STATUS: ENABLED, PENDING, BANNED
-USER ROLES: BASIC, ADMIN, MODERATOR, EDITOR
-POSTS/CATEGORIES STATUS: PUBLISHED, UNPUBLISHED, ARCHIVED, TRASHED
+* USER STATUS: ENABLED, PENDING, BANNED
+* USER ROLES: BASIC, ADMIN, MODERATOR, EDITOR
+* POSTS/CATEGORIES STATUS: PUBLISHED, UNPUBLISHED, ARCHIVED, TRASHED
 
 # 📁 Authentication
 
@@ -204,35 +204,41 @@ A list of users with pagination.
 |select|id,username,email,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
-Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
+* Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: username,email,firstName,lastName,age
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: username, email, firstName, lastName, age, city, country.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: username,email,firstName,lastName,age
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: username, email, firstName, lastName, age, city, country.
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -253,91 +259,108 @@ A list of users with pagination performed by a search.
 |select|id,username,email,city,updateAt|
 |filter.role|BASIC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.username (array[string]): Filter by username query param.
-Format: filter.username={$not}:OPERATION:VALUE
-Example: filter.username=$not:$like:John Doe&filter.username=like:John
-Available Operations: $eq,  $ilike
+filter.username (array[string]): 
+* Filter by username query param.
+* Format: filter.username={$not}:OPERATION:VALUE
+* Example: filter.username=$not:$like:John Doe&filter.username=like:John
+* Available Operations: $eq,  $ilike
 
-filter.email (array[string]): Filter by email query param.
-Format: filter.email={$not}:OPERATION:VALUE
-Example: filter.email=$not:$like:John Doe&filter.email=like:John
-Available Operations: $eq,  $ilike
+filter.email (array[string]): 
+* Filter by email query param.
+* Format: filter.email={$not}:OPERATION:VALUE
+* Example: filter.email=$not:$like:John Doe&filter.email=like:John
+* Available Operations: $eq,  $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.role (array[string]): Filter by role query param.
-Format: filter.role={$not}:OPERATION:VALUE
-Example: filter.role=$not:$like:John Doe&filter.role=like:John
-Available Operations: $eq, $not
+filter.role (array[string]): 
+* Filter by role query param.
+* Format: filter.role={$not}:OPERATION:VALUE
+* Example: filter.role=$not:$like:John Doe&filter.role=like:John
+* Available Operations: $eq, $not
 
-filter.firstName (array[string]): Filter by firstName query param.
-Format: filter.firstName={$not}:OPERATION:VALUE
-Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
-Available Operations: $ilike
+filter.firstName (array[string]): 
+* Filter by firstName query param.
+* Format: filter.firstName={$not}:OPERATION:VALUE
+* Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
+* Available Operations: $ilike
 
-filter.lastName (array[string]): Filter by lastName query param.
-Format: filter.lastName={$not}:OPERATION:VALUE
-Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
-Available Operations: $ilike
+filter.lastName (array[string]): 
+* Filter by lastName query param.
+* Format: filter.lastName={$not}:OPERATION:VALUE
+* Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
+* Available Operations: $ilike
 
-filter.age (array[string]): Filter by age query param.
-Format: filter.age={$not}:OPERATION:VALUE
-Example: filter.age=$not:$like:John Doe&filter.age=like:John
-Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
+filter.age (array[string]): 
+* Filter by age query param.
+* Format: filter.age={$not}:OPERATION:VALUE
+* Example: filter.age=$not:$like:John Doe&filter.age=like:John
+* Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
 
-filter.city (array[string]): Filter by city query param.
-Format: filter.city={$not}:OPERATION:VALUE
-Example: filter.city=$not:$like:John Doe&filter.city=like:John
-Available Operations: $ilike
+filter.city (array[string]): 
+* Filter by city query param.
+* Format: filter.city={$not}:OPERATION:VALUE
+* Example: filter.city=$not:$like:John Doe&filter.city=like:John
+* Available Operations: $ilike
 
-filter.country (array[string]): Filter by country query param.
-Format: filter.country={$not}:OPERATION:VALUE
-Example: filter.country=$not:$like:John Doe&filter.country=like:John
-Available Operations: $ilike
+filter.country (array[string]): 
+* Filter by country query param.
+* Format: filter.country={$not}:OPERATION:VALUE
+* Example: filter.country=$not:$like:John Doe&filter.country=like:John
+* Available Operations: $ilike
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
-Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
+* Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -456,35 +479,41 @@ A list of categories with pagination.
 |select|id,title,description,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status, author, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status, author, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description.
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -505,61 +534,72 @@ A list of categories with pagination performed by a search.
 |sortBy|updateAt:DESC|
 |select|id,title,description,updateAt|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status, author, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status, author, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -698,35 +738,41 @@ A list of posts with pagination.
 |select|id,content,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status author, category, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status author, category, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description, content
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description, content.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description, content
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description, content.
 
-select (string): List of fields to select.
-Example: id, title, description, content, status
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id, title, description, content, status
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -748,71 +794,84 @@ A list of posts with pagination performed by a search.
 |sortBy|updateAt:DESC|
 |select|id,title,description,updateAt|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.category (array[string]): Filter by category query param.
-Format: filter.category={$not}:OPERATION:VALUE
-Example: filter.category=$not:$like:John Doe&filter.category=like:John
-Available Operations: $ilike
+filter.category (array[string]): 
+* Filter by category query param.
+* Format: filter.category={$not}:OPERATION:VALUE
+* Example: filter.category=$not:$like:John Doe&filter.category=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status author, category, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status author, category, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-select (string): List of fields to select.
-Example: id, title, description, content, status
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id, title, description, content, status
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -946,35 +1005,41 @@ A list of comments with pagination.
 |select|message|
 |sortBy|message%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, message, author, post, createAt, updateAt.
-Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, message, author, post, createAt, updateAt.
+* Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: message
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: message.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: message
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: message.
 
-select (string): List of fields to select.
-Example: id, message, reaction, author, post
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id, message, reaction, author, post
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -995,56 +1060,66 @@ A list of comments with pagination performed by a search.
 |sortBy|updateAt:DESC|
 |select|id,message,updateAt|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.message (array[string]): Filter by message query param.
-Format: filter.message={$not}:OPERATION:VALUE
-Example: filter.message=$not:$like:John Doe&filter.message=like:John
-Available Operations: $ilike
+filter.message (array[string]): 
+* Filter by message query param.
+* Format: filter.message={$not}:OPERATION:VALUE
+* Example: filter.message=$not:$like:John Doe&filter.message=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.post (array[string]): Filter by post query param.
-Format: filter.post={$not}:OPERATION:VALUE
-Example: filter.post=$not:$like:John Doe&filter.post=like:John
-Available Operations: $ilike
+filter.post (array[string]): 
+* Filter by post query param.
+* Format: filter.post={$not}:OPERATION:VALUE
+* Example: filter.post=$not:$like:John Doe&filter.post=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, message, author, post, createAt, updateAt.
-Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, message, author, post, createAt, updateAt.
+* Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-select (string): List of fields to select.
-Example: id, message, reaction, author, post
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param 
+select (string): 
+* List of fields to select.
+* Example: id, message, reaction, author, post
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1070,100 +1145,119 @@ A filtered list of comments with pagination.
 |select|id,username,email,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.username (array[string]): Filter by username query param.
-Format: filter.username={$not}:OPERATION:VALUE
-Example: filter.username=$not:$like:John Doe&filter.username=like:John
-Available Operations: $eq,  $ilike
+filter.username (array[string]): 
+* Filter by username query param.
+* Format: filter.username={$not}:OPERATION:VALUE
+* Example: filter.username=$not:$like:John Doe&filter.username=like:John
+* Available Operations: $eq,  $ilike
 
-filter.email (array[string]): Filter by email query param.
-Format: filter.email={$not}:OPERATION:VALUE
-Example: filter.email=$not:$like:John Doe&filter.email=like:John
-Available Operations: $eq,  $ilike
+filter.email (array[string]): 
+* Filter by email query param.
+* Format: filter.email={$not}:OPERATION:VALUE
+* Example: filter.email=$not:$like:John Doe&filter.email=like:John
+* Available Operations: $eq,  $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.role (array[string]): Filter by role query param.
-Format: filter.role={$not}:OPERATION:VALUE
-Example: filter.role=$not:$like:John Doe&filter.role=like:John
-Available Operations: $eq, $not
+filter.role (array[string]): 
+* Filter by role query param.
+* Format: filter.role={$not}:OPERATION:VALUE
+* Example: filter.role=$not:$like:John Doe&filter.role=like:John
+* Available Operations: $eq, $not
 
-filter.firstName (array[string]): Filter by firstName query param.
-Format: filter.firstName={$not}:OPERATION:VALUE
-Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
-Available Operations: $ilike
+filter.firstName (array[string]): 
+* Filter by firstName query param.
+* Format: filter.firstName={$not}:OPERATION:VALUE
+* Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
+* Available Operations: $ilike
 
-filter.lastName (array[string]): Filter by lastName query param.
-Format: filter.lastName={$not}:OPERATION:VALUE
-Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
-Available Operations: $ilike
+filter.lastName (array[string]): 
+* Filter by lastName query param.
+* Format: filter.lastName={$not}:OPERATION:VALUE
+* Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
+* Available Operations: $ilike
 
-filter.age (array[string]): Filter by age query param.
-Format: filter.age={$not}:OPERATION:VALUE
-Example: filter.age=$not:$like:John Doe&filter.age=like:John
-Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
+filter.age (array[string]): 
+* Filter by age query param.
+* Format: filter.age={$not}:OPERATION:VALUE
+* Example: filter.age=$not:$like:John Doe&filter.age=like:John
+* Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
 
-filter.city (array[string]): Filter by city query param.
-Format: filter.city={$not}:OPERATION:VALUE
-Example: filter.city=$not:$like:John Doe&filter.city=like:John
-Available Operations: $ilike
+filter.city (array[string]): 
+* Filter by city query param.
+* Format: filter.city={$not}:OPERATION:VALUE
+* Example: filter.city=$not:$like:John Doe&filter.city=like:John
+* Available Operations: $ilike
 
-filter.country (array[string]): Filter by country query param.
-Format: filter.country={$not}:OPERATION:VALUE
-Example: filter.country=$not:$like:John Doe&filter.country=like:John
-Available Operations: $ilike
+filter.country (array[string]): 
+* Filter by country query param.
+* Format: filter.country={$not}:OPERATION:VALUE
+* Example: filter.country=$not:$like:John Doe&filter.country=like:John
+* Available Operations: $ilike
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
-Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
+* Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: username,email,firstName,lastName,age
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: username, email, firstName, lastName, age, city, country.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: username,email,firstName,lastName,age
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: username, email, firstName, lastName, age, city, country.
 
-select (string): List of fields to select.
-Example: id, username, email, status, role
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, username, email, status, role
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1184,70 +1278,83 @@ A list of comments with pagination performed by a search.
 |select|id,title,description,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status, author, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status, author, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description.
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1268,80 +1375,95 @@ A list of comments with pagination performed by a search.
 |select|id,content,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.category (array[string]): Filter by category query param.
-Format: filter.category={$not}:OPERATION:VALUE
-Example: filter.category=$not:$like:John Doe&filter.category=like:John
-Available Operations: $ilike
+filter.category (array[string]): 
+* Filter by category query param.
+* Format: filter.category={$not}:OPERATION:VALUE
+* Example: filter.category=$not:$like:John Doe&filter.category=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status author, category, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status author, category, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description, content
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description, content.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description, content
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description, content.
 
-select (string): List of fields to select.
-Example: id, title, description, content, status
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, title, description, content, status
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1362,65 +1484,77 @@ A list of comments with pagination performed by a search.
 |select|message|
 |sortBy|message%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.message (array[string]): Filter by message query param.
-Format: filter.message={$not}:OPERATION:VALUE
-Example: filter.message=$not:$like:John Doe&filter.message=like:John
-Available Operations: $ilike
+filter.message (array[string]): 
+* Filter by message query param.
+* Format: filter.message={$not}:OPERATION:VALUE
+* Example: filter.message=$not:$like:John Doe&filter.message=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.post (array[string]): Filter by post query param.
-Format: filter.post={$not}:OPERATION:VALUE
-Example: filter.post=$not:$like:John Doe&filter.post=like:John
-Available Operations: $ilike
+filter.post (array[string]): 
+* Filter by post query param.
+* Format: filter.post={$not}:OPERATION:VALUE
+* Example: filter.post=$not:$like:John Doe&filter.post=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, message, author, post, createAt, updateAt.
-Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, message, author, post, createAt, updateAt.
+* Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: message
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: message.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: message
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: message.
 
-select (string): List of fields to select.
-Example: id, message, reaction, author, post
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, message, reaction, author, post
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1775,100 +1909,119 @@ A list of comments with pagination.
 |select|id,username,email,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.username (array[string]): Filter by username query param.
-Format: filter.username={$not}:OPERATION:VALUE
-Example: filter.username=$not:$like:John Doe&filter.username=like:John
-Available Operations: $eq,  $ilike
+filter.username (array[string]): 
+* Filter by username query param.
+* Format: filter.username={$not}:OPERATION:VALUE
+* Example: filter.username=$not:$like:John Doe&filter.username=like:John
+* Available Operations: $eq,  $ilike
 
-filter.email (array[string]): Filter by email query param.
-Format: filter.email={$not}:OPERATION:VALUE
-Example: filter.email=$not:$like:John Doe&filter.email=like:John
-Available Operations: $eq,  $ilike
+filter.email (array[string]): 
+* Filter by email query param.
+* Format: filter.email={$not}:OPERATION:VALUE
+* Example: filter.email=$not:$like:John Doe&filter.email=like:John
+* Available Operations: $eq,  $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.role (array[string]): Filter by role query param.
-Format: filter.role={$not}:OPERATION:VALUE
-Example: filter.role=$not:$like:John Doe&filter.role=like:John
-Available Operations: $eq, $not
+filter.role (array[string]): 
+* Filter by role query param.
+* Format: filter.role={$not}:OPERATION:VALUE
+* Example: filter.role=$not:$like:John Doe&filter.role=like:John
+* Available Operations: $eq, $not
 
-filter.firstName (array[string]): Filter by firstName query param.
-Format: filter.firstName={$not}:OPERATION:VALUE
-Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
-Available Operations: $ilike
+filter.firstName (array[string]): 
+* Filter by firstName query param.
+* Format: filter.firstName={$not}:OPERATION:VALUE
+* Example: filter.firstName=$not:$like:John Doe&filter.firstName=like:John
+* Available Operations: $ilike
 
-filter.lastName (array[string]): Filter by lastName query param.
-Format: filter.lastName={$not}:OPERATION:VALUE
-Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
-Available Operations: $ilike
+filter.lastName (array[string]): 
+* Filter by lastName query param.
+* Format: filter.lastName={$not}:OPERATION:VALUE
+* Example: filter.lastName=$not:$like:John Doe&filter.lastName=like:John
+* Available Operations: $ilike
 
-filter.age (array[string]): Filter by age query param.
-Format: filter.age={$not}:OPERATION:VALUE
-Example: filter.age=$not:$like:John Doe&filter.age=like:John
-Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
+filter.age (array[string]): 
+* Filter by age query param.
+* Format: filter.age={$not}:OPERATION:VALUE
+* Example: filter.age=$not:$like:John Doe&filter.age=like:John
+* Available Operations: $eq, $btw, $lt, $lte, $gt, $gte
 
-filter.city (array[string]): Filter by city query param.
-Format: filter.city={$not}:OPERATION:VALUE
-Example: filter.city=$not:$like:John Doe&filter.city=like:John
-Available Operations: $ilike
+filter.city (array[string]): 
+* Filter by city query param.
+* Format: filter.city={$not}:OPERATION:VALUE
+* Example: filter.city=$not:$like:John Doe&filter.city=like:John
+* Available Operations: $ilike
 
-filter.country (array[string]): Filter by country query param.
-Format: filter.country={$not}:OPERATION:VALUE
-Example: filter.country=$not:$like:John Doe&filter.country=like:John
-Available Operations: $ilike
+filter.country (array[string]): 
+* Filter by country query param.
+* Format: filter.country={$not}:OPERATION:VALUE
+* Example: filter.country=$not:$like:John Doe&filter.country=like:John
+* Available Operations: $ilike
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
-Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, username, email, status, role, firstName, lastName, age, city, country, createAt, updateAt.
+* Available values : id:ASC, id:DESC, username:ASC, username:DESC, email:ASC, email:DESC, status:ASC, status:DESC, role:ASC, role:DESC, firstName:ASC, firstName:DESC, lastName:ASC, lastName:DESC, age:ASC, age:DESC, city:ASC, city:DESC, country:ASC, country:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: username,email,firstName,lastName,age
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: username, email, firstName, lastName, age, city, country.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: username,email,firstName,lastName,age
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: username, email, firstName, lastName, age, city, country.
 
-select (string): List of fields to select.
-Example: id, username, email, status, role
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, username, email, status, role
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1889,70 +2042,83 @@ A list of users with pagination performed by a search.
 |select|id,title,description,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status, author, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status, author, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description.
 
-select (string): List of fields to select.
-Example: id,username,email,status,rol
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id,username,email,status,rol
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -1973,80 +2139,95 @@ A list of categories with pagination performed by a search.
 |select|id,content,updateAt|
 |sortBy|updateAt%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.title (array[string]): Filter by title query param.
-Format: filter.title={$not}:OPERATION:VALUE
-Example: filter.title=$not:$like:John Doe&filter.title=like:John
-Available Operations: $ilike
+filter.title (array[string]): 
+* Filter by title query param.
+* Format: filter.title={$not}:OPERATION:VALUE
+* Example: filter.title=$not:$like:John Doe&filter.title=like:John
+* Available Operations: $ilike
 
-filter.description (array[string]): Filter by description query param.
-Format: filter.description={$not}:OPERATION:VALUE
-Example: filter.description=$not:$like:John Doe&filter.description=like:John
-Available Operations: $ilike
+filter.description (array[string]): 
+* Filter by description query param.
+* Format: filter.description={$not}:OPERATION:VALUE
+* Example: filter.description=$not:$like:John Doe&filter.description=like:John
+* Available Operations: $ilike
 
-filter.status (array[string]): Filter by status query param.
-Format: filter.status={$not}:OPERATION:VALUE
-Example: filter.status=$not:$like:John Doe&filter.status=like:John
-Available Operations: $eq, $not
+filter.status (array[string]): 
+* Filter by status query param.
+* Format: filter.status={$not}:OPERATION:VALUE
+* Example: filter.status=$not:$like:John Doe&filter.status=like:John
+* Available Operations: $eq, $not
 
-filter.content (array[string]): Filter by content query param.
-Format: filter.content={$not}:OPERATION:VALUE
-Example: filter.content=$not:$like:John Doe&filter.content=like:John
-Available Operations: $ilike
+filter.content (array[string]): 
+* Filter by content query param.
+* Format: filter.content={$not}:OPERATION:VALUE
+* Example: filter.content=$not:$like:John Doe&filter.content=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.category (array[string]): Filter by category query param.
-Format: filter.category={$not}:OPERATION:VALUE
-Example: filter.category=$not:$like:John Doe&filter.category=like:John
-Available Operations: $ilike
+filter.category (array[string]): 
+* Filter by category query param.
+* Format: filter.category={$not}:OPERATION:VALUE
+* Example: filter.category=$not:$like:John Doe&filter.category=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, title, status author, category, createAt, updateAt.
-Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, title, status author, category, createAt, updateAt.
+* Available values : id:ASC, id:DESC, title:ASC, title:DESC, status:ASC, status:DESC, author:ASC, author:DESC, category:ASC, category:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: title, description, content
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: title, description, content.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: title, description, content
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: title, description, content.
 
-select (string): List of fields to select.
-Example: id, title, description, content, status
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, title, description, content, status
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:
@@ -2067,65 +2248,77 @@ A list of posts with pagination performed by a search.
 |select|message|
 |sortBy|message%3ADESC|
 ### Query description:
-page (number): Page number to retrieve.If you provide invalid value the default page number will applied
-Example: 1
-Default Value: 1
+page (number): 
+* Page number to retrieve. If you provide invalid value the default page number will applied
+* Example: 1
+* Default Value: 1
 
-limit (number): Number of records per page.
-Example: 20
-Default Value: 10
-Max Value: 100   -> If provided value is greater than max value, max value will be applied.
+limit (number): 
+* Number of records per page.
+* Example: 20
+* Default Value: 10
+* Max Value: 100   -> If provided value is greater than max value, max value will be applied.
 
-filter.id (array[string]): Filter by id query param.
-Format: filter.id={$not}:OPERATION:VALUE
-Example: filter.id=$not:$like:John Doe&filter.id=like:John
-Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
+filter.id (array[string]): 
+* Filter by id query param.
+* Format: filter.id={$not}:OPERATION:VALUE
+* Example: filter.id=$not:$like:John Doe&filter.id=like:John
+* Available Operations: $and, $or, $not, $eq, $gt, $gte, $in, $null, $lt, $lte, $btw, $ilike, $sw, $contains
 
-filter.message (array[string]): Filter by message query param.
-Format: filter.message={$not}:OPERATION:VALUE
-Example: filter.message=$not:$like:John Doe&filter.message=like:John
-Available Operations: $ilike
+filter.message (array[string]): 
+* Filter by message query param.
+* Format: filter.message={$not}:OPERATION:VALUE
+* Example: filter.message=$not:$like:John Doe&filter.message=like:John
+* Available Operations: $ilike
 
-filter.author (array[string]): Filter by author query param.
-Format: filter.author={$not}:OPERATION:VALUE
-Example: filter.author=$not:$like:John Doe&filter.author=like:John
-Available Operations: $ilike
+filter.author (array[string]): 
+* Filter by author query param.
+* Format: filter.author={$not}:OPERATION:VALUE
+* Example: filter.author=$not:$like:John Doe&filter.author=like:John
+* Available Operations: $ilike
 
-filter.post (array[string]): Filter by post query param.
-Format: filter.post={$not}:OPERATION:VALUE
-Example: filter.post=$not:$like:John Doe&filter.post=like:John
-Available Operations: $ilike
+filter.post (array[string]): 
+* Filter by post query param.
+* Format: filter.post={$not}:OPERATION:VALUE
+* Example: filter.post=$not:$like:John Doe&filter.post=like:John
+* Available Operations: $ilike
 
-filter.createAt (array[string]): Filter by createAt query param.
-Format: filter.createAt={$not}:OPERATION:VALUE
-Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.createAt (array[string]): 
+* Filter by createAt query param.
+* Format: filter.createAt={$not}:OPERATION:VALUE
+* Example: filter.createAt=$not:$like:John Doe&filter.createAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-filter.updateAt (array[string]): Filter by updateAt query param.
-Format: filter.updateAt={$not}:OPERATION:VALUE
-Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
-Available Operations: $btw, $lt, $lte, $gt, $gte
+filter.updateAt (array[string]): 
+* Filter by updateAt query param.
+* Format: filter.updateAt={$not}:OPERATION:VALUE
+* Example: filter.updateAt=$not:$like:John Doe&filter.updateAt=like:John
+* Available Operations: $btw, $lt, $lte, $gt, $gte
 
-sortBy (array[string]): Parameter to sort by.
-To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting
-Format: fieldName:DIRECTION
-Example: sortBy=id:DESC&sortBy=createdAt:ASC
-Default Value: updateAt:DESC
-Available Fields: id, message, author, post, createAt, updateAt.
-Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
+sortBy (array[string]): 
+* Parameter to sort by.
+* To sort by multiple fields, just provide query param multiple types. The order in url defines an order of sorting.
+* Format: fieldName:DIRECTION
+* Example: sortBy=id:DESC&sortBy=createdAt:ASC
+* Default Value: updateAt:DESC
+* Available Fields: id, message, author, post, createAt, updateAt.
+* Available values : id:ASC, id:DESC, message:ASC, message:DESC, author:ASC, author:DESC, post:ASC, post:DESC, createAt:ASC, createAt:DESC, updateAt:ASC, updateAt:DESC
 
-search (string): Search term to filter result values
-Example: John
-Default Value: No default value
+search (string): 
+* Search term to filter result values.
+* Example: John
+* Default Value: No default value.
 
-searchBy (string): List of fields to search by term to filter result values
-Example: message
-Default Value: By default all fields mentioned below will be used to search by term
-Available Fields: message.
+searchBy (string): 
+* List of fields to search by term to filter result values.
+* Example: message
+* Default Value: By default all fields mentioned below will be used to search by term.
+* Available Fields: message.
 
-select (string): List of fields to select.
-Example: id, message, reaction, author, post
-Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
+select (string): 
+* List of fields to select.
+* Example: id, message, reaction, author, post
+* Default Value: By default all fields returns. If you want to select only some fields, provide them in query param.
 ### Headers:
 Requires access_token.
 ### Access rights by Role:

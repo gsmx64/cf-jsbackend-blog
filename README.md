@@ -1,4 +1,4 @@
-# 📝 Blog project for Bootcamp JavaScript in Backend and Bootcamp of React (CodigoFacilito.com)
+# 📝 Blog project for the Bootcamp JavaScript in Backend and the Bootcamp of React (CodigoFacilito.com)
 
 ### Backend ![Version](https://img.shields.io/badge/v0.0.1-alpha_(backend)-blue)
 
@@ -82,10 +82,10 @@ $ npm --prefix backend/ run startw:prod
 
 
 ## Backend - Postman Collections of Endpoints
-* [Backend - Postman Collection](./backend/cf-jsbackend-blog(backend).postman_collection.json)
+* [Backend - Postman Collection](https://raw.githubusercontent.com/gsmx64/cf-jsbackend-blog/main/backend/cf-jsbackend-blog(backend).postman_collection.json)
 
 
-### Frontend
+## Frontend - Set env constants
 Rename the required file and complete the constants:
 ```
 .env.development.sample
