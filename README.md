@@ -1,4 +1,4 @@
-# 📝 Blog project for Bootcamp JavaScript in Backend and Bootcamp de React (CodigoFacilito.com)
+# 📝 Blog project for Bootcamp JavaScript in Backend and Bootcamp of React (CodigoFacilito.com)
 
 ### Backend ![Version](https://img.shields.io/badge/v0.0.1-alpha_(backend)-blue)
 
@@ -40,6 +40,7 @@ to:
 .testing.env
 ```
 
+The default port is 3001.
 Facebook, Google and Twitter keys and secrets are requiered (I will add an enable option in each).
 
 
@@ -75,6 +76,15 @@ $ npm --prefix backend/ run startw:prod
 ```
 
 
+## Backend - Endpoint information
+* [Backend - Endpoints](./backend/README.md)
+* Swagger: Open http://localhost:3001/docs#/ to view it in the browser.
+
+
+## Backend - Postman Collections of Endpoints
+* [Backend - Postman Collection](./backend/cf-jsbackend-blog(backend).postman_collection.json)
+
+
 ### Frontend
 Rename the required file and complete the constants:
 ```
@@ -89,6 +99,9 @@ to:
 .env.production
 .env.testing
 ```
+
+The default port is 3000.
+
 
 ## Frontend - Installation
 ```bash
