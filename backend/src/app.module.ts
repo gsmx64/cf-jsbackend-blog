@@ -14,12 +14,13 @@ import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CommentsModule } from './comments/comments.module';
 import { SearchModule } from './search/search.module';
+import { SettingsModule } from './settings/settings.module';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: process.env.NODE_ENV.trim(),
+      envFilePath: `.env.${process.env.NODE_ENV.trim()}`,
       isGlobal: true
     }),
     AuthModule,
@@ -29,7 +30,8 @@ import { SearchModule } from './search/search.module';
     PostsModule,
     CategoriesModule,
     CommentsModule,
-    SearchModule
+    SearchModule,
+    SettingsModule
   ]
 })
 

@@ -3,7 +3,7 @@
  * It provides services, strategies, and controllers for various authentication methods such as JWT, local, Facebook, Google, and Twitter.
  * The module is global, meaning it can be used across multiple modules in the application.
  */
-import { Global, Module } from '@nestjs/common';
+import { Global, Module, Type } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
@@ -24,6 +24,44 @@ import { LocalAuthController } from './controllers/local-auth.controller';
 import { TwitterOAuthController } from './controllers/twitter-oauth.controller';
 
 
+function getProviders(): Array<Type<unknown>> {
+  const providers: Array<Type<unknown>> = [];
+  providers.push(AuthService)
+  providers.push(UsersService)
+
+  if(String(process.env.APP_AUTH_FACEBOOK_ENABLE) === 'true')
+    providers.push(FacebookStrategy)
+
+  if(String(process.env.APP_AUTH_GOOGLE_ENABLE) === 'true')
+    providers.push(GoogleStrategy)
+
+  if(String(process.env.APP_AUTH_TWITTER_ENABLE) === 'true')
+    providers.push(TwitterStrategy)
+
+  providers.push(JwtAuthController)
+  providers.push(LocalStrategy)
+
+  return providers;
+}
+
+function getControllers(): Array<Type<unknown>> {
+  const controllers: Array<Type<unknown>> = [];
+  
+  if(String(process.env.APP_AUTH_FACEBOOK_ENABLE) === 'true')
+    controllers.push(FacebookAuthController)
+
+  if(String(process.env.APP_AUTH_GOOGLE_ENABLE) === 'true')
+    controllers.push(GoogleOauthController)
+
+  if(String(process.env.APP_AUTH_TWITTER_ENABLE) === 'true')
+    controllers.push(TwitterOAuthController)
+  
+  controllers.push(JwtAuthController)
+  controllers.push(LocalAuthController)
+
+  return controllers;
+}
+
 @Global()
 @Module({
   imports: [
@@ -39,22 +77,24 @@ import { TwitterOAuthController } from './controllers/twitter-oauth.controller';
     }),
     UsersModule,
   ],
-  providers: [
-    AuthService, 
+  providers: getProviders(),
+  /*[
+    AuthService,
     UsersService,
-    FacebookStrategy,
-    GoogleStrategy,    
+    (String(process.env.APP_AUTH_FACEBOOK_ENABLE) === 'true') ? FacebookStrategy : undefined,
+    (String(process.env.APP_AUTH_GOOGLE_ENABLE) === 'true') ? GoogleStrategy : undefined,
+    (String(process.env.APP_AUTH_TWITTER_ENABLE) === 'true') ? TwitterStrategy : undefined,
     JwtStrategy,
-    LocalStrategy,
-    TwitterStrategy
-  ],
-  controllers: [
-    FacebookAuthController,
-    GoogleOauthController,    
+    LocalStrategy
+  ],*/
+  controllers: getControllers(),
+  /*[
+    (String(process.env.APP_AUTH_FACEBOOK_ENABLE) === 'true') ? FacebookAuthController : undefined,
+    (String(process.env.APP_AUTH_GOOGLE_ENABLE) === 'true') ? GoogleOauthController : undefined,
+    (String(process.env.APP_AUTH_TWITTER_ENABLE) === 'true') ? TwitterOAuthController : undefined,
     JwtAuthController,
-    LocalAuthController,
-    TwitterOAuthController
-  ],
+    LocalAuthController
+  ],*/
   exports: [],
 })
 

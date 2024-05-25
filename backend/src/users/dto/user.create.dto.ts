@@ -45,7 +45,8 @@ export class UserCreateDTO {
      * The status of the user.
      */
     @ApiProperty()
-    @IsNotEmpty()
+    /*@IsNotEmpty()*/
+    @IsOptional()
     @IsEnum(USER_STATUS)
     status: USER_STATUS;
     
@@ -53,7 +54,8 @@ export class UserCreateDTO {
      * The role of the user.
      */
     @ApiProperty()
-    @IsNotEmpty()
+    /*@IsNotEmpty()*/
+    @IsOptional()
     @IsEnum(ROLES)
     role: ROLES;
 
@@ -61,7 +63,7 @@ export class UserCreateDTO {
      * The karma of the user.
      */
     @ApiProperty()
-    @IsNumber()
+    /*@IsNumber()*/
     karma: number;
 
     /**

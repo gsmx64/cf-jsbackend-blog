@@ -26,10 +26,11 @@ import { SEARCH_POSTS_CONFIG } from '../../search/filters/search.posts';
 import { SEARCH_COMMENTS_CONFIG } from '../../search/filters/search.comments';
 import { SWAGGER_CATEGORY_BODY_EXAMPLE,
    SWAGGER_ID_EXAMPLE } from '../../constants/swagger.examples';
-import { POSTS_DEFAULT_CONFIG } from 'src/posts/filters/posts.default';
-import { USERS_DEFAULT_CONFIG } from 'src/users/filters/users.default';
-import { CATEGORIES_DEFAULT_CONFIG } from 'src/categories/filters/categories.default';
-import { COMMENTS_FILTER_CONFIG } from 'src/comments/filters/comments.filter';
+import { POSTS_DEFAULT_CONFIG } from '../../posts/filters/posts.default';
+import { USERS_DEFAULT_CONFIG } from '../../users/filters/users.default';
+import { CATEGORIES_DEFAULT_CONFIG } from '../../categories/filters/categories.default';
+import { COMMENTS_FILTER_CONFIG } from '../../comments/filters/comments.filter';
+import { SettingsUpdateDTO } from '../../settings/dto/settings.update.dto';
 
 
 /**
@@ -487,5 +488,30 @@ export class AdminController {
     @Paginate() query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {
     return this.adminService.searchComments(query);
+  }
+
+  /**
+   * Retrieves settings data.
+   * @returns The settings.
+   */
+  @ApiBearerAuth('access_token')
+  @AdminAccess()
+  @Get('settings/view')
+  public async getSettings() {
+    return this.adminService.getSettings();
+  }
+
+  /**
+   * Updates the settings.
+   * @param body - The updated settings data.
+   * @returns The updated settings.
+   */
+  @ApiBearerAuth('access_token')
+  @AdminAccess()
+  @Put('settings/edit')
+  public async updateSettings(
+    @Body() body: SettingsUpdateDTO
+  ) {
+    return this.adminService.updateSettings(body);
   }
 }

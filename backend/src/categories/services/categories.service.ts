@@ -24,6 +24,7 @@ import {
 import {
   CATEGORIES_DEFAULT_CONFIG,
   CATEGORIES_DEFAULT_CONFIG_LOW } from '../filters/categories.default';
+import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**
@@ -39,6 +40,7 @@ export class CategoriesService {
     @InjectRepository(CategoriesEntity)
     private readonly categoryRepository: Repository<CategoriesEntity>,
 
+    private authService: AuthService,
     private userService: UsersService
   ) {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
@@ -53,13 +55,20 @@ export class CategoriesService {
     body: CategoryCreateDTO
   ): Promise<CategoriesEntity> {
     try{
+      const authorOverride = this.authService.getUserId(this.request);      
       const statusOverride = 'UNPUBLISHED' as PUBLISH_STATUS;
+
+      body = { ...body,
+        status: statusOverride,
+        author: await authorOverride,
+      }
+
       const category: CategoriesEntity = await this.categoryRepository
-          .save({ ...body, status: statusOverride });
+          .save(body);
 
       if(!category) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while creating the category.'
         });
       }
@@ -86,8 +95,8 @@ export class CategoriesService {
 
       if(category.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'Error while updating the category.'
+          type: 'NO_CONTENT',
+          message: 'No changes made while updating the category.'
         });
       }
 
@@ -111,7 +120,7 @@ export class CategoriesService {
 
       if(category.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while deleting the category.'
         });
       }
@@ -157,7 +166,7 @@ export class CategoriesService {
 
       if(!category) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Category not found.'
         });
       }
@@ -205,7 +214,7 @@ export class CategoriesService {
 
       if(Object.keys(categories.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Categories not found.'
         });
       }
@@ -242,8 +251,8 @@ export class CategoriesService {
 
       if(Object.keys(categories.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No categories found.'
+          type: 'NO_CONTENT',
+          message: 'Categories not found.'
         });
       }
 
@@ -279,8 +288,8 @@ export class CategoriesService {
 
       if(Object.keys(categories.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No categories found.'
+          type: 'NO_CONTENT',
+          message: 'Categories not found.'
         });
       }
 

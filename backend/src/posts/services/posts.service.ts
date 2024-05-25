@@ -24,6 +24,7 @@ import {
 import {
   POSTS_SEARCH_CONFIG,
   POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
+import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**
@@ -39,6 +40,7 @@ export class PostsService {
     @InjectRepository(PostsEntity)
     private readonly postRepository: Repository<PostsEntity>,
 
+    private authService: AuthService,
     private userService: UsersService
   ) {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
@@ -54,13 +56,20 @@ export class PostsService {
     body: PostCreateDTO
   ): Promise<PostsEntity> {
     try{
+      const authorOverride = this.authService.getUserId(this.request);
       const statusOverride = 'UNPUBLISHED' as PUBLISH_STATUS;
+
+      body = { ...body,
+        status: statusOverride,
+        author: await authorOverride,
+      }
+
       const post: PostsEntity = await this.postRepository
-          .save({ ...body, status: statusOverride });
+          .save(body);
 
       if(!post) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while creating the post.'
         });
       }
@@ -87,7 +96,7 @@ export class PostsService {
 
       if(post.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while updating the post.'
         });
       }
@@ -112,7 +121,7 @@ export class PostsService {
 
       if(post.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while deleting the post.'
         });
       }
@@ -140,12 +149,14 @@ export class PostsService {
           .leftJoinAndSelect('post.author', 'author')
           .leftJoinAndSelect('post.category', 'category')
           .leftJoinAndSelect('post.comments', 'comments')
+          .leftJoin('comments.author', 'comment_author')
+          .addSelect(['comment_author.id', 'comment_author.username', 'comment_author.avatar'])
           .orderBy('post.created_at', 'DESC')
           .getOne();
 
       if(!post) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Post not found.'
         });
       }
@@ -188,7 +199,7 @@ export class PostsService {
 
       if(Object.keys(posts.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Post not found for this user.'
         });
       }
@@ -228,7 +239,7 @@ export class PostsService {
 
       if(Object.keys(posts.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Posts not found.'
         });
       }
@@ -265,8 +276,8 @@ export class PostsService {
 
       if(Object.keys(posts.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No se encontraron posts.'
+          type: 'NO_CONTENT',
+          message: 'Posts not found.'
         });
       }
 
@@ -302,8 +313,8 @@ export class PostsService {
 
       if(Object.keys(posts.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No posts found.'
+          type: 'NO_CONTENT',
+          message: 'Posts not found.'
         });
       }
 

@@ -6,11 +6,12 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 
-import { AuthResponse, PayloadToken } from '../interfaces/auth.interface';
+import { AuthResponse, IUseToken, PayloadToken } from '../interfaces/auth.interface';
 import { UsersService } from '../../users/services/users.service';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { AuthDTO } from '../dto/auth.dto';
 import { LoggingMessages } from '../../utils/logging.messages';
+import { useToken } from 'src/utils/use.token';
 
 
 @Injectable()
@@ -92,6 +93,29 @@ export class AuthService {
       }),
       user,
     };
+  }
+
+  /**
+   * Return current user role.
+   * @param user - The user entity.
+   * @returns An object containing the user role.
+   */
+  public async getUserRole(id: string): Promise<any> {
+    const getUser = await this.userService.findIdRoleOnly(id);
+  
+    return getUser.role;
+  }
+
+  /**
+   * Return current user role.
+   * @param user - The user entity.
+   * @returns An object containing the user role.
+   */
+  public async getUserId(request: any): Promise<any> {
+    const currentToken = request.headers['access_token'];
+      const manageToken: IUseToken | string = useToken(currentToken);
+  
+    return manageToken.sub;
   }
 
   /**

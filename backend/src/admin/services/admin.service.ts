@@ -19,6 +19,9 @@ import { CategoriesService } from '../../categories/services/categories.service'
 import { PostsService } from '../../posts/services/posts.service';
 import { CommentsService } from '../../comments/services/comments.service';
 import { SearchService } from '../../search/services/search.service';
+import { SettingsService } from '../../settings/services/settings.service';
+import { SettingsUpdateDTO } from '../../settings/dto/settings.update.dto';
+import { SettingsEntity } from '../../settings/entities/settings.entity';
 
 
 /**
@@ -40,7 +43,10 @@ export class AdminService {
     private readonly commentService: CommentsService,
 
     @Inject(SearchService)
-    private readonly searchService: SearchService
+    private readonly searchService: SearchService,
+
+    @Inject(SettingsService)
+    private readonly settingsService: SettingsService
   ) {}
 
   /**
@@ -304,5 +310,24 @@ export class AdminService {
     query: PaginateQuery
   ): Promise<Paginated<CommentsEntity>> {
     return await this.searchService.searchComments(query);
+  }
+
+  /**
+   * Return settings data.
+   * @returns The found settings.
+   */
+  public async getSettings(): Promise<SettingsEntity> {
+    return await this.settingsService.getSettings();
+  }
+
+  /**
+   * Updates settings.
+   * @param body - The updated settings data.
+   * @returns The update result.
+   */
+  public async updateSettings(
+    body: SettingsUpdateDTO
+  ): Promise<UpdateResult | undefined>{
+    return await this.settingsService.updateSettings(body);
   }
 }

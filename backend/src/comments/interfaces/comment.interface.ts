@@ -10,10 +10,6 @@ export interface IComment {
      */
     message: string;
     /**
-     * The reaction to the comment.
-     */
-    reaction: string;
-    /**
      * The author of the comment.
      */
     author: UsersEntity;

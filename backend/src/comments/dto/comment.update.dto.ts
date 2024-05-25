@@ -18,14 +18,6 @@ export class CommentUpdateDTO {
     message: string;
 
     /**
-     * The updated reaction of the comment.
-     */
-    @ApiProperty()
-    @IsString()
-    @IsOptional()
-    reaction: string;
-
-    /**
      * The updated author of the comment.
      */
     //@ApiProperty()

@@ -40,7 +40,7 @@ export class CategoryCreateDTO {
      * The status of the category.
      */
     @ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     @IsEnum(PUBLISH_STATUS)
     status: PUBLISH_STATUS;
 
@@ -48,7 +48,7 @@ export class CategoryCreateDTO {
      * The author of the category.
      */
     //@ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     author: UserCreateDTO;
 

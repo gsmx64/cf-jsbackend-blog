@@ -1,4 +1,4 @@
-import { Controller, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Get, Param } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { LocalAuthGuard } from '../guards/local-auth.guard';
@@ -41,5 +41,24 @@ export class LocalAuthController {
   @Post('login')
   async login(@Body() { username, password }: AuthDTO): Promise<any> {
     return this.authService.login({ username, password });
+  }
+
+  /**
+   * Returns user current user role.
+   * @param {AuthDTO} body - The request body containing the username and password.
+   * @returns {Promise<string>} - The user role.
+   */
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
+    description: 'The user id required to return user role.'
+  })
+  @PublicAccess()
+  @Get('role/:id')
+  async role(@Param('id') id: string): Promise<any> {
+    console.log(id);
+    return this.authService.getUserRole(id);
   }
 }

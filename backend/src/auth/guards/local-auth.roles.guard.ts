@@ -49,7 +49,9 @@ export class LocalRolesGuard implements CanActivate {
       } else if (roleUser === ROLES.MODERATOR) {
         return true;
       } else if (roleUser === ROLES.EDITOR) {
-        return true;    
+        return true;
+      } else if (roleUser === ROLES.NONE) {
+        return true; 
       } else {
         throw new UnauthorizedException('No permissions for this operation.');
       }

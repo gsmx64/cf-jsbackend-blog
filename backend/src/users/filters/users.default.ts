@@ -8,9 +8,9 @@ import { USER_STATUS } from "../../constants/user.status";
  * Default configuration for users pagination.
  */
 export const USERS_DEFAULT_CONFIG: PaginateConfig<UsersEntity> = {
-    sortableColumns: ['updateAt'],
+    sortableColumns: ['username', 'updateAt'],
     nullSort: 'last',
-    defaultSortBy: [['updateAt', 'DESC']],
+    defaultSortBy: [['username', 'ASC']],
     defaultLimit: process.env.APP_PAGINATION_DEFAULT_LIMIT || 10,
     maxLimit: process.env.APP_PAGINATION_MAX_LIMIT || 100,
     withDeleted: false,

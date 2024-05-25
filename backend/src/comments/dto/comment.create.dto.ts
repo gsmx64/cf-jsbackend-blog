@@ -18,18 +18,10 @@ export class CommentCreateDTO {
     message: string;
 
     /**
-     * The reaction to the comment.
-     */
-    @ApiProperty()
-    @IsNotEmpty()
-    @IsString()
-    reaction: string;
-
-    /**
      * The author of the comment.
      */
     //@ApiProperty()
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     author: UserCreateDTO;
 

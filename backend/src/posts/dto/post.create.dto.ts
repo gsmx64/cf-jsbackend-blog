@@ -58,7 +58,7 @@ export class PostCreateDTO {
      */
     //@ApiProperty()
     @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     author: UserCreateDTO;
 
     /**

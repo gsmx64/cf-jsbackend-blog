@@ -12,11 +12,14 @@ import { UsersEntity } from './../users/entities/users.entity';
 import { PostsEntity } from '../posts/entities/posts.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';
+import { SettingsEntity } from '../settings/entities/settings.entity';
 import { UsersService } from '../users/services/users.service';
 import { PostsService } from '../posts/services/posts.service';
 import { CategoriesService } from '../categories/services/categories.service';
 import { CommentsService } from '../comments/services/comments.service';
 import { SearchService } from '../search/services/search.service';
+import { SettingsService } from '../settings/services/settings.service';
+
 
 
 @Module({
@@ -25,7 +28,8 @@ import { SearchService } from '../search/services/search.service';
       UsersEntity,
       PostsEntity,
       CommentsEntity,
-      CategoriesEntity
+      CategoriesEntity,
+      SettingsEntity
     ])
   ],
   providers: [
@@ -36,7 +40,8 @@ import { SearchService } from '../search/services/search.service';
     CategoriesService,
     PostsService,
     CommentsService,
-    SearchService
+    SearchService,
+    SettingsService
   ],
   controllers: [AdminController],
   exports: [AdminService, TypeOrmModule]

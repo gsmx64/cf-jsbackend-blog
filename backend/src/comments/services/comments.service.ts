@@ -17,6 +17,7 @@ import { LoggingMessages } from '../../utils/logging.messages';
 import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
 import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_DEFAULT_CONFIG } from '../filters/comments.default';
+import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**
@@ -32,6 +33,7 @@ export class CommentsService {
     @InjectRepository(CommentsEntity)
     private readonly commentRepository: Repository<CommentsEntity>,
 
+    private authService: AuthService,
     private userService: UsersService
   ) {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
@@ -47,11 +49,17 @@ export class CommentsService {
     body: CommentCreateDTO
   ): Promise<CommentsEntity> {
     try{
+      const authorOverride = this.authService.getUserId(this.request);
+
+      body = { ...body,
+        author: await authorOverride,
+      }
+
       const comment: CommentsEntity = await this.commentRepository.save(body);
 
       if(!comment) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while creating the comment.'
         });
       }
@@ -78,8 +86,8 @@ export class CommentsService {
 
       if(comment.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'Error while updating the comment.'
+          type: 'NO_CONTENT',
+          message: 'No changes made while updating the comment.'
         });
       }
 
@@ -103,7 +111,7 @@ export class CommentsService {
 
       if(comment.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while deleting the comment.'
         });
       }
@@ -143,7 +151,7 @@ export class CommentsService {
 
       if(!comment) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Comment not found.'
         });
       }
@@ -183,7 +191,7 @@ export class CommentsService {
 
       if(Object.keys(comments.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Comments not found for this user.'
         });
       }
@@ -226,7 +234,7 @@ export class CommentsService {
 
       if(Object.keys(comments.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Comment not found.'
         });
       }
@@ -261,8 +269,8 @@ export class CommentsService {
 
       if(Object.keys(comments.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No comments found.'
+          type: 'NO_CONTENT',
+          message: 'Comments not found.'
         });
       }
 
@@ -296,8 +304,8 @@ export class CommentsService {
 
       if(Object.keys(comments.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No comments found.'
+          type: 'NO_CONTENT',
+          message: 'Comments not found.'
         });
       }
 

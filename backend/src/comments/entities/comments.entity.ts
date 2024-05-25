@@ -21,15 +21,6 @@ export class CommentsEntity extends BaseEntity implements IComment {
     message: string;
 
     /**
-     * The reaction of the comment.
-     */
-    @Column({
-        type: 'varchar',
-        width: 10
-    })
-    reaction: string;
-
-    /**
      * The author of the comment.
      */
     @ManyToOne(()=>UsersEntity, (author)=>author.comments)

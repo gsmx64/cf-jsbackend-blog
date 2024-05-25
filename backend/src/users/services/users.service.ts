@@ -41,7 +41,7 @@ export class UsersService {
     @Inject(REQUEST) private request: Request,
 
     @InjectRepository(UsersEntity)
-    private readonly userRepository: Repository<UsersEntity>,    
+    private readonly userRepository: Repository<UsersEntity>,
   ) {
     this.dataForLog = this.getUserRoleforLogging(this.request);
   }
@@ -101,7 +101,9 @@ export class UsersService {
     try {
       const currentToken = request.headers['access_token'];
       const manageToken: any = useToken(currentToken);
-      return (manageToken.role == ROLES.BASIC);
+      return (request.headers['access_token'] == '')
+        ? true
+        : (manageToken.role == ROLES.BASIC);
     } catch(error) {
       throw ErrorManager.createSignatureError(error.message);
     }
@@ -152,13 +154,14 @@ export class UsersService {
         { ...body,
           status: statusOverride,
           role: roleOverride,
+          karma: body.karma ? body.karma : 0,
           password: hashedPassword
         }
       );
 
       if(!user) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while creating the user.'
         });
       }
@@ -194,8 +197,8 @@ export class UsersService {
 
       if(user.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'Error while updating the user.'
+          type: 'NO_CONTENT',
+          message: 'No changes made while updating the user.'
         });
       }
 
@@ -219,7 +222,7 @@ export class UsersService {
 
       if(user.affected === 0){
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while deleting the user.'
         });
       }
@@ -327,7 +330,7 @@ export class UsersService {
 
       if(!user) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'User not found by Id.'
         });
       }
@@ -374,7 +377,7 @@ export class UsersService {
 
       if(!user) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'User not found.'
         });
       }
@@ -423,7 +426,7 @@ export class UsersService {
 
       if(!user) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Error while loading your user data.'
         });
       }
@@ -478,7 +481,7 @@ export class UsersService {
 
       if(Object.keys(users.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
+          type: 'NO_CONTENT',
           message: 'Users not found.'
         });
       }
@@ -530,8 +533,8 @@ export class UsersService {
 
       if(Object.keys(users.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No users found.'
+          type: 'NO_CONTENT',
+          message: 'Users not found.'
         });
       }
 
@@ -582,8 +585,8 @@ export class UsersService {
 
       if(Object.keys(users.data).length === 0) {
         throw new ErrorManager({
-          type: 'BAD_REQUEST',
-          message: 'No users found.'
+          type: 'NO_CONTENT',
+          message: 'Users not found.'
         });
       }
 

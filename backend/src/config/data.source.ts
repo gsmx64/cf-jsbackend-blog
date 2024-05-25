@@ -9,13 +9,14 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { PostsEntity } from '../posts/entities/posts.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
+import { SettingsEntity } from '../settings/entities/settings.entity';
 
 
 /**
  * Load environment variables from the specified file.
  */
 ConfigModule.forRoot({
-  envFilePath: `.${process.env.NODE_ENV.trim()}.env`,
+  envFilePath: `.env.${process.env.NODE_ENV.trim()}`,
 });
 
 /**
@@ -33,7 +34,7 @@ export const DataSourceConfig: DataSourceOptions = {
   logging: false,
   synchronize: true,
   name: 'default',
-  entities: [UsersEntity, PostsEntity, CategoriesEntity, CommentsEntity], 
+  entities: [UsersEntity, PostsEntity, CategoriesEntity, CommentsEntity, SettingsEntity], 
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   subscribers: [__dirname + '/../subscriber/**/*{.ts,.js}'],
   migrationsRun: true,
