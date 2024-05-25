@@ -1,11 +1,11 @@
 import PostsView from "../Posts";
 
 
-const HomeView = (): React.JSX.Element => {
+const HomeView = () => {
   return (
-    <div className="container">
-      {<PostsView />}
-    </div>
+    <>
+      <PostsView />
+    </>
   );
 };
 

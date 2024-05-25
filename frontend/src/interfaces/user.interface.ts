@@ -54,6 +54,19 @@ export interface IUserArray {
   }
 }
 
+export interface IUserRegister {
+  username: string;
+  password: string;
+  repeat_password: string;
+  avatar?: string | undefined;
+  firstName: string;
+  lastName: string;
+  email: string;
+  age: number;
+  city: string;
+  country: string;
+}
+
 export const initIUser: IUser = {
   id: '',
   createAt: '',
@@ -108,4 +121,17 @@ export const initIUserArray: IUserArray = {
     next: '',
     last: ''
   }
+}
+
+export const initIUserRegister: IUserRegister = {
+  username: '',
+  password: '',
+  repeat_password: '',
+  avatar: '',
+  firstName: '',
+  lastName: '',
+  email: '',
+  age: 0,
+  city: '',
+  country: ''
 }

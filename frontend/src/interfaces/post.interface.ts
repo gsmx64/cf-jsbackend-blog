@@ -12,6 +12,14 @@ export default interface IPost {
   comments?: [string]
 }
 
+export interface IPostCreate {
+  title: string;
+  description: string;
+  image: string;
+  content: string;
+  category: string;
+}
+
 export interface IPostArray {
   data: {
     id: string;
@@ -54,6 +62,14 @@ export const initIPost: IPost = {
   author: '',
   category: '',
   comments: ['']
+}
+
+export const initIPostCreate: IPostCreate = {
+  title: '',
+  description: '',
+  image: '',
+  content: '',
+  category: '',
 }
 
 export const initIPostArray: IPostArray = {

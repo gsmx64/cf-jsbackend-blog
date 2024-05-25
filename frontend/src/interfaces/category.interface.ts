@@ -10,6 +10,12 @@ export default interface ICategory {
   posts?: [string];
 }
 
+export interface ICategoryCreate {
+  title: string;
+  description: string;
+  image: string;
+}
+
 export interface ICategoryArray {
   data: {
     id: string;
@@ -48,6 +54,12 @@ export const initICategory: ICategory = {
   status: '',
   author: '',
   posts: ['']
+}
+
+export const initICategoryCreate: ICategoryCreate = {
+  title: '',
+  description: '',
+  image: '',
 }
 
 export const initICategoryArray: ICategoryArray = {

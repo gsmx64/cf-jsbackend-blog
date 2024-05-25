@@ -1,7 +1,7 @@
-import React from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
-const Loading = (): React.JSX.Element => {
+const Loading = () => {
   return (
     <div className="spinner-border" role="status">
       <span className="visually-hidden">Loading...</span>

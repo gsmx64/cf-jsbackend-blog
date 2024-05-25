@@ -1,57 +1,61 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+
 import { AxiosResponse } from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import Navbar from "../../components/Navbar";
 import Profile from "../../components/Profile";
+import Footer from "../../components/Footer";
 import CommentsService from "../../services/comments.service";
 import PostsService from "../../services/posts.service";
+import UsersService from "../../services/users.service";
 import { ICommentArray, initICommentArray } from "../../interfaces/comment.interface";
 import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
-import { useParams } from "react-router-dom";
-import UsersService from "../../services/users.service";
 import IUser, { initIUser } from "../../interfaces/user.interface";
-import Navbar from "../../components/Navbar";
+import AuthService from "../../services/auth.service";
 
 
-const UserView = (): React.JSX.Element => {
+const UserView = () => {
   const { userId } = useParams();
+  const [userRole, setUserRole] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const [user, setUser] = useState<IUser>(initIUser);
   const [userComments, setUserComments] = useState<ICommentArray>(initICommentArray);
   const [userPosts, setUserPosts] = useState<IPostArray>(initIPostArray);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | undefined>();
 
   useEffect(() => {
+    setUserRole(AuthService.userRole());
     fetchUser();
     fetchComments(5);
     fetchPosts(5);
   }, []);
 
-  const handleNavbarSearch = (term: any) => {
+  const handleNavbarSearch = (term: string) => {
     setSearchTerm(term);
-    //fetchPosts(`?search=${term}`);
-  }  
+    fetchUsers(`?search=${term}`);
+  }
 
   const fetchUser = () => {
     return UsersService.get(userId)
     .then((response: AxiosResponse) => {
-      setUser(response.data);
-      setIsLoading(false);
+      setUser(response.data as IUser);
     })
-    .catch((error: Error) => {
-      setUser(initIUser);
-      setError(error);
-      setIsLoading(false);
-    });
+  }
+
+  const fetchUsers = (term: string) => {
+    return UsersService.search(`?search=${term}`)
+    .then((response: AxiosResponse) => {
+      setUser(response.data);
+    })
   }
 
   const fetchComments = (limit: number | null = null) => {
     return CommentsService
       .getUserComments(userId, limit)
       .then((response: AxiosResponse) => {
-        setUserComments(response.data);
+        setUserComments(response.data as ICommentArray);
       })
   }
 
@@ -59,52 +63,44 @@ const UserView = (): React.JSX.Element => {
     return PostsService
       .getUserPosts(userId, limit)
       .then((response: AxiosResponse) => {
-        setUserPosts(response.data);
-        console.log(JSON.stringify(response.data));
+        setUserPosts(response.data as IPostArray);
       })
   }
 
-  const renderUser = () => {
-    if (isLoading) {
-      return (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="card text-white bg-danger mb-3" style={{maxWidth: 288}}>
-          <div className="card-header">ERROR:</div>
-          <div className="card-body">
-            <h5 className="card-title">An error was found.</h5>
-            <p className="card-text">`The error code was: {error.message}</p>
-          </div>
-        </div>
-      );
-    }
-    
+  const renderUsers = () => {
     return (
       <div>
         <Profile
           user={user}
           comments={userComments}
           posts={userPosts}
+          userRole={userRole}
         />
       </div>
     );
   }
 
   return (
-    <div className="container">
-      <div className="search">
-        {<Navbar onSearch={handleNavbarSearch} />}
+    <>
+      <Navbar
+        onSearch={handleNavbarSearch}
+      />
+      <div className="container mt-3">
+        {
+          searchTerm
+          ?
+          renderUsers()
+          :
+          <Profile
+            user={user}
+            comments={userComments}
+            posts={userPosts}
+            userRole={userRole}
+          />
+        }
       </div>
-      <div className="mt-3">
-        {renderUser()}
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

@@ -1,8 +1,11 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 import styles from './CategoryItem.module.css';
+import BootstrapLink from "../../../BootstrapLink";
 
-const CategoryItem = ({ id, title, description, image, status, author, postsCount, updateAt, userRole, onCategoryClick }: any): React.JSX.Element => {
+
+const CategoryItem = ({ id, title, description, image, status,
+  author, postsCount, updateAt, userRole, onCategoryClick }: any) => {
   const handleSeeMoreClick = (event: any) => {
     event.stopPropagation();
     onCategoryClick(id);
@@ -12,7 +15,7 @@ const CategoryItem = ({ id, title, description, image, status, author, postsCoun
 
   return (
     <div className={styles.categoryContainer}>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+      <BootstrapLink />
       <div className={styles.imageContainer}>
         <img src={image} width={200} height={200} alt={title} className="rounded" />
       </div>
@@ -33,7 +36,10 @@ const CategoryItem = ({ id, title, description, image, status, author, postsCoun
               </div>
               <div className="input-group-text">
                 <i className="bi bi-person-circle pb-1 pe-2"></i>
-                <small>{author}</small>
+                <Link to={`/user/${author.id}`} className="">
+                  <small>{author.username}</small>
+                  {(author.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                </Link>
               </div>
               {(
                 (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&

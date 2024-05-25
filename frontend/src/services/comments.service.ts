@@ -1,47 +1,70 @@
 import api from "../utils/useApi";
 import AuthService from "./auth.service";
-import IComment, { ICommentArray, initIComment,
+import IComment, { ICommentCreate, initIComment,
   initICommentArray } from "../interfaces/comment.interface";
 
 
-const create = (data: IComment) => {
-  return api.post<IComment>(
-    `comments/create`, { data: data, headers: AuthService.authHeader() });
+const create = (data: ICommentCreate) => {
+  return api.post<ICommentCreate>(
+    `comments/create`,
+    data,
+    { headers: AuthService.authHeader() }
+  );
 };
 
-const update = (id: string, data: IComment) => {
+const update = (id: string, data: any) => {
   return api.put<any>(
-    `comments/edit/${id}`, { data: data, headers: AuthService.authHeader() });
+    `comments/edit/${id}`,
+    data,
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const remove = (id: string) => {
   return api.delete<any>(
-    `comments/delete/${id}`, { headers: AuthService.authHeader() });
+    `comments/delete/${id}`,
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const get = (id: string | undefined) => {
   return (id != undefined) ? api.get<IComment>(
-    `comments/view/${id}`) : initIComment as any;
+    `comments/view/${id}`,
+    { headers: AuthService.authHeader() }
+  ) : initIComment as any;
 };
 
-const getAll = () => {
-  return api.get<Array<IComment>>(`comments/list`);
+const getAll = (currentPage: number | null = null, itemsPerPage: number | null = null) => {
+  const currentPageQuery = (currentPage != null) ? `/?page=${currentPage}` : ``;
+  const itemsPerPageQuery = (itemsPerPage != null) ? `&limit=${itemsPerPage}` : ``;
+
+  return api.get<Array<IComment>>(
+    `comments/list${currentPageQuery}${itemsPerPageQuery}`,
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const getUserComments = (id: string | undefined, limit: number | null = null) => {
   const limitQuery = (limit != null) ? `?limit=${limit}` : ``;
-  return (id != undefined) ? api.get<ICommentArray>(
-    `comments/user/${id}${limitQuery}`) : initICommentArray as any;
+
+  return (id != undefined) ? api.get<Array<IComment>>(
+    `comments/user/${id}${limitQuery}`,
+    { headers: AuthService.authHeader() }
+  ) : initICommentArray as any;
 };
 
 const search = (query: any) => {
   return api.get<Array<IComment>>(
-    `comments/search${query}`, { headers: AuthService.authHeader() });
+    `comments/search${query}`,
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const filter = (query: any) => {
   return api.get<Array<IComment>>(
-    `comments/filter${query}`, { headers: AuthService.authHeader() });
+    `comments/filter${query}`,
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const CommentsService = {

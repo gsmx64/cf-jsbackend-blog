@@ -1,7 +1,4 @@
-import React from "react";
-
-
-const ProfileSocialItem = ({ social }: any): React.JSX.Element => {
+const ProfileSocialItem = ({ social }: any) => {
 
   if(social.length === 0) return <></>;
 

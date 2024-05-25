@@ -1,33 +1,78 @@
-import React from "react";//, { useState }
+import { memo } from "react";
 import { useNavigate } from "react-router-dom";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import CategoryItem from "./components/CategoryItem";
+import Pagination from "../Pagination";
+import Loading from "../Loading";
+import Alerts from "../Alerts";
 
 
-const Categories = ({categories, userRole}: any): React.JSX.Element => {
+const Categories = ({data, currentPage, setCurrentPage, totalPages,
+  errorMessage, loading, searchTerm, userRole}: any) => {
   const navigate = useNavigate();
 
   const handleCategoryItemClick = (id: string) => {
-      navigate(`/category/${id}`, { state: id });
+    navigate(`/category/${id}`, { state: id });
   };
 
   const renderCategories = () => {
+    const currentData = Array.from(data);
 
-    return Array.from(categories.data).map((categoryItem: any) => (
-      <CategoryItem
-        key={`category-item-${categoryItem.id}`}
-        title={categoryItem.title}
-        description={categoryItem.description}
-        image={categoryItem.image}
-        status={categoryItem.status}
-        author={categoryItem.author.username}        
-        updateAt={categoryItem.updateAt}
-        postsCount={categories.meta.totalItems}
-        userRole={userRole}
-        onCategoryClick={handleCategoryItemClick}
-        id={categoryItem.id}
-      />
-    ));
+    return (
+      <>
+        {currentData && loading ? (
+          <Loading />
+        ) : (
+          <>
+            {!currentData ? (
+              <div className="justify-content-center pt-20">
+                <p>No categories found!</p>
+              </div>
+            ) : (
+              <div className="justify-content-center">
+                {currentData?.map((categoryItem: any) => {
+                  if (searchTerm !== '') {
+                    if (
+                      !categoryItem.title.toLowerCase().includes(searchTerm) &&
+                      !categoryItem.description.toLowerCase().includes(searchTerm)
+                    ) {
+                      return '';
+                    }
+                  }
+
+                  return (
+                    <CategoryItem
+                      key={`category-item-${categoryItem.id}`}
+                      title={categoryItem.title}                      
+                      image={categoryItem.image}
+                      description={categoryItem.description}
+                      status={categoryItem.status}
+                      author={categoryItem.author}        
+                      updateAt={categoryItem.updateAt}
+                      postsCount={categoryItem.posts.length}
+                      userRole={userRole}
+                      onCategoryClick={handleCategoryItemClick}
+                      id={categoryItem.id}
+                      />
+                    );
+                })}
+              </div>
+            )}
+            <Pagination
+              totalPages={totalPages}
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+            />
+            <Alerts
+              alertMessage={''}
+              errorMessage={errorMessage}
+            />
+          </>
+        )}
+      </>
+    );
   }
 
   return (
@@ -42,4 +87,4 @@ const Categories = ({categories, userRole}: any): React.JSX.Element => {
   );
 };
 
-export default Categories;
+export default memo(Categories);

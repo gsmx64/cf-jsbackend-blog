@@ -1,109 +1,102 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
-import ReactPaginate from "react-paginate";
+import { useState, useEffect, useRef } from "react";
+
 import { AxiosResponse } from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CategoriesService from "../../services/categories.service";
-import AuthService from "../../services/auth.service";
-import { ICategoryArray, initICategoryArray } from "../../interfaces/category.interface";
 import Navbar from "../../components/Navbar";
 import Categories from "../../components/Categories";
-import styles from "./Categories.module.css";
+import Footer from "../../components/Footer";
+import AuthService from "../../services/auth.service";
+import CategoriesService from "../../services/categories.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
+import { ICategoryArray, initICategoryArray } from "../../interfaces/category.interface";
 
 
-const CategoriesView = (): React.JSX.Element => {
+/*
+// Implementation of Zustand with Axios
+import usePostsStore from "../../state/categories.store";
+
+interface Error {
+  err: unknown;
+  isError: boolean;
+  error?: Error;
+  stack?: Error;
+  message: string;
+  toString(): string;
+}
+
+interface IUseCategoriesStore {
+  postsData: ICategories;
+  postsIsLoading: boolean;
+  postsError: Error | null | unknown;
+  fetchCategories: (query: string | null) => void;
+}
+*/
+const CategoriesView = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | undefined>();
-
   const [searchTerm, setSearchTerm] = useState<string>('');
   const containerRef = useRef();
 
   useEffect(() => {
-    fetchCategories();
+    fetchCategories(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
-  }, []);
+  }, [currentPage, itemsPerPage]);
 
-  const fetchCategories = () => {
-    return CategoriesService.getAll()
+  const fetchCategories = (currentPage: number, itemsPerPage: number) => {
+    setErrorMessage('');
+    setLoading(true);
+
+    return CategoriesService.getAll(currentPage, itemsPerPage)
       .then((response: AxiosResponse) => {
-        setCategories(response.data);
-        setIsLoading(false);
+        setCategories(response.data.data);
+        setTotalPages(response.data.meta.totalPages);
+        setTotalItems(response.data.meta.totalItems);
+        setItemsPerPage(response.data.meta.itemsPerPage);
       })
-      .catch((error: Error) => {
-        setCategories(initICategoryArray);
-        setError(error);
-        setIsLoading(false);
+      .catch((error: any) => {
+        setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term);
-    //fetchCategories(`?search=${term}`);
-  }
-
-  const handlePageClick = useCallback(({ selected }: any) => {
-    //fetchCategories(`?search=${searchTerm}&page=${selected}`);
-  }, [searchTerm, fetchCategories]);
-
-  const renderCategories = () => {
-    if (isLoading) {
-      return (
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="card text-white bg-danger mb-3" style={{maxWidth: 288}}>
-          <div className="card-header">ERROR:</div>
-          <div className="card-body">
-            <h5 className="card-title">An error was found.</h5>
-            <p className="card-text">`The error code was: {error.message}</p>
-          </div>
-        </div>
-      );
-    }
-
-    return (
-      <div>
-          <Categories
-            categories={categories}
-            userRole={
-              (currentUser?.user?.role != null) && 
-              (currentUser.user.role)}
-          />
-          <ReactPaginate
-              className={styles.pagination}
-              nextClassName={styles.next}
-              previousClassName={styles.previous}
-              pageClassName={styles.page}
-              activeClassName={styles.activePage}
-              disabledClassName={styles.disabledPage}
-              breakLabel="..."
-              nextLabel=">"
-              onPageChange={handlePageClick}
-              pageRangeDisplayed={5}
-              pageCount={categories.meta.totalPages}
-              previousLabel="<"
-              renderOnZeroPageCount={null}
-          />
-      </div>
-    );
   }
 
   return (
-    <div className="container">
-      {<Navbar
+    <>
+      <Navbar
         onSearch={handleNavbarSearch}
         ref={containerRef}
-        />}
-      {renderCategories()}
-    </div> 
+      />
+      <div className="container">
+        <Categories
+          data={categories}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          errorMessage={errorMessage}
+          loading={loading}
+          searchTerm={searchTerm.toLowerCase()}
+          userRole={
+            (currentUser?.user?.role != null) && 
+            (currentUser.user.role)}
+        />
+      </div>
+      <Footer />
+    </>
   );
 };
 

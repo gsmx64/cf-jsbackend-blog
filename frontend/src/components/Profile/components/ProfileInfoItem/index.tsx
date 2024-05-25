@@ -1,7 +1,5 @@
-import React from "react";
-
-
-const ProfileInfoItem = ({ id, username, email, firstName, lastName, age, city, country, createAt, onProfileEditClick }: any): React.JSX.Element => {
+const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
+  city, country, createAt, canEdit, onProfileEditClick }: any) => {
   const handleProfileEditClick = (event: any) => {
     event.stopPropagation();
     onProfileEditClick(id);
@@ -9,7 +7,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age, city, 
 
   var formatDate = (currentDate: string) => {
     var new_date = new Date(currentDate);
-    return `${new_date.toLocaleString()}hs.`;
+    return currentDate ? `${new_date.toLocaleString()}hs.` : '';
   }
 
   return (
@@ -45,15 +43,6 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age, city, 
         <hr />
         <div className="row">
           <div className="col-sm-3">
-            <h6 className="mb-0">Age</h6>
-          </div>
-          <div className="col-sm-9 text-secondary">
-            {age}
-          </div>
-        </div>
-        <hr />
-        <div className="row">
-          <div className="col-sm-3">
             <h6 className="mb-0">Email</h6>
           </div>
           <div className="col-sm-9 text-secondary">
@@ -63,10 +52,10 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age, city, 
         <hr />
         <div className="row">
           <div className="col-sm-3">
-            <h6 className="mb-0">Created</h6>
+            <h6 className="mb-0">Age</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {formatDate(createAt)}
+            {age}
           </div>
         </div>
         <hr />
@@ -89,12 +78,24 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age, city, 
         </div>
         <hr />
         <div className="row">
-          <div className="col-sm-12">
-            <button onClick={handleProfileEditClick} className="btn btn-info">
-              Edit
-            </button>
+          <div className="col-sm-3">
+            <h6 className="mb-0">Created</h6>
+          </div>
+          <div className="col-sm-9 text-secondary">
+            {formatDate(createAt)}
           </div>
         </div>
+        <hr />
+        {
+          (canEdit === 1) &&
+          <div className="row">
+            <div className="col-sm-12">
+              <button onClick={handleProfileEditClick} className="btn btn-info">
+                Edit
+              </button>
+            </div>
+          </div>
+        }
       </div>
     </div>
   );

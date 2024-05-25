@@ -1,16 +1,38 @@
-import { useRouteError } from "react-router-dom";
+import { Link, useRouteError } from "react-router-dom";
 
-import styles from "./Error404.module.css";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
 
 
 const Error404View = () => {
   const error: any = useRouteError();
 
   return (
-    <div className={styles.container}>
-      <h3 className={styles.title}>ERROR {error.status}!</h3>
-      <p className={styles.description}>{error.data}</p>
-    </div>
+    <>
+      <Navbar
+        onSearch={() => {}}
+      />
+      <section className="py-3 py-md-5 min-vh-99 d-flex justify-content-center align-items-center">
+        <div className="container">
+          <div className="row">
+            <div className="col-12">
+              <div className="text-center">
+                <h2 className="d-flex justify-content-center align-items-center gap-2 mb-4">
+                  <span className="display-1 fw-bold">ERROR {error.status}</span>
+                </h2>
+                <h3 className="h2 mb-2">Oops! You're lost.</h3>
+                <p className="mb-5">The page you are looking for was not found.</p>
+                <p className="mb-5">{error.data}</p>
+                <Link to={"/"} className="btn bsb-btn-5xl btn-dark rounded-pill px-5 fs-6 m-0">
+                  <span className="ms-2">Back to Home</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </>
   );
 };
 

@@ -3,8 +3,12 @@ export default interface IComment {
   createAt: string;
   updateAt: string;
   message: string;
-  reaction: string;
   author: string;
+  post: string;
+}
+
+export interface ICommentCreate {
+  message: string;
   post: string;
 }
 
@@ -14,7 +18,6 @@ export interface ICommentArray {
     createAt: string;
     updateAt: string;
     message: string;
-    reaction: string;
     author: string;
     post: [string];
   },
@@ -39,9 +42,13 @@ export const initIComment: IComment = {
   createAt: '',
   updateAt: '',
   message: '',
-  reaction: '',
   author: '',
   post: ''
+}
+
+export const initICommentCreate: ICommentCreate = {
+  message: '',
+  post: '',
 }
 
 export const initICommentArray: ICommentArray = {
@@ -50,7 +57,6 @@ export const initICommentArray: ICommentArray = {
     createAt: '',
     updateAt: '',
     message: '',
-    reaction: '',
     author: '',
     post: ['']
   },
