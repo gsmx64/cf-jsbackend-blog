@@ -28,16 +28,16 @@ The project is a Blog site, with posts, categories, users with roles as administ
 ### Backend - Set env constants
 Rename the required file and complete the constants:
 ```
-.development.env.sample
-.production.env.sample
-.testing.env.sample
+.env.development.sample
+.env.production.sample
+.env.testing.sample
 ```
 
 to:
 ```
-.development.env
-.production.env
-.testing.env
+.env.development
+.env.production
+.env.testing
 ```
 
 The default port is 3001.
