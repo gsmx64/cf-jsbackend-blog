@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { ChangeEvent, forwardRef, KeyboardEvent, useEffect, useImperativeHandle, useState } from "react";
 import { Link } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -26,11 +26,11 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
     setSearch,
   }));
 
-  const handleInputChange = (event: any) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
       setSearch(event.target.value);
   }
 
-  const handleInputKeyDown = (event: any) => {
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
       if (event.key = 'Enter') {
           onSearch(search);
       }

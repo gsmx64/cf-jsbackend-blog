@@ -12,7 +12,6 @@ import SettingsService from "../../services/settings.service";
 const Footer = () => { 
   const [settings, setSettings] = useState<ISettings>(initISettings);
   const year = new Date().getFullYear();
-  //const navigate = useNavigate();
 
   useEffect(() => {
     fetchSettings();

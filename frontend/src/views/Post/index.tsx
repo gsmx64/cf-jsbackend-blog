@@ -36,7 +36,7 @@ const PostView = () => {
     setLoading(true);
 
     return PostsService.get(postId)
-    .then((response: AxiosResponse) => {
+    .then((response: AxiosResponse<any>) => {
       setPost(response.data);
     })
     .catch((error: any) => {

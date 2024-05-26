@@ -10,41 +10,21 @@ import AuthService from "../../services/auth.service";
 import PostsService from "../../services/posts.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
+import usePostsStore from "../../state/stores/posts";
 
+const env = import.meta.env;
+const isZustandEnabled = env.VITE_ZUSTAND_ENABLED === 'true';
 
-/*
-// Implementation of Zustand with Axios
-import usePostsStore from "../../state/posts.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUsePostsStore {
-  postsData: IPost;
-  postsIsLoading: boolean;
-  postsError: Error | null | unknown;
-  fetchPosts: (query: string | null) => void;
-}
-*/
-const PostsView = () => {
+const PostsViewDefault = () => {
+  const [posts, setPosts] = useState<IPostArray>(initIPostArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [posts, setPosts] = useState<IPostArray>(initIPostArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+
   useEffect(() => {
     fetchPosts(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
@@ -69,6 +49,35 @@ const PostsView = () => {
       });
   }
 
+  return { posts, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
+}
+
+const PostsViewZustand = () => {
+  const posts = usePostsStore((state) => state.posts);
+  const currentPage = usePostsStore((state) => state.currentPage);
+  const totalPages = usePostsStore((state) => state.totalPages);
+  const totalItems = usePostsStore((state) => state.totalItems);
+  const itemsPerPage = usePostsStore((state) => state.itemsPerPage);
+  const loading = usePostsStore((state) => state.loading);
+  const errorMessage = usePostsStore((state) => state.errorMessage);
+  const setCurrentPage = usePostsStore((state) => state.setCurrentPage);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+  
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+  }, []);
+
+  return { posts, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
+}
+  
+
+const PostsView = () => {
+  const { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    errorMessage, currentUser, setCurrentPage } = (isZustandEnabled) ? PostsViewZustand() : PostsViewDefault();
+  
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
+
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());
   }
@@ -79,6 +88,7 @@ const PostsView = () => {
         onSearch={handleNavbarSearch}
         ref={containerRef}
       />
+      {(isZustandEnabled) ? 'isZustandEnabled' : 'isZustandDisabled'}
       <div className="container">
         <Posts
           data={posts}
