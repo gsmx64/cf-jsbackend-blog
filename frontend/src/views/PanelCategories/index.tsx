@@ -10,48 +10,27 @@ import AuthService from "../../services/auth.service";
 import CategoriesService from "../../services/categories.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { ICategoryArray, initICategoryArray } from "../../interfaces/category.interface";
+import useCategoriesStore from "../../state/stores/categories";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
 
-/*
-// Implementation of Zustand with Axios
-import usePostsStore from "../../state/categories.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUseCategoriesStore {
-  categoriesData: ICategory;
-  categoriesIsLoading: boolean;
-  categoriesError: Error | null | unknown;
-  fetchCategories: (query: string | null) => void;
-}
-*/
-const PanelCategoriesView = () => {
+const PanelCategoriesViewDefault = () => {
+  const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+
   useEffect(() => {
-    fetchPosts(currentPage, itemsPerPage);
+    fetchCategories(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
   }, [currentPage, itemsPerPage]);
 
-  const fetchPosts = (currentPage: number, itemsPerPage: number) => {
+  const fetchCategories = (currentPage: number, itemsPerPage: number) => {
     setAlertMessage('');
     setErrorMessage('');
     setLoading(true);
@@ -116,6 +95,45 @@ const PanelCategoriesView = () => {
       setLoading(false);
     });
   }
+
+  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusCategory, handleDeleteCategory }
+}
+
+const PanelCategoriesViewZustand = () => {
+  const categories = useCategoriesStore((state) => state.categories);
+  const currentPage = useCategoriesStore((state) => state.currentPage);
+  const totalPages = useCategoriesStore((state) => state.totalPages);
+  const totalItems = useCategoriesStore((state) => state.totalItems);
+  const itemsPerPage = useCategoriesStore((state) => state.itemsPerPage);
+  const loading = useCategoriesStore((state) => state.loading);
+  const alertMessage = useCategoriesStore((state) => state.alertMessage);
+  const errorMessage = useCategoriesStore((state) => state.errorMessage);
+  const setCurrentPage = useCategoriesStore((state) => state.setCurrentPage);
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
+  const handleUpdateStatusCategory = useCategoriesStore((state) => state.handleUpdateStatusCategory);
+  const handleDeleteCategory = useCategoriesStore((state) => state.handleDeleteCategory);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    fetchCategories(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
+
+  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusCategory, handleDeleteCategory }
+}
+
+const PanelCategoriesView = () => {
+  const { categories, currentPage, totalPages, totalItems, itemsPerPage,
+    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusCategory, handleDeleteCategory
+  } = (isZustandEnabled) ? PanelCategoriesViewZustand() : PanelCategoriesViewDefault();
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());

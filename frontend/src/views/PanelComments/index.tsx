@@ -10,42 +10,21 @@ import AuthService from "../../services/auth.service";
 import CommentsService from "../../services/comments.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { ICommentArray, initICommentArray } from "../../interfaces/comment.interface";
+import useCommentsStore from "../../state/stores/comments";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
 
-/*
-// Implementation of Zustand with Axios
-import useCommentsStore from "../../state/comments.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUseCommentsStore {
-  commentsData: IComment;
-  commentsIsLoading: boolean;
-  commentsError: Error | null | unknown;
-  fetchComments: (query: string | null) => void;
-}
-*/
-const PanelCommentsView = () => {
+const PanelCommentsViewDefault = () => {
+  const [comments, setComments] = useState<ICommentArray>(initICommentArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [comments, setComments] = useState<ICommentArray>(initICommentArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+
   useEffect(() => {
     fetchComments(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
@@ -93,6 +72,44 @@ const PanelCommentsView = () => {
       setLoading(false);
     });
   }
+
+  return { comments, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleDeleteComment }
+}
+
+const PanelCommentsViewZustand = () => {
+  const comments = useCommentsStore((state) => state.comments);
+  const currentPage = useCommentsStore((state) => state.currentPage);
+  const totalPages = useCommentsStore((state) => state.totalPages);
+  const totalItems = useCommentsStore((state) => state.totalItems);
+  const itemsPerPage = useCommentsStore((state) => state.itemsPerPage);
+  const loading = useCommentsStore((state) => state.loading);
+  const alertMessage = useCommentsStore((state) => state.alertMessage);
+  const errorMessage = useCommentsStore((state) => state.errorMessage);
+  const setCurrentPage = useCommentsStore((state) => state.setCurrentPage);
+  const fetchComments = useCommentsStore((state) => state.fetchComments);
+  const handleDeleteComment = useCommentsStore((state) => state.handleDeleteComment);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    fetchComments(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
+
+  return { comments, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleDeleteComment }
+}
+
+const PanelCommentsView = () => {
+  const { comments, currentPage, totalPages, totalItems, itemsPerPage,
+    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleDeleteComment
+  } = (isZustandEnabled) ? PanelCommentsViewZustand() : PanelCommentsViewDefault();
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());

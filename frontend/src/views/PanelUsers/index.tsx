@@ -10,42 +10,21 @@ import AuthService from "../../services/auth.service";
 import UsersService from "../../services/users.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { IUserArray, initIUserArray } from "../../interfaces/user.interface";
+import useUsersStore from "../../state/stores/users";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
 
-/*
-// Implementation of Zustand with Axios
-import useUsersStore from "../../state/users.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUseUsersStore {
-  usersData: IUser;
-  usersIsLoading: boolean;
-  usersError: Error | null | unknown;
-  fetchUsers: (query: string | null) => void;
-}
-*/
-const PanelUsersView = () => {
+const PanelUsersViewDefault = () => {
+  const [users, setUsers] = useState<IUserArray>(initIUserArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [users, setUsers] = useState<IUserArray>(initIUserArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+
   useEffect(() => {
     fetchUsers(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
@@ -166,6 +145,47 @@ const PanelUsersView = () => {
       setLoading(false);
     });
   }
+
+  return { users, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage, handleUpdateUserRole,
+    handleBanUser, handleActivateUser, handleDeleteUser }
+}
+
+const PanelUsersViewZustand = () => {
+  const users = useUsersStore((state) => state.users);
+  const currentPage = useUsersStore((state) => state.currentPage);
+  const totalPages = useUsersStore((state) => state.totalPages);
+  const totalItems = useUsersStore((state) => state.totalItems);
+  const itemsPerPage = useUsersStore((state) => state.itemsPerPage);
+  const loading = useUsersStore((state) => state.loading);
+  const alertMessage = useUsersStore((state) => state.alertMessage);
+  const errorMessage = useUsersStore((state) => state.errorMessage);
+  const setCurrentPage = useUsersStore((state) => state.setCurrentPage);
+  const fetchUsers = useUsersStore((state) => state.fetchUsers);
+  const handleUpdateUserRole = useUsersStore((state) => state.handleUpdateUserRole);
+  const handleBanUser = useUsersStore((state) => state.handleBanUser);
+  const handleActivateUser = useUsersStore((state) => state.handleActivateUser);
+  const handleDeleteUser = useUsersStore((state) => state.handleDeleteUser);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    fetchUsers(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
+
+  return { users, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage, handleUpdateUserRole,
+    handleBanUser, handleActivateUser, handleDeleteUser }
+}
+
+const PanelUsersView = () => {
+  const { users, currentPage, totalPages, totalItems, itemsPerPage,
+    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateUserRole, handleBanUser, handleActivateUser, handleDeleteUser
+  } = (isZustandEnabled) ? PanelUsersViewZustand() : PanelUsersViewDefault();
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());

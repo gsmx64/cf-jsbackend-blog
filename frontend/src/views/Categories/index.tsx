@@ -10,40 +10,18 @@ import AuthService from "../../services/auth.service";
 import CategoriesService from "../../services/categories.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { ICategoryArray, initICategoryArray } from "../../interfaces/category.interface";
+import useCategoriesStore from "../../state/stores/categories";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
-
-/*
-// Implementation of Zustand with Axios
-import usePostsStore from "../../state/categories.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUseCategoriesStore {
-  postsData: ICategories;
-  postsIsLoading: boolean;
-  postsError: Error | null | unknown;
-  fetchCategories: (query: string | null) => void;
-}
-*/
-const CategoriesView = () => {
+const CategoriesViewDefault = () => {
+  const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
 
   useEffect(() => {
     fetchCategories(currentPage, itemsPerPage);
@@ -69,8 +47,38 @@ const CategoriesView = () => {
       });
   }
 
+  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
+}
+
+const CategoriesViewZustand = () => {
+  const categories = useCategoriesStore((state) => state.categories);
+  const currentPage = useCategoriesStore((state) => state.currentPage);
+  const totalPages = useCategoriesStore((state) => state.totalPages);
+  const totalItems = useCategoriesStore((state) => state.totalItems);
+  const itemsPerPage = useCategoriesStore((state) => state.itemsPerPage);
+  const loading = useCategoriesStore((state) => state.loading);
+  const errorMessage = useCategoriesStore((state) => state.errorMessage);
+  const setCurrentPage = useCategoriesStore((state) => state.setCurrentPage);
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    fetchCategories(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
+
+  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
+}
+
+const CategoriesView = () => {
+  const { categories, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    errorMessage, currentUser, setCurrentPage } = (isZustandEnabled) ? CategoriesViewZustand() : CategoriesViewDefault();
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
+
   const handleNavbarSearch = (term: any) => {
-    setSearchTerm(term);
+    setSearchTerm(term.toLowerCase());
   }
 
   return (

@@ -8,8 +8,12 @@ export interface IUsePostsStore {
   totalItems: number;
   itemsPerPage: number;
   loading: boolean;
+  alertMessage: string;
   errorMessage: Error | null | unknown;
-  setCurrentPage: (/*page: number*/) => void;
+  setCurrentPage: (page: number) => void;
+  fetchPosts: (currentPage: number, itemsPerPage: number) => void;
+  handleUpdateStatusPost: (id: string, status: string) => void;
+  handleDeletePost: (id: string) => void;
 }
 
 export const initialPostsStoreState = {
@@ -19,6 +23,7 @@ export const initialPostsStoreState = {
   totalItems: 0,
   itemsPerPage: 10,
   loading: true,
+  alertMessage: '',
   errorMessage: '',
-  setCurrentPage: (/*page: number*/) => {},
+  setCurrentPage: () => {},
 }

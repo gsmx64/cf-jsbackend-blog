@@ -11,9 +11,8 @@ import PostsService from "../../services/posts.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
 import usePostsStore from "../../state/stores/posts";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
-const env = import.meta.env;
-const isZustandEnabled = env.VITE_ZUSTAND_ENABLED === 'true';
 
 const PostsViewDefault = () => {
   const [posts, setPosts] = useState<IPostArray>(initIPostArray);
@@ -61,20 +60,21 @@ const PostsViewZustand = () => {
   const loading = usePostsStore((state) => state.loading);
   const errorMessage = usePostsStore((state) => state.errorMessage);
   const setCurrentPage = usePostsStore((state) => state.setCurrentPage);
+  const fetchPosts = usePostsStore((state) => state.fetchPosts);
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  
+
   useEffect(() => {
     setCurrentUser(AuthService.getCurrentUser());
-  }, []);
+    fetchPosts(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
 
   return { posts, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
 }
-  
 
 const PostsView = () => {
   const { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
     errorMessage, currentUser, setCurrentPage } = (isZustandEnabled) ? PostsViewZustand() : PostsViewDefault();
-  
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const containerRef = useRef();
 
@@ -88,7 +88,6 @@ const PostsView = () => {
         onSearch={handleNavbarSearch}
         ref={containerRef}
       />
-      {(isZustandEnabled) ? 'isZustandEnabled' : 'isZustandDisabled'}
       <div className="container">
         <Posts
           data={posts}

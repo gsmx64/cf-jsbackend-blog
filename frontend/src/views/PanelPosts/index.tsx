@@ -10,42 +10,21 @@ import AuthService from "../../services/auth.service";
 import PostsService from "../../services/posts.service";
 import { AuthResponse } from "../../interfaces/auth.interface";
 import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
+import usePostsStore from "../../state/stores/posts";
+import { isZustandEnabled } from "../../constants/defaultConstants";
 
 
-/*
-// Implementation of Zustand with Axios
-import usePostsStore from "../../state/posts.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
-}
-
-interface IUsePostsStore {
-  postsData: IPost;
-  postsIsLoading: boolean;
-  postsError: Error | null | unknown;
-  fetchPosts: (query: string | null) => void;
-}
-*/
-const PanelPostsView = () => {
+const PanelPostsViewDefault = () => {
+  const [posts, setPosts] = useState<IPostArray>(initIPostArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [posts, setPosts] = useState<IPostArray>(initIPostArray);
+  const [itemsPerPage, setItemsPerPage] = useState(10);  
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
-  
   const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+
   useEffect(() => {
     fetchPosts(currentPage, itemsPerPage);
     setCurrentUser(AuthService.getCurrentUser());
@@ -116,6 +95,45 @@ const PanelPostsView = () => {
       setLoading(false);
     });
   }
+
+  return { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusPost, handleDeletePost }
+}
+
+const PanelPostsViewZustand = () => {
+  const posts = usePostsStore((state) => state.posts);
+  const currentPage = usePostsStore((state) => state.currentPage);
+  const totalPages = usePostsStore((state) => state.totalPages);
+  const totalItems = usePostsStore((state) => state.totalItems);
+  const itemsPerPage = usePostsStore((state) => state.itemsPerPage);
+  const loading = usePostsStore((state) => state.loading);
+  const alertMessage = usePostsStore((state) => state.alertMessage);
+  const errorMessage = usePostsStore((state) => state.errorMessage);
+  const setCurrentPage = usePostsStore((state) => state.setCurrentPage);
+  const fetchPosts = usePostsStore((state) => state.fetchPosts);
+  const handleUpdateStatusPost = usePostsStore((state) => state.handleUpdateStatusPost);
+  const handleDeletePost = usePostsStore((state) => state.handleDeletePost);
+  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
+
+  useEffect(() => {
+    setCurrentUser(AuthService.getCurrentUser());
+    fetchPosts(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
+
+  return { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusPost, handleDeletePost }
+}
+
+const PanelPostsView = () => {
+  const { posts, currentPage, totalPages, totalItems, itemsPerPage,
+    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    handleUpdateStatusPost, handleDeletePost
+  } = (isZustandEnabled) ? PanelPostsViewZustand() : PanelPostsViewDefault();
+
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const containerRef = useRef();
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());
