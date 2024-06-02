@@ -1,19 +1,22 @@
 import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { Button, Modal } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import AuthService from "../../services/auth.service";
 import ValidationSchema from "./utils/validationSchema";
 import { IUserRegister, initIUserRegister } from "../../interfaces/user.interface";
 import Alerts from "../Alerts";
 
 
-const RegisterForm = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  
+const RegisterForm = ({ settings, loading, alertMessage, errorMessage, onRegisterUserSaveClick }: any) => {
+  const [showTerms, setShowTerms] = useState(false);
+  const [termsAcepted, setTermsAcepted] = useState(false);
+  const handleTermsClose = () => setShowTerms(false);
+  const handleTermsShow = () => setShowTerms(true);
+  const handleTermsAcepted = () => setTermsAcepted(!termsAcepted);
+
   const {
     register,
     handleSubmit,
@@ -26,36 +29,10 @@ const RegisterForm = () => {
   const navigate: NavigateFunction = useNavigate();
 
   const onSubmitHandler = (body: IUserRegister) => {
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-
-    AuthService
-    .register(body)
-    .then(() => {
-      const { username, password } = body;
-      AuthService
-      .login(username, password)
-      .then(() => {
-        setAlertMessage('Register successful, making auto-login and redirecting to home page...');
-        setLoading(false);
-        navigate('/');
-      })
-      .catch((error: any) => {
-        setLoading(false);
-        setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+    const saveSuccessful = onRegisterUserSaveClick(body);
+    if (saveSuccessful !== undefined) {
+      navigate('/');
+    }
   }
 
   return (
@@ -269,13 +246,69 @@ const RegisterForm = () => {
             {errors.country && <span className="invalid-feedback">{errors.country.message}</span>}
           </div>
 
+          <div className="col-12">
+            <div className="form-check">
+              <input
+                type="checkbox"
+                id="termsCheck"
+                value=""
+                className="form-check-input"
+                required
+                onClick={handleTermsAcepted}
+              />
+              <label
+                htmlFor="termsCheck"
+                className="form-check-label"
+              >
+                Agree to terms and conditions
+              </label>
+              {
+                termsAcepted === false &&
+                <button
+                  type="button"
+                  className="btn btn-primary mt-2"
+                  data-bs-toggle="modal"
+                  data-bs-target="#staticBackdrop"
+                  onClick={handleTermsShow}
+                >
+                  Click here to read our terms and conditions.
+                </button>
+              }
+            </div>
+
+            <div
+              className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+              style={{ display: 'block', position: 'initial' }}
+            >
+              <Modal size="lg" show={showTerms} onHide={handleTermsClose} scrollable={true} centered>
+                <Modal.Header closeButton>
+                  <Modal.Title>Terms and conditions</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <span>{settings?.terms}</span>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={handleTermsClose}
+                  >
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
+          </div>
+
           <div className="mb-3">
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-              {loading && (
-                <span className="spinner-border spinner-border-sm"></span>
-              )}
-              <span>Register</span>
-            </button>
+            {
+              termsAcepted &&
+              <button type="submit" className="btn btn-primary btn-block mt-2" disabled={loading}>
+                {loading && (
+                  <span className="spinner-border spinner-border-sm"></span>
+                )}
+                <span>Register</span>
+              </button>
+            }
           </div>
           <Alerts
             alertMessage={alertMessage}

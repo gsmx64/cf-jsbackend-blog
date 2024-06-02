@@ -11,11 +11,12 @@ import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
 
 
 const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage,
-  errorMessage, loading, searchTerm, userRole, onUpdateStatusPost, onDeletePost}: any) => {
+  errorMessage, loading, searchTerm, userRole, currentUser, onUpdateStatusPost,
+  onDeletePost}: any) => {
   const navigate = useNavigate();
 
-  const handlePostItemUpdateStatusPost = (id: string, status: string) => {
-    onUpdateStatusPost(id, status);
+  const handlePostItemUpdateStatusPost = (id: string, status: string, title: string) => {
+    onUpdateStatusPost(id, status, title);
   };
 
   const handlePostEditPost = (id: string) => {
@@ -23,10 +24,10 @@ const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage
   };
 
   const handlePostItemDeletePost = (id: string, title: string) => {
-    const shouldRemove = confirm(`Are you sure you want to delete ${title}?`);
+    const shouldRemove = confirm(`Are you sure you want to delete "${title}"?`);
   
     if (shouldRemove) {
-      onDeletePost(id);
+      onDeletePost(id, title);
     }
   };
 
@@ -85,6 +86,7 @@ const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage
                       createAt={postItem.createAt}
                       updateAt={postItem.updateAt}
                       userRole={userRole}
+                      currentUser={currentUser}
                       onPostItemUpdateStatusPost={handlePostItemUpdateStatusPost}
                       onPostItemEditPost={handlePostEditPost}
                       onPostItemDeletePost={handlePostItemDeletePost}

@@ -1,116 +1,66 @@
-import { useEffect, useState } from "react";
-
-import { AxiosResponse } from "axios";
+import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Navbar from "../../components/Navbar";
 import Profile from "../../components/Profile";
-import Footer from "../../components/Footer";
 import AuthService from "../../services/auth.service";
-import CommentsService from "../../services/comments.service";
-import PostsService from "../../services/posts.service";
-import { AuthResponse } from "../../interfaces/auth.interface";
-import { ICommentArray, initICommentArray } from "../../interfaces/comment.interface";
-import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
-import PostsView from "../Posts";
-import UsersService from "../../services/users.service";
-import IUser, { initIUser } from "../../interfaces/user.interface";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import useUser from "../../hooks/useUser";
+import useCurrentUserStore from "../../state/stores/currentUser";
+import useUserStore from "../../state/stores/user";
 
 
-const ProfileView = () => {
-  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [userRole, setUserRole] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+const PanelProfileViewDefault = () => {
+  const userId = AuthService.getCurrentUserId();
+  return {...useUser(userId as string), userId};
+}
 
-  const [user, setUser] = useState<IUser>(initIUser);
-  const [userComments, setUserComments] = useState<ICommentArray>(initICommentArray);
-  const [userPosts, setUserPosts] = useState<IPostArray>(initIPostArray);
+const PanelProfileViewZustand = () => {
+  const currentUser = useCurrentUserStore((state) => state.currentUser);
+  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
 
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const { userId } = AuthService.getCurrentUserId();
+  const user = useUserStore((state) => state.user);
+  const userComments = useUserStore((state) => state.userComments);
+  const userPosts = useUserStore((state) => state.userPosts);
+  const loading = useUserStore((state) => state.loading);
+  const errorMessage = useUserStore((state) => state.errorMessage);
+  const fetchUser = useUserStore((state) => state.fetchUser);
+  const fetchUserComments = useUserStore((state) => state.fetchUserComments);
+  const fetchUserPosts = useUserStore((state) => state.fetchUserPosts);
+  const handleEditUserSaveClick = useUserStore((state) => state.handleEditUserSaveClick);
 
   useEffect(() => {
-    setErrorMessage('');
-    setCurrentUser(AuthService.getCurrentUser());
-    setUserRole(AuthService.userRole());
+    fetchCurrentUser();
+    fetchUser(userId);
+    fetchUserComments(userId, 5);
+    fetchUserPosts(userId, 5);
+  }, [loading]);
 
-    fetchUser();
-    fetchComments(currentUser.user.id, 5);
-    fetchPosts(currentUser.user.id, 5);
-  }, [user]);
+  return { userId, user, userComments, userPosts, loading, errorMessage,
+    currentUser, handleEditUserSaveClick }
+}
 
-  const handleNavbarSearch = (term: any) => {
-    setSearchTerm(term);
-  }
-
-  const fetchUser = () => {
-    return UsersService
-    .get(currentUser.user.id)
-    .then((response: AxiosResponse) => {
-      setUser(response.data as IUser);
-    })
-    .catch((error: any) => {
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
-
-  const fetchComments = (id: string, limit: number | null = null) => {
-    return CommentsService
-    .getUserComments(id, limit)
-    .then((response: AxiosResponse) => {
-      setUserComments(response.data as ICommentArray);
-    })
-    .catch((error: any) => {
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
-
-  const fetchPosts = (id: string, limit: number | null = null) => {
-    return PostsService
-    .getUserPosts(id, limit)
-    .then((response: AxiosResponse) => {
-      setUserPosts(response.data as IPostArray);
-    })
-    .catch((error: any) => {
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
+const ProfileView = () => {
+  const { userId, user, userComments, userPosts, loading, errorMessage,
+    currentUser, handleEditUserSaveClick } = (
+    isZustandEnabled) ? PanelProfileViewZustand() : PanelProfileViewDefault();
 
   return (
     <>
-      {
-        (searchTerm === '') ? (
-          <>
-            <Navbar
-              onSearch={handleNavbarSearch}
-            />
-            <div className="container mt-3">
-              <Profile
-                user={user}
-                comments={userComments}
-                posts={userPosts}
-                errorMessage={errorMessage}
-                loading={loading}
-                userRole={userRole}
-              />
-            </div>
-            <Footer />
-            </>
-        ) : (
-          <>
-            <PostsView />
-          </>
-        )
-      }
+      <div className="container mt-3">
+        <Profile
+          userId={userId}
+          user={user}
+          comments={userComments}
+          posts={userPosts}
+          loading={loading}
+          errorMessage={errorMessage}
+          userRole={
+            (currentUser?.role != null) ? 
+            (currentUser.role) : null}
+          handleEditUserSaveClick={handleEditUserSaveClick}
+        />
+      </div>
     </>
   );
 };

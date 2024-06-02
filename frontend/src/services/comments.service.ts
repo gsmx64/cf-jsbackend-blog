@@ -12,7 +12,7 @@ const create = (data: ICommentCreate) => {
   );
 };
 
-const update = (id: string, data: any) => {
+const update = (id: string | undefined, data: any) => {
   return api.put<any>(
     `comments/edit/${id}`,
     data,

@@ -1,10 +1,8 @@
-import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import AuthService from "../../services/auth.service";
 import { AuthBody, initIAuth } from "../../interfaces/auth.interface";
 import styles from "./Login.module.css";
 import validationSchema from "./utils/validationSchema";
@@ -12,12 +10,8 @@ import { DEFAULT_NO_AVATAR_MEDIUM } from "../../constants/defaultConstants";
 import Alerts from "../Alerts";
 
 
-const LoginForm = () => {
+const LoginForm = ({ loading, alertMessage, errorMessage, onLoginUserSaveClick }: any) => {
   let navigate: NavigateFunction = useNavigate();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const {
     register,
@@ -28,38 +22,12 @@ const LoginForm = () => {
     defaultValues: initIAuth,
   } );
 
-  const onSubmitHandler = (data: AuthBody) => {
-    const { username, password } = data;
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-  
-    AuthService
-    .login(username, password)
-    .then(() => {
-      AuthService
-      .login(username, password)
-      .then(() => {
-        setAlertMessage('Login successful, redirecting to home page...');
-        setLoading(false);
-        navigate('/');
-        })
-      .catch((error: any) => {
-        setLoading(false);
-        setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  };
+  const onSubmitHandler = (body: AuthBody) => {
+    const saveSuccessful = onLoginUserSaveClick(body);
+    if (saveSuccessful !== undefined) {
+      navigate('/');
+    }
+  }
 
   return (
     <div className="container">

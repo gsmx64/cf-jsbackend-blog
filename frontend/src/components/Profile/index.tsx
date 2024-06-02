@@ -13,7 +13,8 @@ import Loading from "../Loading";
 let canEdit = 0;
 
 
-const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) => {
+const Profile = ({ user, comments, posts, alertMessage, errorMessage, loading,
+  userRole, handleEditUserSaveClick }: any) => {
   const [karmaCounter, setKarmaCounter] = useState(user.karma);
   const urlPath = useLocation();
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) 
     if(urlPath.pathname === '/profile/edit/'){
       navigate(`/profile`);
     } else if(urlPath.pathname === `/user/edit/${id}`) {
-       navigate(`/user/${id}`, { state: id });
+      navigate(`/user/${id}`, { state: id });
     }
   };
 
@@ -113,7 +114,7 @@ const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) 
                   urlPath.pathname === `/user/${user.id}`
                 ) ? (
                   <ProfileInfoItem
-                    key={`profile-info-item-${user.id ? user.id : '0'}`}
+                    key={`profile-info-item-${user.id}`}
                     username={user.username}
                     email={user.email}
                     firstName={user.firstName}
@@ -128,7 +129,7 @@ const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) 
                   />            
                 ) : (
                   <ProfileInfoEditItem
-                    key={`profile-info-item-${user.id ? user.id : '0'}`}
+                    key={`profile-info-item-${user.id}`}
                     username={user.username}
                     email={user.email}
                     firstName={user.firstName}
@@ -137,9 +138,13 @@ const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) 
                     city={user.city}
                     country={user.country}
                     createAt={user.createAt}
+                    onProfileEditSaveClick={handleEditUserSaveClick}
                     onProfileEditCancelClick={handleProfileEditCancelClick}
                     canEdit={canEdit}
                     userRole={userRole}
+                    loading={loading}
+                    alertMessage={alertMessage}
+                    errorMessage={errorMessage}
                     id={user.id}
                   />
                 )
@@ -161,7 +166,7 @@ const Profile = ({user, comments, posts, errorMessage, loading, userRole}: any) 
               </div>
 
               <Alerts
-                alertMessage={''}
+                alertMessage={alertMessage}
                 errorMessage={errorMessage}
               />
 

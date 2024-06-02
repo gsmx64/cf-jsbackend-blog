@@ -37,7 +37,7 @@ header {
   margin-top: 1rem;
 }
 
-container-comment {
+.container-comment {
   display: flex;
   flex-direction: column;
   align-items: end;
@@ -65,53 +65,101 @@ container-comment {
   padding-bottom: 0.5rem;
 }
 
-.menus {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  list-style: none;
-}
-
-.menu-items {
-  position: relative;
-  font-size: 14px;
-}
-
-.menu-items a {
-  display: block;
-  font-size: inherit;
-  color: inherit;
-  text-decoration: none;
-}
-
-.menu-items button {
-  display: flex;
-  align-items: center;
-  color: inherit;
-  font-size: inherit;
-  border: none;
+.nav-item a,
+.nav-item button {
+  box-sizing: border-box;
+  appearance: none;
   background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.4em;
   cursor: pointer;
-  width: 100%;
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1px;
+  margin: 1px;
+  padding: 0.5em 0.7em;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  border-color: transparent;
+  color: #b2b2b2;
+  transition: all 150ms ease-in-out;
+}
+
+.nav-item a span {
+  margin-left: 0.2rem;
 }
 
 .nav-item button {
-  align-items: center;
-  color: white;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  width: 100%;
+  margin-left: 0.3rem;
 }
 
-.menu-items > a, .menu-items button {
+.nav-item button span {
+  margin-left: 0.3rem;
+}
+
+.nav-item a:hover,
+.nav-item button:hover,
+.nav-item .button:hover {
+  color: #fff;
+  outline: 0;
+  border: 1px solid transparent;
+  background-color: #2b3136;
+  box-shadow: 0 0 1px 0 #919191 inset, 0 0 1px 1px #919191;
+}
+
+.nav-item a:focus,
+.nav-item button:focus {
+  color: #fff;
+  outline: 0;
+}
+
+.nav-item-menu > a,
+  .nav-item-menu button {
   text-align: left;
   padding: 0.7rem 1rem;
 }
 
-.menu-items a:hover,
-.menu-items button:hover {
-  background-color: #f2f2f2;
+.nav-item-menu a {
+  display: block;
+  font-size: inherit;
+  color: #b2b2b2;
+  text-decoration: none;
+}
+
+.nav-item-menu a:visited,
+.nav-item-menu button:visited {
+  color: #2b3136;
+  background-color: #b2b2b2;
+}
+
+.nav-item-menu button:focus {
+  color: #fff;
+  background-color: #b2b2b2;
+}
+
+.nav-item-menu a:hover,
+.nav-item-menu button:hover {
+  color: #fff;
+  background-color: #b2b2b2;
+}
+
+.nav-item-menu {
+  position: relative;
+}
+
+.nav-item-menu button {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  font-size: inherit;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  width: 100%;
 }
 
 .arrow::after {

@@ -8,48 +8,64 @@ import Loading from "../Loading";
 import styles from "./Category.module.css";
 import BootstrapLink from "../BootstrapLink";
 import Alerts from "../Alerts";
+import ICategory from "../../interfaces/category.interface";
+import { IPostArray } from "../../interfaces/post.interface";
 
+interface CategoryProps {
+  category: ICategory;
+  loading: boolean;
+  errorMessage: Error | string | unknown;
+  setSearchTerm: (term: string) => void;
+  userRole: string | null | undefined;
+}
 
-const Category = ({data, loading, errorMessage, userRole}: any) => {
+const Category = ({category, loading, errorMessage, setSearchTerm, userRole}: CategoryProps) => {
   const navigate = useNavigate();
 
   const handleMiniPostItemClick = (id: string) => {
       navigate(`/post/${id}`, { state: id });
   };
 
-  const currentData = data;
-  const date = new Date(currentData?.updateAt);
+  const date = new Date(category?.updateAt);
+  loading = (category.id === '') ? true : loading;
+  const categoryPosts = category.posts || [];
+  setSearchTerm('');
 
   return (
     <>
-      {currentData && loading ? (
+      {loading ? (
         <Loading />
       ) : (
         <>
           <div className={styles.categoryContainer}>
             <BootstrapLink />
             <div className={styles.imageContainer}>
-              <img src={currentData.image} width={200} height={200} alt={currentData.title} />
+              <img
+                src={category.image}
+                width={200}
+                height={200}
+                alt={category.title}
+              />
             </div>
-            <h4 className="h4">{currentData.title}</h4>
-            <p className="lead">{currentData.description}</p>
+            <h4 className="h4">{category.title}</h4>
+            <p className="lead">{category.description}</p>
             <div className="align-self-end float-end ps-1">
               <div className="col input-group input-group-sm">
                 <div className="input-group-text">
                   <i className="bi bi-person-circle pb-1"></i>
-                  <Link to={`/user/${currentData.author.id}`} className="badge">
-                    <span className="text-info font-weight-bold">{currentData.author.username}</span>
-                    {(currentData.author.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                  <Link to={`/user/${category.author.id}`} className="badge">
+                    <span className="text-info font-weight-bold">{category.author.username}</span>
+                    {(category.author.status === 'BANNED') && <i className="bi bi-ban"></i>}
                   </Link>
                 </div>
                 {(
                   (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
                     <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-1"></i>
                       <small>
-                        {(currentData.status == 'PUBLISHED') && ' Published'}
-                        {(currentData.status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(currentData.status == 'ARCHIVED') && ' Archived'}
-                        {(currentData.status == 'TRASHED') && ' Trashed'}
+                        {(category.status == 'PUBLISHED') && ' Published'}
+                        {(category.status == 'UNPUBLISHED') && ' Unpublished'}
+                        {(category.status == 'ARCHIVED') && ' Archived'}
+                        {(category.status == 'TRASHED') && ' Trashed'}
                       </small>
                     </div>
                 )}
@@ -66,13 +82,13 @@ const Category = ({data, loading, errorMessage, userRole}: any) => {
                     <i className="text-info pe-1">Posts</i>
                   </h4>
                 </div>
-                {!currentData.posts ? (
+                {((categoryPosts as IPostArray[]).length === 0) ? (
                   <div className="justify-content-center pt-20">
                     <p>No posts found!</p>
                   </div>
                 ) : (
                   <>
-                    {currentData.posts?.map((categoryPostItem: any) => {
+                    {(categoryPosts as IPostArray[]).map((categoryPostItem: any) => {
                       return (
                         <MiniPostsItem
                           key={`mini-post-item-${categoryPostItem.id}`}

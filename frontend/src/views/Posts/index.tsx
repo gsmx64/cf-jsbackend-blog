@@ -1,87 +1,50 @@
-import { useState, useEffect, useRef } from "react";
-
-import { AxiosResponse } from "axios";
+import { useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Navbar from "../../components/Navbar";
 import Posts from "../../components/Posts";
-import Footer from "../../components/Footer";
-import AuthService from "../../services/auth.service";
-import PostsService from "../../services/posts.service";
-import { AuthResponse } from "../../interfaces/auth.interface";
-import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import usePosts from "../../hooks/usePosts";
+import usePostsStore from "../../state/stores/posts";
+import useCurrentUserStore from "../../state/stores/currentUser";
 
 
-/*
-// Implementation of Zustand with Axios
-import usePostsStore from "../../state/posts.store";
-
-interface Error {
-  err: unknown;
-  isError: boolean;
-  error?: Error;
-  stack?: Error;
-  message: string;
-  toString(): string;
+const PostsViewDefault = () => {
+  return usePosts();
 }
 
-interface IUsePostsStore {
-  postsData: IPost;
-  postsIsLoading: boolean;
-  postsError: Error | null | unknown;
-  fetchPosts: (query: string | null) => void;
-}
-*/
-const PostsView = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [totalItems, setTotalItems] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [posts, setPosts] = useState<IPostArray>(initIPostArray);
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  
-  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
-  
+const PostsViewZustand = () => {
+  const currentUser = useCurrentUserStore((state) => state.currentUser);
+  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
+
+  const posts = usePostsStore((state) => state.posts);
+  const currentPage = usePostsStore((state) => state.currentPage);
+  const totalPages = usePostsStore((state) => state.totalPages);
+  const totalItems = usePostsStore((state) => state.totalItems);
+  const itemsPerPage = usePostsStore((state) => state.itemsPerPage);
+  const loading = usePostsStore((state) => state.loading);
+  const errorMessage = usePostsStore((state) => state.errorMessage);
+  const setCurrentPage = usePostsStore((state) => state.setCurrentPage);
+  const fetchPosts = usePostsStore((state) => state.fetchPosts);
+
   useEffect(() => {
+    fetchCurrentUser();
     fetchPosts(currentPage, itemsPerPage);
-    setCurrentUser(AuthService.getCurrentUser());
   }, [currentPage, itemsPerPage]);
 
-  const fetchPosts = (currentPage: number, itemsPerPage: number) => {
-    setErrorMessage('');
-    setLoading(true);
+  return { posts, currentPage, totalPages, totalItems, itemsPerPage,
+    loading, errorMessage, currentUser, setCurrentPage }
+}
 
-    return PostsService.getAll(currentPage, itemsPerPage)
-      .then((response: AxiosResponse) => {
-        setPosts(response.data.data);
-        setTotalPages(response.data.meta.totalPages);
-        setTotalItems(response.data.meta.totalItems);
-        setItemsPerPage(response.data.meta.itemsPerPage);
-      })
-      .catch((error: any) => {
-        setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
-
-  const handleNavbarSearch = (term: any) => {
-    setSearchTerm(term.toLowerCase());
-  }
+const PostsView = ({searchTerm}: any) => {
+  const { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
+    errorMessage, currentUser, setCurrentPage } = (
+      isZustandEnabled) ? PostsViewZustand() : PostsViewDefault();
 
   return (
     <>
-      <Navbar
-        onSearch={handleNavbarSearch}
-        ref={containerRef}
-      />
       <div className="container">
         <Posts
-          data={posts}
+          posts={posts}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           totalPages={totalPages}
@@ -91,11 +54,10 @@ const PostsView = () => {
           loading={loading}
           searchTerm={searchTerm}
           userRole={
-            (currentUser?.user?.role != null) &&
-            (currentUser.user.role)}
+            (currentUser?.role != null) ?
+            (currentUser.role) : null}
         />
       </div>
-      <Footer />
     </>
   );
 };

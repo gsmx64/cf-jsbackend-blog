@@ -11,7 +11,7 @@ const create = (data: ICategoryCreate) => {
   );
 };
 
-const update = (id: string, data: any) => {
+const update = (id: string | undefined, data: any) => {
   return api.put<any>(
     `categories/edit/${id}`,
     data,

@@ -1,45 +1,71 @@
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { ChangeEvent, forwardRef, KeyboardEvent, memo, useEffect,
+  useImperativeHandle, useState } from "react";
 import { Link } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import { AuthResponse } from "../../interfaces/auth.interface";
 import AuthService from "../../services/auth.service";
 import BootstrapLink from "../BootstrapLink";
 import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import useCurrentUser from "../../hooks/useCurrentUser";
+import useSettings from "../../hooks/useSettings";
+import useCurrentUserStore from "../../state/stores/currentUser";
+import useSettingsStore from "../../state/stores/settings";
 
+
+const NavbarDefault = () => {
+  const { currentUser, loading, handleLogOutClick } = useCurrentUser();
+  const { settings } = useSettings();
+
+  return { settings, currentUser, loading, handleLogOutClick }
+}
+
+const NavbarZustand = () => {
+  const currentUser = useCurrentUserStore((state) => state.currentUser);
+  const loading = useCurrentUserStore((state) => state.loading);
+  const setCurrentUser = useCurrentUserStore((state) => state.setCurrentUser);
+  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
+
+  const settings = useSettingsStore((state) => state.settings);
+  const fetchSettings = useSettingsStore((state) => state.fetchSettings);
+
+  useEffect(() => {
+    fetchCurrentUser();
+    fetchSettings(false);
+  }, []);
+
+  const handleLogOutClick = (event: any) => {
+    event.stopPropagation();
+    AuthService.logout();
+    setCurrentUser(undefined);
+  }
+
+  return { settings, currentUser, loading, handleLogOutClick }
+}
 
 const Navbar = forwardRef(({ onSearch }: any, ref: any) => { 
-  const [currentUser, setCurrentUser] = useState<AuthResponse | undefined>(undefined);
   const [search, setSearch] = useState<string>('');
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [panelDropdown, setPanelDropdown] = useState(false);
+  const { settings, currentUser, loading, handleLogOutClick } = (
+    isZustandEnabled) ? NavbarZustand() : NavbarDefault();
 
-  const envAppName: string = import.meta.env.VITE_APP_NAME || 'Blog';
-
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-  }, []);
+  const envAppName: string = loading ? settings.brand : import.meta.env.VITE_APP_NAME;
 
   useImperativeHandle(ref, () => ({
     search,
     setSearch,
   }));
 
-  const handleInputChange = (event: any) => {
-      setSearch(event.target.value);
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
   }
 
-  const handleInputKeyDown = (event: any) => {
-      if (event.key = 'Enter') {
-          onSearch(search);
-      }
-  }
-
-  const handleLogOutClick = (event: any) => {
-    event.stopPropagation();
-    AuthService.logout();
-    setCurrentUser(undefined);
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key = 'Enter') {
+      (onSearch !== undefined) && onSearch(search);
+    }
+    
   }
 
   return (
@@ -49,21 +75,21 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2 ps-1">       
           <ul className="navbar-nav me-auto">
             <li className="nav-item ms-2">
-              <Link to={"/"} className="nav-link">
+              <Link to={"/"}>
                 <i className="bi bi-house"></i>
-                <div>Home</div>
+                <span>Home</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/categories"} className="nav-link">
+              <Link to={"/categories"}>
                 <i className="bi bi-tags"></i>
-                <div>Categories</div>
+                <span>Categories</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/posts"} className="nav-link">
-                <i className="bi bi-file-earmark-post pb-1 pe-2"></i>
-                <div>Posts</div>
+              <Link to={"/posts"}>
+                <i className="bi bi-file-earmark-post"></i>
+                <span>Posts</span>
               </Link>
             </li>
           </ul>
@@ -74,36 +100,51 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
           </Link>
         </div>
         <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 pe-1">
-          <ul className="navbar-nav ms-auto menus">
+          <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <div className="input-group">
                 <span className="input-group-text" id="basic-addon1">
                   <i className="bi bi-search"></i>
-                </span>             
-                <input
-                  id="search"
-                  placeholder="Buscar en el blog"
-                  onChange={handleInputChange}
-                  onKeyDown={handleInputKeyDown}
-                  value={search}
-                  className="form-control"
-                />
+                </span>
+                {((onSearch === undefined)) ?
+                  (
+                    <input
+                      id="search"
+                      placeholder="Buscar en el blog"
+                      value={undefined}
+                      disabled
+                      className="form-control"
+                    />
+                  ) : (
+                    <input
+                      id="search"
+                      placeholder="Buscar en el blog"
+                      onChange={handleInputChange}
+                      onKeyDown={handleInputKeyDown}
+                      value={search}
+                      className="form-control"
+                    />
+                  )
+                }
               </div>
             </li>
             {
-              !currentUser && 
+              (
+                (currentUser == undefined) &&
+                (loading == false)
+              ) && 
               (
                 <>
-                  <li className="nav-item">
-                    <Link to={"/login"} className="nav-link">
+                  <li className="nav-item pb-1 ms-2">
+                    <Link to={"/login"} className="mt-1">
                       <i className="bi bi-box-arrow-in-right"></i>
-                      <div>Login</div>
+                      <span>Login</span>
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/register"} className="nav-link">
+                    <Link to={"/register"} className="mt-1">
                       <i className="bi bi-door-open"></i>
-                      <div>Register</div>
+                      <span>Register</span>
                     </Link>
                   </li>
                 </>
@@ -111,9 +152,9 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
             }
             {
               (
-                (currentUser?.user.role === 'ADMIN') ||
-                (currentUser?.user.role === 'MODERATOR') ||
-                (currentUser?.user.role === 'EDITOR')
+                (currentUser?.role === 'ADMIN') ||
+                (currentUser?.role === 'MODERATOR') ||
+                (currentUser?.role === 'EDITOR')
               ) &&
               (
                 <>
@@ -128,51 +169,85 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                         <path d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"/>
                         <path d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
                       </svg>
-                      <div>Panel</div>
+                      <span>Panel</span>
                     </button>
                     <ul className={`dropdown ${panelDropdown ? "show" : ""}`}>
-                      <li className="menu-items">
-                        <Link to={"/new-post"} className="nav-link">
-                          <i className="bi bi-file-post"></i>
-                          <span className="ms-2">New Post</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/list-posts"} className="nav-link">
-                          <i className="bi bi-stickies"></i>
-                          <span className="ms-2">List Posts</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/new-category"} className="nav-link">
-                          <i className="bi bi-tag-fill"></i>
-                          <span className="ms-2">New Category</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/list-categories"} className="nav-link">
-                          <i className="bi bi-tags"></i>
-                          <span className="ms-2">List Categories</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/list-users"} className="nav-link">
-                          <i className="bi bi-people-fill"></i>
-                          <span className="ms-2">List Users</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/list-comments"} className="nav-link">
-                          <i className="bi bi-chat-dots"></i>
-                          <span className="ms-2">Moderate Comments</span>
-                        </Link>
-                      </li>
-                      <li className="menu-items">
-                        <Link to={"/settings"} className="nav-link">
-                          <i className="bi bi bi-gear"></i>
-                          <span className="ms-2">Blog Settings</span>
-                        </Link>
-                      </li>
+                    {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR') ||
+                        (currentUser?.role === 'EDITOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/new-post"}>
+                            <i className="bi bi-file-post"></i>
+                            <span className="ms-2">New Post</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR') ||
+                        (currentUser?.role === 'EDITOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/list-posts"}>
+                            <i className="bi bi-stickies"></i>
+                            <span className="ms-2">List Posts</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/new-category"}>
+                            <i className="bi bi-tag-fill"></i>
+                            <span className="ms-2">New Category</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/list-categories"}>
+                            <i className="bi bi-tags"></i>
+                            <span className="ms-2">List Categories</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/list-users"}>
+                            <i className="bi bi-people-fill"></i>
+                            <span className="ms-2">List Users</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(
+                        (currentUser?.role === 'ADMIN') ||
+                        (currentUser?.role === 'MODERATOR')
+                      ) && (
+                        <li className="nav-item-menu">
+                          <Link to={"/list-comments"}>
+                            <i className="bi bi-chat-dots"></i>
+                            <span className="ms-2">Moderate Comments</span>
+                          </Link>
+                        </li>
+                      )}
+                      {(currentUser?.role === 'ADMIN') && (
+                        <li className="nav-item-menu">
+                          <Link to={"/settings"}>
+                            <i className="bi bi bi-gear"></i>
+                            <span className="ms-2">Blog Settings</span>
+                          </Link>
+                        </li>
+                      )}
                     </ul>
                   </li>
                 </>
@@ -188,27 +263,25 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                       aria-haspopup="menu"
                       aria-expanded={profileDropdown ? "true" : "false"}
                       onClick={() => setProfileDropdown((prev) => !prev)}
+                      className="button"
                     >
                       <img
-                        src={currentUser.user.avatar ? currentUser.user.avatar : DEFAULT_NO_AVATAR_TINY}
+                        src={currentUser.avatar ? currentUser.avatar : DEFAULT_NO_AVATAR_TINY}
                         className="rounded-circle img-thumbnail"
                         style={{height:26,width:26}}
                         alt="User Panel"
                       />
-                      <div>{currentUser.user.username}</div>
+                      <span>{currentUser.username}</span>
                     </button>
                     <ul className={`dropdown ${profileDropdown ? "show" : ""}`}>
-                      <li className="menu-items">
-                        <Link
-                          to={"/profile"}
-                          className="nav-link"
-                        >
+                      <li className="nav-item-menu">
+                        <Link to={"/profile"}>
                           <i className="bi bi-person-lines-fill"></i>
                           <span className="ms-2">Profile</span>
                         </Link>
                       </li>
-                      <li className="menu-items">
-                        <a href="/login" className="nav-link" onClick={handleLogOutClick}>
+                      <li className="nav-item-menu">
+                        <a href="/login" onClick={handleLogOutClick}>
                           <i className="bi bi-box-arrow-right"></i>
                           <span className="ms-2">LogOut</span>
                         </a>
@@ -225,4 +298,4 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
   );
 });
 
-export default Navbar;
+export default memo(Navbar);

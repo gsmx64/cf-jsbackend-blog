@@ -11,8 +11,8 @@ const update = (data: ISettings) => {
   );
 };
 
-const get = () => {
-  return api.get<ISettings>(`settings/view`);
+const get = async () => {
+  return await api.get<ISettings>(`settings/view`);
 };
 
 const SettingsService = {

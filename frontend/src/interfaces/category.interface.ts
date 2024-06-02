@@ -1,3 +1,5 @@
+import IUser, { initIUser } from "./user.interface";
+
 export default interface ICategory {
   id: string;
   createAt: string;
@@ -6,8 +8,8 @@ export default interface ICategory {
   description: string;
   image: string;
   status: string;
-  author: string;
-  posts?: [string];
+  author: IUser;
+  posts?: {};
 }
 
 export interface ICategoryCreate {
@@ -25,8 +27,8 @@ export interface ICategoryArray {
     description: string;
     image: string;
     status: string;
-    author: string;
-    posts?: [string];
+    author: IUser;
+    posts?: {};
   },
   meta: {
     itemsPerPage: number,
@@ -52,8 +54,8 @@ export const initICategory: ICategory = {
   description: '',
   image: '',
   status: '',
-  author: '',
-  posts: ['']
+  author: initIUser,
+  posts: {},
 }
 
 export const initICategoryCreate: ICategoryCreate = {
@@ -71,8 +73,8 @@ export const initICategoryArray: ICategoryArray = {
     description: '',
     image: '',
     status: '',
-    author: '',
-    posts: ['']
+    author: initIUser,
+    posts: {}
   },
   meta: {
     itemsPerPage: 0,

@@ -7,6 +7,7 @@ import {
   VALID_EMAIL_REGEX,
   VALID_URL_REGEX
 } from "../../../constants/validationsRegex";
+import UsersService from "../../../services/users.service";
 
 
 const validationSchema = yup
@@ -19,6 +20,9 @@ const validationSchema = yup
         val &&
         val.toString().length >= 3 &&
         val.toString().length <= 20
+      )
+      .test('is-valid-username', 'This username is taken!', (username) =>
+        UsersService.usernameIsAvailable(username as string),
       )
       .required('This field is required!')
       .matches(
@@ -85,6 +89,9 @@ const validationSchema = yup
         val.toString().length >= 7 &&
         val.toString().length <= 254
       )
+      .test('is-valid-email', 'This email is taken!', (email) =>
+        UsersService.emailIsAvailable(email as string),
+      )
       .email('This is not a valid email.')
       .required('This field is required!')
       .matches(
@@ -136,6 +143,10 @@ const validationSchema = yup
         VALID_URL_REGEX,
         { message: 'Only url direct link allowed.', excludeEmptyString: true }
       ),
+    termsCheck: yup
+    .bool()
+    .oneOf([true],'You must accept the terms and conditions!')
+    .required('This field is required!')
   })
   .required();
 
