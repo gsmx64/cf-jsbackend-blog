@@ -161,7 +161,7 @@ const routes: RouteDefinition[] = [
   {
     name: 'User Profile',
     urlPath: 'user/:userId',
-    acl: (AuthService.isLoggedIn()),
+    acl: (await AuthService.isLoggedIn()),
     search: false,
     Component: UserView,
     ComponentOnACLFail: LoginView,

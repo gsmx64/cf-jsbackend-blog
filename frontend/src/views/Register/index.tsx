@@ -6,7 +6,6 @@ import useAuthStore from "../../state/stores/auth";
 import useSettingsStore from "../../state/stores/settings";
 
 
-
 const RegisterViewDefault = () => {
   const { settings } = useSettings();
   const { loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = useAuth();
@@ -22,7 +21,6 @@ const RegisterViewZustand= () => {
 
   return { settings, loading, alertMessage, errorMessage, handleRegisterUserSaveClick }
 }
-
 
 const RegisterView = () => {
   const { settings, loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = (

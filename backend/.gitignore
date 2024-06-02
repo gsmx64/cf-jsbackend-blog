@@ -1,5 +1,7 @@
 # env file
-.development.env
+.env.production
+.env.development
+.env.testing
 
 # compiled output
 /dist
