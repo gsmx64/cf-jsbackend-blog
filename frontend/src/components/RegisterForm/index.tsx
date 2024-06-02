@@ -280,7 +280,7 @@ const RegisterForm = ({ settings, loading, alertMessage, errorMessage, onRegiste
               className="modal-dialog modal-dialog-centered modal-dialog-scrollable"
               style={{ display: 'block', position: 'initial' }}
             >
-              <Modal show={showTerms} onHide={handleTermsClose} scrollable={true} centered>
+              <Modal size="lg" show={showTerms} onHide={handleTermsClose} scrollable={true} centered>
                 <Modal.Header closeButton>
                   <Modal.Title>Terms and conditions</Modal.Title>
                 </Modal.Header>

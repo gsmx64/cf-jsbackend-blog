@@ -69,7 +69,7 @@ const isRoleAuthorized = async (roles: Array<string>) => {
 
 const isAdmin = async () => {
   const role = await userRole();
-  return (role === 'ADMIN');
+  return ((role === 'ADMIN'));
 }
 
 const getCurrentUserId = () => {

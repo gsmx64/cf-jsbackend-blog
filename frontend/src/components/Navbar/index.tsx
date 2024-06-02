@@ -135,14 +135,14 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
               ) && 
               (
                 <>
-                  <li className="nav-item">
-                    <Link to={"/login"}>
+                  <li className="nav-item pb-1 ms-2">
+                    <Link to={"/login"} className="mt-1">
                       <i className="bi bi-box-arrow-in-right"></i>
                       <span>Login</span>
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/register"}>
+                    <Link to={"/register"} className="mt-1">
                       <i className="bi bi-door-open"></i>
                       <span>Register</span>
                     </Link>
