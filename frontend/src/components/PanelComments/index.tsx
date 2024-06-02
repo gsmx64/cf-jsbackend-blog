@@ -19,7 +19,7 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
   };
 
   const handleCommentItemDeleteComment = (id: string, username: string) => {
-    const shouldRemove = confirm(`Are you sure you want to delete the message of user ${username}?`);
+    const shouldRemove = confirm(`Are you sure you want to delete the message of user "${username}"?`);
   
     if (shouldRemove) {
       onDeleteComment(id);

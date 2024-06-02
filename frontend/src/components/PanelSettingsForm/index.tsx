@@ -1,22 +1,16 @@
-import { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
-import { AxiosResponse } from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import SettingsService from "../../services/settings.service";
 import validationSchema from "./utils/validationSchema";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
 
 
-const PanelSettingsForm = ({ brand, facebook, instagram, twitterx,
-  linkedin, youtube, tiktok, error, onSettingsCancelClick }: any) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>(error);
+const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
+  linkedin, youtube, tiktok, loading, alertMessage, errorMessage,
+  onEditSettingsSaveClick, onEditSettingsCancelClick }: any) => {
 
   const {
     register,
@@ -26,8 +20,9 @@ const PanelSettingsForm = ({ brand, facebook, instagram, twitterx,
   } = useForm(
     { 
       resolver: yupResolver(validationSchema),
-      defaultValues: {
-        brand: brand ? brand : brand,
+      values: {
+        brand: brand,
+        terms: terms,
         facebook: facebook,
         instagram: instagram,
         twitterx: twitterx,
@@ -38,35 +33,14 @@ const PanelSettingsForm = ({ brand, facebook, instagram, twitterx,
     }
   );
 
-  const navigate: NavigateFunction = useNavigate();
-
   const handleSettingsCancelClick = (event: any) => {
     event.stopPropagation();
     reset();
-    onSettingsCancelClick();
+    onEditSettingsCancelClick();
   };
 
-  const onSubmitHandler = (data: any) => {
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-
-    return SettingsService
-    .update(data)
-    .then((response: AxiosResponse) => {
-      setLoading(false);        
-      if(response.data) {
-        setAlertMessage('Settings saved!');
-        navigate('/');
-      }
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+  const onSubmitHandler = (body: any) => {
+    onEditSettingsSaveClick(body);
   }
 
   return (
@@ -87,6 +61,7 @@ const PanelSettingsForm = ({ brand, facebook, instagram, twitterx,
                 <div className="card">
                   <div className="card-body">
                     <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">General Settings</i></h6>
+
                     <div className="row">
                       <div className="col-sm-3">
                         <h6 className="mt-2">Brand</h6>
@@ -106,6 +81,29 @@ const PanelSettingsForm = ({ brand, facebook, instagram, twitterx,
                           {...register('brand')}
                         />
                         {errors.brand && <div className="invalid-feedback">{(errors.brand.message?.toString())}</div>}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mt-2">Terms and conditions</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        <textarea
+                          id={`settings-terms-textarea`}
+                          placeholder={terms ? terms : 'Write here your terms and conditions.'}
+                          autoComplete="off"
+                          className={`${(
+                            (isSubmitted && errors?.terms) ?
+                            "form-control is-invalid" :
+                            (isSubmitted && errors?.brand === undefined) ?
+                            "form-control is-valid" :
+                            "form-control"
+                          )}`}
+                          {...register('terms')}
+                          rows={10}
+                        />
+                        {errors.terms && <div className="invalid-feedback">{(errors.terms.message?.toString())}</div>}
                       </div>
                     </div>
                   </div>

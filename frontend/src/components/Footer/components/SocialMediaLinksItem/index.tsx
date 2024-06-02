@@ -1,9 +1,11 @@
+import { memo } from "react";
+
 const SocialMediaLinksItem = ({ facebook, instagram,
   twitterx, linkedin, youtube, tiktok }: any) => {
   return (
     <>
       <div className="navbar-nav me-auto">
-        <div className="card-body">
+        <div className="card-body nav-item">
         {
             (facebook) && (
               <a
@@ -76,4 +78,4 @@ const SocialMediaLinksItem = ({ facebook, instagram,
   );
 };
 
-export default SocialMediaLinksItem;
+export default memo(SocialMediaLinksItem);

@@ -271,7 +271,7 @@ export class UsersService {
           const response: UsersEntity = await this.userRepository
               .createQueryBuilder('user')
               .select(['user.username'])
-              .where("user.username = :userUsername", { userUsername: username })
+              .where("LOWER(user.username) like :userUsername", { userUsername: `%${username.toLowerCase()}%` })
               .getOne();
 
           LoggingMessages.log(response, 'UsersService.usernameExist(username) -> response', this.dataForLog);
@@ -295,11 +295,10 @@ export class UsersService {
   ): Promise<any> {
     try {
       if(email.match(VALID_EMAIL_REGEX)) {
-
         const response: UsersEntity = await this.userRepository
             .createQueryBuilder('user')
             .select(['user.email'])
-            .where("user.email = :userEmail", { userEmail: email })
+            .where("LOWER(user.email) like :userEmail", { userEmail: `%${email.toLowerCase()}%` })
             .getOne();
 
         LoggingMessages.log(response, 'UsersService.emailExist(email) -> response', this.dataForLog);

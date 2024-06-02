@@ -1,17 +1,10 @@
 import { Link, useRouteError } from "react-router-dom";
 
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-
-
 const Error404View = () => {
   const error: any = useRouteError();
 
   return (
     <>
-      <Navbar
-        onSearch={() => {}}
-      />
       <section className="py-3 py-md-5 min-vh-99 d-flex justify-content-center align-items-center">
         <div className="container">
           <div className="row">
@@ -31,7 +24,6 @@ const Error404View = () => {
           </div>
         </div>
       </section>
-      <Footer />
     </>
   );
 };

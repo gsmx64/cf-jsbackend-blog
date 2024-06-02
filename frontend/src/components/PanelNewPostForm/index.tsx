@@ -1,25 +1,18 @@
-import { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import { AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import PostsService from "../../services/posts.service";
 import validationSchema from "./utils/validationSchema";
-
-import { initIPostCreate } from "../../interfaces/post.interface";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
 
 
-const PanelNewPostForm = ({ categories, error, onNewPostCancelClick }: any) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>(error);
-
+const PanelNewPostForm = ({ categories, loading, alertMessage,
+  errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any) => {
   const activeCategories = Array.from(categories);
-  
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -27,45 +20,22 @@ const PanelNewPostForm = ({ categories, error, onNewPostCancelClick }: any) => {
     formState: { errors, isSubmitted },
   } = useForm(
     { 
-      resolver: yupResolver(validationSchema),
-      defaultValues: initIPostCreate,
+      resolver: yupResolver(validationSchema)
     }
   );
 
-  const navigate: NavigateFunction = useNavigate();
+  const onSubmitHandler = (body: any) => {
+    const saveSuccessful = onNewPostSaveClick(body);
+    if (saveSuccessful !== undefined) {
+      navigate(`/list-posts`);
+    }
+  };
 
   const handleNewPostCancelClick = (event: any) => {
     event.stopPropagation();
     reset();
     onNewPostCancelClick();
   };
-
-  const onSubmitHandler = (data: any) => {
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-
-    return PostsService
-    .create({
-      ...data,
-      status: 'UNPUBLISHED',
-      comments: []
-    })
-    .then((response: AxiosResponse) => {
-      setLoading(false);        
-      if(response.data) {
-        setAlertMessage(`Post ${response.data.title} created!`);
-        navigate(`/list-posts`);
-      }
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
 
   return (
     <>
@@ -159,14 +129,14 @@ const PanelNewPostForm = ({ categories, error, onNewPostCancelClick }: any) => {
                       autoComplete="off"
                       className={`${(
                         (isSubmitted && errors?.content) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.content === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('content')}
                       rows={10}
-                    ></textarea>
+                    />
                     {errors.content && <div className="invalid-feedback">{(errors.content.message?.toString())}</div>}
                   </div>
                 </div>
@@ -179,9 +149,10 @@ const PanelNewPostForm = ({ categories, error, onNewPostCancelClick }: any) => {
                     <select
                       id={`post-select-category`}
                       className="form-select form-select-sm pe-14" style={{minWidth:124 }}
+                      defaultValue=""
                       {...register('category')}
                     >
-                      <option selected disabled value=""> - Select Category - </option>
+                      <option disabled value=""> - Select Category - </option>
                       {
                         activeCategories?.map((categoryItem: any, idx: number) => (
                           (categoryItem.status === 'PUBLISHED') &&

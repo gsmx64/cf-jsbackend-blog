@@ -1,30 +1,31 @@
-import { useEffect, useState } from "react";
-
-import { AxiosResponse } from "axios";
+import { memo, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import CopyrightItem from "./components/CopyrightItem";
 import SocialMediaLinksItem from "./components/SocialMediaLinksItem";
-import ISettings, { initISettings } from "../../interfaces/settings.interface";
-import SettingsService from "../../services/settings.service";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import useSettings from "../../hooks/useSettings";
+import useSettingsStore from "../../state/stores/settings";
 
 
-const Footer = () => { 
-  const [settings, setSettings] = useState<ISettings>(initISettings);
-  const year = new Date().getFullYear();
-  //const navigate = useNavigate();
+const FooterDefault = () => {
+  return useSettings()
+}
+
+const FooterZustand= () => {
+  const settings = useSettingsStore((state) => state.settings);
+  const fetchSettings = useSettingsStore((state) => state.fetchSettings);
 
   useEffect(() => {
-    fetchSettings();
+    fetchSettings(false);
   }, []);
 
-  const fetchSettings = () => {
-    return SettingsService
-    .get()
-    .then((response: AxiosResponse) => {
-      setSettings(response.data);
-    });
-  }
+  return { settings }
+}
+
+const Footer = () => { 
+  const { settings } = (isZustandEnabled) ? FooterZustand() : FooterDefault();
+  const year = new Date().getFullYear();
 
   return (
     <div>
@@ -50,4 +51,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default memo(Footer);

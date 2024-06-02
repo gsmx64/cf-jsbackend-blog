@@ -1,3 +1,5 @@
+import { memo } from "react";
+
 const CopyrightItem = ({ year, brand }: any) => {  
   return (
     <>
@@ -8,4 +10,4 @@ const CopyrightItem = ({ year, brand }: any) => {
   );
 };
 
-export default CopyrightItem;
+export default memo(CopyrightItem);

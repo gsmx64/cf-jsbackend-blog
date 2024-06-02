@@ -14,8 +14,8 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
   errorMessage, loading, searchTerm, userRole, onUpdateStatusCategory, onDeleteCategory}: any) => {
   const navigate = useNavigate();
 
-  const handleCategoryItemUpdateStatusCategory = (id: string, status: string) => {
-    onUpdateStatusCategory(id, status);
+  const handleCategoryItemUpdateStatusCategory = (id: string, status: string, title: string) => {
+    onUpdateStatusCategory(id, status, title);
   };
 
   const handleCategoryEditCategory = (id: string) => {
@@ -23,10 +23,10 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
   };
 
   const handleCategoryItemDeleteCategory = (id: string, title: string) => {
-    const shouldRemove = confirm(`Are you sure you want to delete ${title}?`);
+    const shouldRemove = confirm(`Are you sure you want to delete "${title}"?`);
   
     if (shouldRemove) {
-      onDeleteCategory(id);
+      onDeleteCategory(id, title);
     }
   };
 

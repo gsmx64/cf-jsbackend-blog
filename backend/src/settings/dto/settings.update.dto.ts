@@ -15,6 +15,14 @@ export class SettingsUpdateDTO {
     brand: string;
 
     /**
+     * The terms and conditions for blog.
+     */
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    terms: string;
+
+    /**
      * The Facebook link for social media info.
      */
     @ApiProperty()
