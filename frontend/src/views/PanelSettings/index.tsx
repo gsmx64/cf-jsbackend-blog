@@ -11,7 +11,7 @@ const PanelSettingsViewDefault = () => {
   return useSettings();
 }
 
-const PanelSettingsViewZustand= () => {
+const PanelSettingsViewZustand = () => {
   const settings = useSettingsStore((state) => state.settings);
   const loading = useSettingsStore((state) => state.loading);
   const alertMessage = useSettingsStore((state) => state.alertMessage);

@@ -34,7 +34,7 @@ const PanelUserViewZustand = () => {
     fetchUser(userId);
     fetchUserComments(userId, 5);
     fetchUserPosts(userId, 5);
-  }, [loading]);
+  }, []);
 
   return { userId, user, userComments, userPosts, loading, errorMessage,
     currentUser, handleEditUserSaveClick }

@@ -114,7 +114,7 @@ const useUser = (userId: string) => {
     fetchUser(userId);
     fetchUserComments(userId, 5);
     fetchUserPosts(userId, 5);
-  }, [loading]);
+  }, []);
 
   return { currentUser, user, userComments, userPosts, loading,
     alertMessage, errorMessage, handleEditUserSaveClick
