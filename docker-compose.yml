@@ -1,53 +1,53 @@
-version: '3.1'
+version: '3.9'
 
 services:
   db:
     image: postgres:15.5
-    container_name: cf-blog-db_pg
+    container_name: ${APP_DB_HOST}
     restart: always
     env_file:
-      - ./backend/.env
-      - ./backend/.development.env
+      - ./.env
+      - ./backend/.env.development
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${APP_DB_NAME}
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - ${APP_DB_PORT}:5432
 
   backend:
-    container_name: cf-blog-backend
+    container_name: ${APP_BACKEND_HOST}
     env_file:
-      - ./backend/.env
-      - ./backend/.development.env
+      - ./.env
+      - ./backend/.env.development
     command: npm run start:dev
     depends_on:
       - db
     build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
-      - ${APP_PORT}:3001
+      - ${APP_BACKEND_PORT}:3001
     restart: always
     volumes:
       - .:/application
       - ./node_modules:/application/node_modules
 
   frontend:
-    container_name: cf-blog-frontend
+    container_name: ${APP_FRONTEND_HOST}
     env_file:
-      - ./frontend/.env
-      - ./frontend/.development.env
+      - ./.env
+      - ./frontend/.env.development
     command: npm run start:dev
     depends_on:
       - backend
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - ${APP_PORT}:3000
+      - ${APP_FRONTEND_PORT}:3000
     restart: always
     volumes:
       - .:/application

@@ -1,3 +1,8 @@
+# env file
+.env.production
+.env.development
+.env.testing
+
 # Logs
 logs
 *.log
