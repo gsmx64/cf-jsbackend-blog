@@ -17,22 +17,22 @@ const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, sea
 
   const handleUserItemBanUser = (id: string, username: string, ban: boolean) => {
     ban ? 
-      confirm(`Are you sure you want to ban user ${username}?`) :
-      confirm(`Are you sure you want to unban user ${username}?`);
+      confirm(`Are you sure you want to ban user "${username}"?`) :
+      confirm(`Are you sure you want to unban user "${username}"?`);
 
       onBanUser(id, username, ban);
   };
 
   const handleUserItemActivateUser = (id: string, username: string, activate: boolean) => {
     activate ?
-      confirm(`Are you sure you want to activate user ${username}?`) : 
-      confirm(`Are you sure you want to deactivate user ${username}?`);
+      confirm(`Are you sure you want to activate user "${username}"?`) : 
+      confirm(`Are you sure you want to deactivate user "${username}"?`);
   
     onActivateUser(id, username, activate); 
   };
 
   const handleUserItemDeleteUser = (id: string, username: string) => {
-    const shouldRemove = confirm(`Are you sure you want to delete user ${username}?`);
+    const shouldRemove = confirm(`Are you sure you want to delete user "${username}"?`);
   
     if (shouldRemove) {
       onDeleteUser(id, username);
@@ -103,6 +103,7 @@ const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, sea
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
             />
+            <div className="mt-2"></div>
             <Alerts
               alertMessage={alertMessage}
               errorMessage={errorMessage}

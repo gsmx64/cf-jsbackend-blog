@@ -6,14 +6,33 @@ import CommentForm from "../CommentForm";
 import Comments from "../Comments";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
+import IPost from "../../interfaces/post.interface";
+import { useEffect } from "react";
 
 
-const Post = ({post, errorMessage, loading, userRole}: any) => {
+interface PostProps {
+  post: IPost;
+  loading: boolean;
+  alertMessage: string;
+  errorMessage: Error | string | unknown;
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  userRole: string | null | undefined;
+  handleNewCommentSaveClick: (postId: string, data: any) => void;
+}
+
+const Post = ({ post, alertMessage, errorMessage, loading, searchTerm,
+  setSearchTerm, userRole, handleNewCommentSaveClick }: PostProps) => {
   const date = new Date(post.updateAt);
+  loading = (post.id === '') ? true : loading;
+
+  useEffect(() => {
+    setSearchTerm('');
+  }, [searchTerm]);
 
   return (
     <>
-      {post && loading ? (
+      {loading ? (
         <Loading />
       ) : (
         <>
@@ -58,15 +77,19 @@ const Post = ({post, errorMessage, loading, userRole}: any) => {
               </div>
             </div>
             <div className="align-self-end float-end pt-4">
+              {(userRole !== undefined) &&
+                <div className="container-new-comment">
+                  <CommentForm
+                    postId={post.id}
+                    loading={loading}
+                    alertMessage={alertMessage}
+                    errorMessage={errorMessage}
+                    onNewCommentSaveClick={handleNewCommentSaveClick}
+                  />
+                </div>
+              }
               <div className="container-comments">
-                <Comments
-                  comments={post.comments}
-                />
-              </div>
-              <div className="container-new-comment">
-                <CommentForm
-                  postId={post.id}
-                />
+                <Comments comments={post.comments} />
               </div>
             </div>
           </div>

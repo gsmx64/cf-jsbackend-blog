@@ -1,22 +1,16 @@
-import { useState } from "react";
-import { NavigateFunction, useNavigate } from "react-router-dom";
-import { AxiosResponse } from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import CategoriesService from "../../services/categories.service";
 import validationSchema from "./utils/validationSchema";
-
-import { initICategoryCreate } from "../../interfaces/category.interface";
 import Alerts from "../Alerts";
 
 
-const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-  
+const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
+  onNewCategorySaveClick, onNewCategoryCancelClick }: any) => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -24,45 +18,22 @@ const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
     formState: { errors, isSubmitted },
   } = useForm(
     { 
-      resolver: yupResolver(validationSchema),
-      defaultValues: initICategoryCreate,
+      resolver: yupResolver(validationSchema)
     }
   );
 
-  const navigate: NavigateFunction = useNavigate();
+  const onSubmitHandler = (body: any) => {
+    const saveSuccessful = onNewCategorySaveClick(body);
+    if (saveSuccessful !== undefined) {
+      navigate(`/list-categories`);
+    }
+  }
 
   const handleNewCategoryCancelClick = (event: any) => {
     event.stopPropagation();
     reset();
     onNewCategoryCancelClick();
   };
-
-  const onSubmitHandler = (data: any) => {
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-
-    return CategoriesService
-    .create({
-      ...data,
-      status: 'UNPUBLISHED',
-      posts: []
-    })
-    .then((response: AxiosResponse) => {
-      setLoading(false);        
-      if(response.data) {
-        setAlertMessage(`Category ${response.data.title} created!`);
-        navigate(`/list-categories`);
-      }
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
-  }
 
   return (
     <div className="card mb-3">
@@ -72,7 +43,11 @@ const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
             noValidate
             className="needs-validation"
           >
-          <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">New category</i></h6>
+          <h6 className="d-flex align-items-center mb-3">
+            <i className="material-icons text-info mr-2 pe-1">
+              New category
+            </i>
+          </h6>
           <div className="row">
             <div className="col-sm-3">
               <h6 className="mb-0">Title</h6>
@@ -91,7 +66,12 @@ const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
                 )}`}
                 {...register('title')}
               />
-              {errors.title && <div className="invalid-feedback">{(errors.title.message?.toString())}</div>}
+              {
+                errors.title &&
+                <div className="invalid-feedback">
+                  {(errors.title.message?.toString())}
+                </div>
+              }
             </div>
           </div>
           <hr />
@@ -113,7 +93,12 @@ const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
                 )}`}
                 {...register('description')}
               />
-              {errors.description && <div className="invalid-feedback">{(errors.description.message?.toString())}</div>}
+              {
+                errors.description &&
+                <div className="invalid-feedback">
+                  {(errors.description.message?.toString())}
+                </div>
+              }
             </div>
           </div>
           <hr />
@@ -136,18 +121,32 @@ const PanelNewCategoryForm = ({ onNewCategoryCancelClick }: any) => {
                 )}`}
                 {...register('image')}
               />
-              {errors.image && <div className="invalid-feedback">{(errors.image.message?.toString())}</div>}
+              {
+                errors.image &&
+                <div className="invalid-feedback">
+                  {(errors.image.message?.toString())}
+                </div>
+              }
             </div>
           </div>
           <hr />
           <div className="mb-3">
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={loading}
+            >
               {loading && (
                 <span className="spinner-border spinner-border-sm"></span>
               )}
               <span>Save</span>
             </button>
-            <button type="submit" onClick={handleNewCategoryCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
+            <button
+              type="submit"
+              onClick={handleNewCategoryCancelClick}
+              className="btn btn-primary btn-block ms-2"
+              disabled={loading}
+            >
               <span>Cancel</span>
             </button>
           </div>

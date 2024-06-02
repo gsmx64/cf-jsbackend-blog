@@ -65,6 +65,7 @@ export interface IUserRegister {
   age: number;
   city: string;
   country: string;
+  termsCheck: boolean;
 }
 
 export const initIUser: IUser = {
@@ -133,5 +134,6 @@ export const initIUserRegister: IUserRegister = {
   email: '',
   age: 0,
   city: '',
-  country: ''
+  country: '',
+  termsCheck: false,
 }

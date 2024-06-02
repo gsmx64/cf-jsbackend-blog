@@ -1,6 +1,7 @@
 import Error from "../../interfaces/error.interface";
 import IComment, { initIComment } from "../../interfaces/comment.interface";
 
+
 export interface IUseCommentsStore {
   comments: IComment;
   currentPage: number;

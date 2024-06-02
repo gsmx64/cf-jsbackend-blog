@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import CommentsService from "../../services/comments.service";
 import { initialCommentsStoreState, IUseCommentsStore } from "../interfaces/comments.interface";
 
+
 const useCommentsStore = create<IUseCommentsStore>((set) => ({
   ...initialCommentsStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
@@ -23,7 +24,7 @@ const useCommentsStore = create<IUseCommentsStore>((set) => ({
         }));
       })
       .catch((error: Error | null | any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -40,13 +41,13 @@ const useCommentsStore = create<IUseCommentsStore>((set) => ({
       .remove(id)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Deleted comment with id: ${id}.` }));
+          set(() => ({ alertMessage: `Comment deleted!` }));
         } else {  
-          set(() => ({ errorMessage: `Error deleting comment with id: ${id}. Comment not found.` }));
+          set(() => ({ errorMessage: `Error deleting comment! Comment not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));

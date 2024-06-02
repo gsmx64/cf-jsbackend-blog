@@ -1,20 +1,14 @@
-import { useState } from "react";
 import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-
-import { AxiosResponse } from "axios";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import validationSchema from "./utils/validationSchema";
-import UsersService from "../../../../services/users.service";
 import Alerts from "../../../Alerts";
 
 
 const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
-  age, city, country, createAt, userRole, onProfileEditCancelClick }: any) => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [alertMessage, setAlertMessage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  age, city, country, createAt, userRole, loading, alertMessage,
+  errorMessage, onProfileEditCancelClick, onProfileEditSaveClick }: any) => {
   const urlPath = useLocation();
   
   const {
@@ -26,7 +20,6 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
     { 
       resolver: yupResolver(validationSchema),
       defaultValues: {
-        //username: username,
         firstName: firstName,
         lastName: lastName,
         email: email,
@@ -45,35 +38,19 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
     onProfileEditCancelClick(id);
   };
 
-  const onSubmitHandler = (data: any) => {
-    setAlertMessage('');
-    setErrorMessage('');
-    setLoading(true);
-
-    return UsersService
-    .update(id, data)
-    .then((response: AxiosResponse) => {
-      setLoading(false);        
-      if(response.data.affected === 1) {
-        setAlertMessage('Data updated!');
-        if(urlPath.pathname === '/profile/edit') {
-          navigate(`/profile`);
-        } else if(urlPath.pathname === `/user/edit/${id}`) {
-          if(userRole === 'ADMIN' || userRole === 'MODERATOR') {
-            navigate(`/user/${id}`, { state: id });
-          } else {
-            navigate(`/`);
-          }
+  const onSubmitHandler = (body: any) => {
+    const saveSuccessful = onProfileEditSaveClick(id, body);
+    if (saveSuccessful !== undefined) {
+      if(urlPath.pathname === '/profile/edit') {
+        navigate(`/profile`);
+      } else if(urlPath.pathname === `/user/edit/${id}`) {
+        if(userRole === 'ADMIN' || userRole === 'MODERATOR') {
+          navigate(`/user/${id}`, { state: id });
+        } else {
+          navigate(`/`);
         }
       }
-    })
-    .catch((error: any) => {
-      setLoading(false);
-      setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response.data.message));
-    })
-    .finally(() => {
-      setLoading(false);
-    });
+    }
   }
 
   var formatDate = (currentDate: string) => {

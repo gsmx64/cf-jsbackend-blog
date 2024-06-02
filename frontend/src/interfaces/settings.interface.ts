@@ -1,6 +1,7 @@
 export default interface ISettings {
   updateAt: string;
   brand: string;
+  terms: string;
   facebook: string;
   instagram: string;
   twitterx: string;
@@ -12,6 +13,7 @@ export default interface ISettings {
 export const initISettings: ISettings = {
   updateAt: '',
   brand: '',
+  terms: '',
   facebook: '',
   instagram: '',
   twitterx: '',

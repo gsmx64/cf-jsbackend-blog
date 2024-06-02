@@ -1,8 +1,9 @@
 import Error from "../../interfaces/error.interface";
-import ICategory, { initICategory } from "../../interfaces/category.interface";
+import { ICategoryArray, initICategoryArray } from "../../interfaces/category.interface";
+
 
 export interface IUseCategoriesStore {
-  categories: ICategory;
+  categories: ICategoryArray;
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -12,12 +13,12 @@ export interface IUseCategoriesStore {
   errorMessage: Error | null | unknown;
   setCurrentPage: (page: number) => void;
   fetchCategories: (currentPage: number, itemsPerPage: number) => void;
-  handleUpdateStatusCategory: (id: string, status: string) => void;
-  handleDeleteCategory: (id: string) => void;
+  handleUpdateStatusCategory: (id: string, status: string, title: string) => void;
+  handleDeleteCategory: (id: string, title: string) => void;
 }
 
 export const initialCategoriesStoreState = {
-  categories: initICategory,
+  categories: initICategoryArray,
   currentPage: 1,
   totalPages: 1,
   totalItems: 0,

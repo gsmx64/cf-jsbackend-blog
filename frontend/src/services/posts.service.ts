@@ -11,7 +11,7 @@ const create = (data: IPostCreate) => {
   );
 };
 
-const update = (id: string, data: any) => {
+const update = (id: string | undefined, data: any) => {
   return api.put<any>(
     `posts/edit/${id}`,
     data,
@@ -47,7 +47,7 @@ const getUserPosts = (id: string | undefined, limit: number | null = null) => {
   const limitQuery = (limit != null) ? `?limit=${limit}` : ``;
 
   return (id != undefined) ? api.get<Array<IPost>>(
-    `posts/user/${id}${limitQuery}`) : initIPostArray as any;
+    `posts/user/${id}${limitQuery}`, { headers: AuthService.authHeader() }) : initIPostArray as any;
 };
 
 const findByTitle = (title: string | undefined) => {

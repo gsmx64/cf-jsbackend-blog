@@ -1,29 +1,16 @@
-import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Navbar from "../../components/Navbar";
-import Footer from "../../components/Footer";
-import AuthService from "../../services/auth.service";
-import { AuthResponse } from "../../interfaces/auth.interface";
-import PanelNewCategoryForm from "../../components/PanelNewCategoryForm";
 import CategoriesView from "../Categories";
+import PanelNewCategoryForm from "../../components/PanelNewCategoryForm";
+import { initICategoryCreate } from "../../interfaces/category.interface";
+import useCategory from "../../hooks/useCategory";
 
 
-const PanelNewCategoryView = () => {
-  const [currentUser, setCurrentUser] = useState<AuthResponse>(AuthService.getCurrentUser());
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
+const PanelNewCategoryView = ({searchTerm}: any) => {
+  const { currentUser, loading, alertMessage, errorMessage,
+    handleNewCategorySaveClick } = useCategory();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setCurrentUser(AuthService.getCurrentUser());
-  }, []);
-
-  const handleNavbarSearch = (term: any) => {
-    setSearchTerm(term);
-  }
 
   const handleNewCategoryCancelClick = () => {
     navigate(`/categories`);
@@ -34,19 +21,19 @@ const PanelNewCategoryView = () => {
       {
       (searchTerm === '') ? (
         <>
-          <Navbar
-            onSearch={handleNavbarSearch}
-            ref={containerRef}
-          />
           <div className="container">
             <PanelNewCategoryForm
+              category={initICategoryCreate}
               userRole={
-                (currentUser?.user?.role != null) && 
-                (currentUser.user.role)}
+                (currentUser?.role != null) ? 
+                (currentUser.role) : null}
+              alertMessage={alertMessage}
+              errorMessage={errorMessage}
+              loading={loading}
+              onNewCategorySaveClick={handleNewCategorySaveClick}
               onNewCategoryCancelClick={handleNewCategoryCancelClick}
             />
           </div>
-          <Footer />
         </>
       ) : (
         <>

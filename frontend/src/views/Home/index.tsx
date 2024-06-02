@@ -1,10 +1,10 @@
 import PostsView from "../Posts";
 
 
-const HomeView = () => {
+const HomeView = ({searchTerm}: any) => {
   return (
     <>
-      <PostsView />
+      <PostsView searchTerm={searchTerm} />
     </>
   );
 };

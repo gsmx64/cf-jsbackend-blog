@@ -1,10 +1,12 @@
+import IUser, { initIUser } from "./user.interface";
+
 export default interface IComment {
   id: string;
   createAt: string;
   updateAt: string;
   message: string;
-  author: string;
-  post: string;
+  author: IUser;
+  post: {};
 }
 
 export interface ICommentCreate {
@@ -18,8 +20,8 @@ export interface ICommentArray {
     createAt: string;
     updateAt: string;
     message: string;
-    author: string;
-    post: [string];
+    author: IUser;
+    post: {};
   },
   meta: {
     itemsPerPage: number,
@@ -42,8 +44,8 @@ export const initIComment: IComment = {
   createAt: '',
   updateAt: '',
   message: '',
-  author: '',
-  post: ''
+  author: initIUser,
+  post: {},
 }
 
 export const initICommentCreate: ICommentCreate = {
@@ -57,8 +59,8 @@ export const initICommentArray: ICommentArray = {
     createAt: '',
     updateAt: '',
     message: '',
-    author: '',
-    post: ['']
+    author: initIUser,
+    post: {},
   },
   meta: {
     itemsPerPage: 0,

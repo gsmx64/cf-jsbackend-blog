@@ -4,9 +4,28 @@ import { AxiosResponse } from "axios";
 import PostsService from "../../services/posts.service";
 import { initialPostsStoreState, IUsePostsStore } from "../interfaces/posts.interface";
 
+
 const usePostsStore = create<IUsePostsStore>((set) => ({
   ...initialPostsStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
+  fetchPost: (postId: string | undefined) => {
+    try {
+      set(() => ({ loading: true, errorMessage: '' }));
+
+      return PostsService.get(postId)
+      .then((response: AxiosResponse<any>) => {
+        set(() => ({ posts: response.data }));
+      })
+      .catch((error: any) => {
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
+      })
+      .finally(() => {
+        set(() => ({ loading: false }));
+      });
+    } catch (error: any) {
+      set(() => ({ errorMessage: error.toString(), loading: false }));
+    }
+  },
   fetchPosts: (currentPage: number, itemsPerPage: number) => {
     try {
       set(() => ({ loading: true, errorMessage: '' }));
@@ -23,7 +42,7 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
         }));
       })
       .catch((error: Error | null | any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -32,7 +51,7 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
   },
-  handleUpdateStatusPost: (id: string, status: string) => {
+  handleUpdateStatusPost: (id: string, status: string, title: string) => {
     try {
       const data = {status: status};
       set(() => ({ loading: true, alertMessage: '', errorMessage: '' }));
@@ -41,13 +60,13 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Status change to ${status} for post id: ${id}` }));
+          set(() => ({ alertMessage: `Status change to "${status}" for post: "${title}".` }));
         } else {  
-          set(() => ({ errorMessage: `Error changing status to post with id: ${id}. Post not found.` }));
+          set(() => ({ errorMessage: `Error changing status to post: "${title}". Post not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -56,7 +75,7 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
   },
-  handleDeletePost: (id: string) => {
+  handleDeletePost: (id: string, title: string) => {
     try {
       set(() => ({ loading: true, alertMessage: '', errorMessage: '' }));
 
@@ -64,13 +83,13 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       .remove(id)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Deleted post with id: ${id}.` }));
+          set(() => ({ alertMessage: `Deleted post: "${title}".` }));
         } else {  
-          set(() => ({ errorMessage: `Error deleting post with id: ${id}. Post not found.` }));
+          set(() => ({ errorMessage: `Error deleting post: "${title}". Post not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));

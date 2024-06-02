@@ -1,18 +1,36 @@
-import Navbar from "../../components/Navbar";
 import LoginForm from "../../components/LoginForm";
-import Footer from "../../components/Footer";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import useAuth from "../../hooks/useAuth";
+import useAuthStore from "../../state/stores/auth";
 
+
+const LoginViewDefault = () => {
+  return useAuth()
+}
+
+const LoginViewZustand= () => {
+  const loading = useAuthStore((state) => state.loading);
+  const alertMessage = useAuthStore((state) => state.alertMessage);
+  const errorMessage = useAuthStore((state) => state.errorMessage);
+  const handleLoginUserSaveClick = useAuthStore((state) => state.handleLoginUserSaveClick);
+
+  return { loading, alertMessage, errorMessage, handleLoginUserSaveClick }
+}
 
 const LoginView = () => {
+  const { loading, alertMessage, errorMessage, handleLoginUserSaveClick } = (
+    isZustandEnabled) ? LoginViewZustand() : LoginViewDefault();
+  
   return (
     <>
-      <Navbar
-        onSearch={() => {}}
-      />
       <div className="container">
-        <LoginForm />
+        <LoginForm
+          loading={loading}
+          alertMessage={alertMessage}
+          errorMessage={errorMessage}
+          onLoginUserSaveClick={handleLoginUserSaveClick}
+        />
       </div>
-      <Footer />
     </>
   );
 }

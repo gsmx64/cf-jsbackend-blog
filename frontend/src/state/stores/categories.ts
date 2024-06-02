@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import CategoriesService from "../../services/categories.service";
 import { initialCategoriesStoreState, IUseCategoriesStore } from "../interfaces/categories.interface";
 
+
 const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
   ...initialCategoriesStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
@@ -23,7 +24,7 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
         }));
       })
       .catch((error: Error | null | any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -32,7 +33,7 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
   },
-  handleUpdateStatusCategory: (id: string, status: string) => {
+  handleUpdateStatusCategory: (id: string, status: string, title: string) => {
     try {
       const data = {status: status};
       set(() => ({ loading: true, errorMessage: '' }));
@@ -41,13 +42,13 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Status change to ${status} for category id: ${id}` }));
+          set(() => ({ alertMessage: `Status change to "${status}" for category: "${title}"` }));
         } else {  
-          set(() => ({ errorMessage: `Error changing status to category with id: ${id}. Category not found.` }));
+          set(() => ({ errorMessage: `Error changing status to category: "${title}". Category not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -56,7 +57,7 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
   },
-  handleDeleteCategory: (id: string) => {
+  handleDeleteCategory: (id: string, title: string) => {
     try {
       set(() => ({ loading: true, alertMessage: '', errorMessage: '' }));
 
@@ -64,13 +65,13 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       .remove(id)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Deleted category with id: ${id}.` }));
+          set(() => ({ alertMessage: `Deleted category: "${title}".` }));
         } else {  
-          set(() => ({ errorMessage: `Error deleting category with id: ${id}. Category not found.` }));
+          set(() => ({ errorMessage: `Error deleting category: "${title}". Category not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));

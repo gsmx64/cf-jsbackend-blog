@@ -1,105 +1,66 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-
-import { AxiosResponse } from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import Navbar from "../../components/Navbar";
 import Profile from "../../components/Profile";
-import Footer from "../../components/Footer";
-import CommentsService from "../../services/comments.service";
-import PostsService from "../../services/posts.service";
-import UsersService from "../../services/users.service";
-import { ICommentArray, initICommentArray } from "../../interfaces/comment.interface";
-import { IPostArray, initIPostArray } from "../../interfaces/post.interface";
-import IUser, { initIUser } from "../../interfaces/user.interface";
-import AuthService from "../../services/auth.service";
+import { isZustandEnabled } from "../../constants/defaultConstants";
+import useUser from "../../hooks/useUser";
+import useCurrentUserStore from "../../state/stores/currentUser";
+import useUserStore from "../../state/stores/user";
 
 
-const UserView = () => {
+const PanelUserViewDefault = () => {
   const { userId } = useParams();
-  const [userRole, setUserRole] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  return {...useUser(userId as string), userId};
+}
 
-  const [user, setUser] = useState<IUser>(initIUser);
-  const [userComments, setUserComments] = useState<ICommentArray>(initICommentArray);
-  const [userPosts, setUserPosts] = useState<IPostArray>(initIPostArray);
+const PanelUserViewZustand = () => {
+  const currentUser = useCurrentUserStore((state) => state.currentUser);
+  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
+
+  const { userId } = useParams();
+  const user = useUserStore((state) => state.user);
+  const userComments = useUserStore((state) => state.userComments);
+  const userPosts = useUserStore((state) => state.userPosts);
+  const loading = useUserStore((state) => state.loading);
+  const errorMessage = useUserStore((state) => state.errorMessage);
+  const fetchUser = useUserStore((state) => state.fetchUser);
+  const fetchUserComments = useUserStore((state) => state.fetchUserComments);
+  const fetchUserPosts = useUserStore((state) => state.fetchUserPosts);
+  const handleEditUserSaveClick = useUserStore((state) => state.handleEditUserSaveClick);
 
   useEffect(() => {
-    setUserRole(AuthService.userRole());
-    fetchUser();
-    fetchComments(5);
-    fetchPosts(5);
-  }, []);
+    fetchCurrentUser();
+    fetchUser(userId);
+    fetchUserComments(userId, 5);
+    fetchUserPosts(userId, 5);
+  }, [loading]);
 
-  const handleNavbarSearch = (term: string) => {
-    setSearchTerm(term);
-    fetchUsers(`?search=${term}`);
-  }
+  return { userId, user, userComments, userPosts, loading, errorMessage,
+    currentUser, handleEditUserSaveClick }
+}
 
-  const fetchUser = () => {
-    return UsersService.get(userId)
-    .then((response: AxiosResponse) => {
-      setUser(response.data as IUser);
-    })
-  }
-
-  const fetchUsers = (term: string) => {
-    return UsersService.search(`?search=${term}`)
-    .then((response: AxiosResponse) => {
-      setUser(response.data);
-    })
-  }
-
-  const fetchComments = (limit: number | null = null) => {
-    return CommentsService
-      .getUserComments(userId, limit)
-      .then((response: AxiosResponse) => {
-        setUserComments(response.data as ICommentArray);
-      })
-  }
-
-  const fetchPosts = (limit: number | null = null) => {
-    return PostsService
-      .getUserPosts(userId, limit)
-      .then((response: AxiosResponse) => {
-        setUserPosts(response.data as IPostArray);
-      })
-  }
-
-  const renderUsers = () => {
-    return (
-      <div>
-        <Profile
-          user={user}
-          comments={userComments}
-          posts={userPosts}
-          userRole={userRole}
-        />
-      </div>
-    );
-  }
+const UserView = () => {
+  const { userId, user, userComments, userPosts, loading, errorMessage,
+    currentUser, handleEditUserSaveClick } = (
+    isZustandEnabled) ? PanelUserViewZustand() : PanelUserViewDefault();
 
   return (
     <>
-      <Navbar
-        onSearch={handleNavbarSearch}
-      />
       <div className="container mt-3">
-        {
-          searchTerm
-          ?
-          renderUsers()
-          :
-          <Profile
-            user={user}
-            comments={userComments}
-            posts={userPosts}
-            userRole={userRole}
-          />
-        }
+        <Profile
+          userId={userId}
+          user={user}
+          comments={userComments}
+          posts={userPosts}
+          loading={loading}
+          errorMessage={errorMessage}
+          userRole={
+            (currentUser?.role != null) ? 
+            (currentUser.role) : null}
+          handleEditUserSaveClick={handleEditUserSaveClick}
+        />
       </div>
-      <Footer />
     </>
   );
 };

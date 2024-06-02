@@ -1,6 +1,7 @@
 import Error from "../../interfaces/error.interface";
 import IUser, { initIUser } from "../../interfaces/user.interface";
 
+
 export interface IUseUsersStore {
   users: IUser;
   currentPage: number;
@@ -15,7 +16,7 @@ export interface IUseUsersStore {
   handleUpdateUserRole: (id: string, username: string, role: string) => void;
   handleBanUser: (id: string, username: string, ban: boolean) => void;
   handleActivateUser: (id: string, username: string, activate: boolean) => void;
-  handleDeleteUser: (id: string) => void;
+  handleDeleteUser: (id: string, username: string) => void;
 }
 
 export const initialUsersStoreState = {

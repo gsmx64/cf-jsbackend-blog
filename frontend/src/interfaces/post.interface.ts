@@ -1,3 +1,7 @@
+import ICategory, { initICategory } from "./category.interface";
+import { ICommentArray, initICommentArray } from "./comment.interface";
+import IUser, { initIUser } from "./user.interface";
+
 export default interface IPost {
   id: string;
   createAt: string;
@@ -7,9 +11,9 @@ export default interface IPost {
   image: string;
   content: string;
   status: string;
-  author: string;
-  category: string;
-  comments?: [string]
+  author: IUser;
+  category: ICategory;
+  comments?: ICommentArray;
 }
 
 export interface IPostCreate {
@@ -30,9 +34,9 @@ export interface IPostArray {
     image: string;
     content: string;
     status: string;
-    author: string;
-    category: string;
-    comments?: [string]
+    author: IUser;
+    category: ICategory;
+    comments?: ICommentArray
   },
   meta: {
     itemsPerPage: number,
@@ -59,9 +63,9 @@ export const initIPost: IPost = {
   image: '',
   content: '',
   status: '',
-  author: '',
-  category: '',
-  comments: ['']
+  author: initIUser,
+  category: initICategory,
+  comments: initICommentArray,
 }
 
 export const initIPostCreate: IPostCreate = {
@@ -82,9 +86,9 @@ export const initIPostArray: IPostArray = {
     image: '',
     content: '',
     status: '',
-    author: '',
-    category: '',
-    comments: ['']
+    author: initIUser,
+    category: initICategory,
+    comments: initICommentArray,
   },
   meta: {
     itemsPerPage: 0,

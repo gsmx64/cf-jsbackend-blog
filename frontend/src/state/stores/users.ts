@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import UsersService from "../../services/users.service";
 import { initialUsersStoreState, IUseUsersStore } from "../interfaces/users.interface";
 
+
 const useUsersStore = create<IUseUsersStore>((set) => ({
   ...initialUsersStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
@@ -23,7 +24,7 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
         }));
       })
       .catch((error: Error | null | any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -41,13 +42,13 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Role changed to ${role} to the user: ${username}` }));
+          set(() => ({ alertMessage: `Role changed to "${role}" to the user: "${username}"` }));
         } else {  
-          set(() => ({ errorMessage: `Error changing role to user ${username} with id: ${id}. User not found.` }));
+          set(() => ({ errorMessage: `Error changing role to user "${username}". User not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -65,15 +66,15 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if (ban && response.data.affected === 1) {
-          set(() => ({ alertMessage: `The user ${username} was banned. Status: ${data.status}` }));
+          set(() => ({ alertMessage: `The user "${username}" was banned. Status: "${data.status}"` }));
         } else if (!ban && response.data.affected === 1) {
-          set(() => ({ alertMessage: `The user ${username} was unbanned. Status: ${data.status}` }));
+          set(() => ({ alertMessage: `The user "${username}" was unbanned. Status: "${data.status}"` }));
         } else {  
-          set(() => ({ errorMessage: `Error changing ban status to user ${username} with id: ${id}. User not found.` }));
+          set(() => ({ errorMessage: `Error changing ban status to user "${username}"! User not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -91,15 +92,15 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1 && activate) {
-          set(() => ({ alertMessage: `The user ${username} was activate. Status: ${data.status}` }));
+          set(() => ({ alertMessage: `The user ${username} was activate. Status: "${data.status}"` }));
         } else if (response.data.affected === 1 && !activate) {
-          set(() => ({ alertMessage: `The user ${username} was deactivate. Status: ${data.status}` }));
+          set(() => ({ alertMessage: `The user ${username} was deactivate. Status: "${data.status}"` }));
         } else {  
-          set(() => ({ errorMessage: `Error changing activation status to user ${username} with id: ${id}. User not found.` }));
+          set(() => ({ errorMessage: `Error changing activation status to user "${username}"! User not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));
@@ -108,7 +109,7 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
   },
-  handleDeleteUser: (id: string) => {
+  handleDeleteUser: (id: string, username: string) => {
     try {
       set(() => ({ loading: true, alertMessage: '', errorMessage: '' }));
 
@@ -116,13 +117,13 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .remove(id)
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
-          set(() => ({ alertMessage: `Deleted user with id: ${id}.` }));
+          set(() => ({ alertMessage: `Deleted user: "${username}".` }));
         } else {  
-          set(() => ({ errorMessage: `Error deleting user with id: ${id}. User not found.` }));
+          set(() => ({ errorMessage: `Error deleting user: "${username}". User not found.` }));
         }
       })
       .catch((error: any) => {
-        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response.data.message) }));
+        set(() => ({ errorMessage: error.toString()+" :: "+JSON.stringify(error.response) }));
       })
       .finally(() => {
         set(() => ({ loading: false }));

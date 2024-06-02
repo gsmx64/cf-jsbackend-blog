@@ -6,12 +6,12 @@ import BootstrapLink from "../../../BootstrapLink";
 
 const PostItem = ({ id, title, image, content, status, author_id, author_username,
   author_status, category_id, category_title, updateAt, userRole, onPostClick }: any) => {
+  const date = new Date(updateAt);
+  
   const handleSeeMoreClick = (event: any) => {
     event.stopPropagation();
     onPostClick(id);
   };
-
-  const date = new Date(updateAt);
 
   return (
     <div className={styles.postsContainer}>
@@ -27,6 +27,9 @@ const PostItem = ({ id, title, image, content, status, author_id, author_usernam
             <button onClick={handleSeeMoreClick} className="btn btn-outline-secondary">
               Ver mas
             </button>
+            {/*<Link to={`/post/${id}`} className="btn btn-outline-secondary">
+              <span className="text-info">Ver mas</span>
+            </Link>*/}
           </div>
           <div className="float-end pt-1 ps-2">
             <div className="col input-group input-group-sm">

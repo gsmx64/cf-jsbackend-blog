@@ -1,8 +1,10 @@
+import React, { Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Suspense } from "react";
 
 import AuthService from "../services/auth.service";
+import ErrorBoundary from "../components/ErrorBoundary";
 import HomeView from "../views/Home";
+import Error401View from "../views/Error401";
 import Error404View from "../views/Error404";
 import LoginView from "../views/Login";
 import RegisterView from "../views/Register";
@@ -18,250 +20,244 @@ import PanelNewCategoryView from "../views/PanelNewCategory";
 import PanelCategoriesView from "../views/PanelCategories";
 import PanelCommentsView from "../views/PanelComments";
 import PanelUsersView from "../views/PanelUsers";
-import SettingsView from "../views/Settings";
+import PanelSettingsView from "../views/PanelSettings";
+import PanelEditCategoryView from "../views/PanelEditCategory";
+import PanelEditCommentView from "../views/PanelEditComment";
+import PanelEditPostView from "../views/PanelEditPost";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-import ErrorBoundary from "../components/ErrorBoundary";
-import Loading from "../components/Loading";
 
+type RouteDefinition = {
+  name: string;
+  urlPath: string;
+  acl: boolean | undefined;
+  search?: boolean;
+  Component: React.ComponentType<React.PropsWithChildren> | any;
+  children?: RouteDefinition[];
+  ComponentOnACLFail?: React.ComponentType<React.PropsWithChildren> | any;
+  ComponentOnError?: React.ComponentType<React.PropsWithChildren> | any;
+};
 
-const router = createBrowserRouter([
+const createRouteElementsFromObject = (
+  routeDefinitions: RouteDefinition[],
+  searchTerm: string,
+  setSearchTerm: any,
+  handleNavbarSearch: any,
+  containerRef: any) => {
+  let routesArray: any = {};
+
+  routesArray = routeDefinitions.map(({ urlPath, acl, search, Component,
+    children, ComponentOnACLFail, ComponentOnError }) => (
+      {
+        path: urlPath,
+        element: (
+          (acl) ?
+          (
+            <Suspense fallback={null}>
+              <ErrorBoundary>
+                <Navbar
+                  onSearch={search ? handleNavbarSearch : undefined}
+                  ref={containerRef}
+                />
+                <Component
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+                />
+                <Footer />
+              </ErrorBoundary>
+            </Suspense>
+          ) : (
+            <Suspense fallback={null}>
+              <ErrorBoundary>
+                <Navbar onSearch={undefined} />
+                <ComponentOnACLFail />
+                <Footer />
+              </ErrorBoundary>
+            </Suspense>
+          )
+        ),
+        children: children?.length ? createRouteElementsFromObject(children, '', '', '', '') : [],
+        errorElement: (
+          (ComponentOnError) ? (
+            <ErrorBoundary>
+              <Navbar />
+              <ComponentOnError />
+              <Footer />
+            </ErrorBoundary>
+          ) : ( <></> )
+        ),
+      }
+  ));
+
+  return <RouterProvider router={createBrowserRouter(routesArray)} />;
+};
+
+const routes: RouteDefinition[] = [
   {
-    path: '/',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <HomeView />
-        </ErrorBoundary>
-      </Suspense>
-    ),
-    errorElement: <Error404View />
+    name: 'Home',
+    urlPath: '/',
+    acl: true,
+    search: true,
+    Component: HomeView,
+    ComponentOnError: Error404View,
   },
   {
-    path: 'login',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Login',
+    urlPath: 'login',
+    acl: true,
+    search: false,
+    Component: LoginView,
   },
   {
-    path: 'register',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <RegisterView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Register',
+    urlPath: 'register',
+    acl: true,
+    search: false,
+    Component: RegisterView,
   },
   {
-    path: 'profile',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <ProfileView />
-        </ErrorBoundary>
-      </Suspense>
-    ),
+    name: 'Current User Profile',
+    urlPath: 'profile',
+    acl: true,
+    search: false,
+    Component: ProfileView,
   },
   {
-    path: 'profile/edit',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <ProfileView />
-        </ErrorBoundary>
-      </Suspense>
-    ),
+    name: 'Edit Current User Profile',
+    urlPath: 'profile/edit',
+    acl: true,
+    search: false,
+    Component: ProfileView,
   },
   {
-    path: 'posts',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PostsView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Posts',
+    urlPath: 'posts',
+    acl: true,
+    search: true,
+    Component: PostsView,
   },
   {
-    path: 'post/:postId',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PostView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Post',
+    urlPath: 'post/:postId',
+    acl: true,
+    search: true,
+    Component: PostView,
   },
   {
-    path: 'categories',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <CategoriesView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Categories',
+    urlPath: 'categories',
+    acl: true,
+    search: true,
+    Component: CategoriesView,
   },
   {
-    path: 'category/:categoryId',
-    element: (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <CategoryView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Category',
+    urlPath: 'category/:categoryId',
+    acl: true,
+    search: true,
+    Component: CategoryView,
   },
   {
-    path: 'user/:userId',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <UserView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'User Profile',
+    urlPath: 'user/:userId',
+    acl: (AuthService.isLoggedIn()),
+    search: false,
+    Component: UserView,
+    ComponentOnACLFail: LoginView,
   },
   {
-    path: 'user/edit/:userId',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <ProfileView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Edit User Profile',
+    urlPath: 'user/edit/:userId',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: false,
+    Component: UserView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'new-post',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelNewPostView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel New Post',
+    urlPath: 'new-post',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR', 'EDITOR'])),
+    search: false,
+    Component: PanelNewPostView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'list-posts',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelPostsView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel Posts List',
+    urlPath: 'list-posts',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR', 'EDITOR'])),
+    search: true,
+    Component: PanelPostsView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'new-category',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelNewCategoryView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel Edit Post',
+    urlPath: 'edit-post/:postId',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR', 'EDITOR'])),
+    search: false,
+    Component: PanelEditPostView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'list-categories',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelCategoriesView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
-  },  
-  {
-    path: 'list-comments',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelCommentsView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel New Category',
+    urlPath: 'new-category',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: false,
+    Component: PanelNewCategoryView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'list-users',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <PanelUsersView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel Categories List',
+    urlPath: 'list-categories',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: true,
+    Component: PanelCategoriesView,
+    ComponentOnACLFail: Error401View,
   },
   {
-    path: 'settings',
-    element: AuthService.isLoggedIn() ? (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <SettingsView />
-        </ErrorBoundary>
-      </Suspense>
-    ) : (
-      <Suspense fallback={<Loading />}>
-        <ErrorBoundary>
-          <LoginView />
-        </ErrorBoundary>
-      </Suspense>
-    )
+    name: 'Panel Edit Category',
+    urlPath: 'edit-category/:categoryId',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: false,
+    Component: PanelEditCategoryView,
+    ComponentOnACLFail: Error401View,
+  },
+  {
+    name: 'Panel Comments List',
+    urlPath: 'list-comments',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: true,
+    Component: PanelCommentsView,
+    ComponentOnACLFail: Error401View,
+  },
+  {
+    name: 'Panel Edit Comment',
+    urlPath: 'edit-comment/:commentId',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: false,
+    Component: PanelEditCommentView,
+    ComponentOnACLFail: Error401View,
+  },
+  {
+    name: 'Panel Users List',
+    urlPath: 'list-users',
+    acl: (await AuthService.isRoleAuthorized(['ADMIN', 'MODERATOR'])),
+    search: true,
+    Component: PanelUsersView,
+    ComponentOnACLFail: Error401View,
+  },
+  {
+    name: 'Panel Settings',
+    urlPath: 'settings',
+    acl: (await AuthService.isAdmin()),
+    search: false,
+    Component: PanelSettingsView,
+    ComponentOnACLFail: Error401View,
   }
-]);
+];
 
-const MyRoutes = () => <RouterProvider router={router} />;
+const MyRoutes =  (searchTerm: string, setSearchTerm: any, handleNavbarSearch: any, containerRef: any) => {
+  return createRouteElementsFromObject(routes, searchTerm, setSearchTerm, handleNavbarSearch, containerRef)
+};
 
 export default MyRoutes;

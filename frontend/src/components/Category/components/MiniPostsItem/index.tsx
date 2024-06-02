@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
+
 import BootstrapLink from '../../../BootstrapLink';
 import styles from './MiniPostsItem.module.css';
-import { Link } from "react-router-dom";
 
 
 const MiniPostsItem = ({ id, title, description, image, status, post_author_id, post_author_username,

@@ -22,6 +22,19 @@ const validationSchema = yup
       VALID_LETTERS_NUMBERS_REGEX,
       'Title can contain spaces, letters, numbers and only these special characters: % & ( ) * + , . : ? @ _ -',
     ),
+    terms: yup.string()
+    .test(
+      'len',
+      'The title must be more than 3 characters.',
+      (val: any) =>
+      val &&
+      val.toString().length >= 3
+    )
+    .required('This field is required!')
+    .matches(
+      VALID_LETTERS_NUMBERS_REGEX,
+      'Terms can contain spaces, letters, numbers and only these special characters: % & ( ) * + , . : ? @ _ -',
+    ),
     facebook: yup.string()
     .matches(
       VALID_URL_REGEX,
