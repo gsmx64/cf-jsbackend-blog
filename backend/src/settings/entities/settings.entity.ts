@@ -34,6 +34,15 @@ export class SettingsEntity implements ISettings {
     brand: string;
 
     /**
+     * The terms and conditions for blog.
+     */
+    @Column({
+        type: 'text',
+        nullable: true
+    })
+    terms: string;
+
+    /**
      * The Facebook link for social media info.
      */
     @Column({

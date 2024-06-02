@@ -151,7 +151,7 @@ export class PostsService {
           .leftJoinAndSelect('post.comments', 'comments')
           .leftJoin('comments.author', 'comment_author')
           .addSelect(['comment_author.id', 'comment_author.username', 'comment_author.avatar'])
-          .orderBy('post.created_at', 'DESC')
+          .orderBy('comments.created_at', 'DESC')
           .getOne();
 
       if(!post) {

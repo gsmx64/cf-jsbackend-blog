@@ -8,6 +8,11 @@ export interface ISettings {
     brand: string;
 
     /**
+     * The terms and conditions for blog.
+     */
+    terms: string;
+
+    /**
      * The Facebook link for social media info.
      */
     facebook: string;
