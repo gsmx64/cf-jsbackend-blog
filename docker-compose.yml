@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  db:
+  cf-blog-database:
     image: postgres:15.5
     container_name: ${APP_DB_HOST}
     restart: always
@@ -17,38 +17,38 @@ services:
     ports:
       - ${APP_DB_PORT}:5432
 
-  backend:
-    container_name: ${APP_BACKEND_HOST}
+  cf-blog-backend:
+    image: cf-blog-backend:0.0.1
+	build: ./backend
+	container_name: ${APP_BACKEND_HOST}
+	restart: unless-stopped
     env_file:
       - ./.env
       - ./backend/.env.development
-    command: npm run start:dev
     depends_on:
-      - db
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+      - cf-blog-database
     ports:
       - ${APP_BACKEND_PORT}:3001
-    restart: always
+    
     volumes:
       - .:/application
       - ./node_modules:/application/node_modules
 
   frontend:
-    container_name: ${APP_FRONTEND_HOST}
-    env_file:
+    image: cf-blog-frontend:0.0.1
+	build: ./frontend
+	container_name: ${APP_FRONTEND_HOST}
+    restart: unless-stopped
+	env_file:
       - ./.env
       - ./frontend/.env.development
-    command: npm run start:dev
     depends_on:
-      - backend
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      - cf-blog-backend
     ports:
       - ${APP_FRONTEND_PORT}:3000
-    restart: always
+      - ${APP_FRONTEND_PROD_PORT}:80
     volumes:
       - .:/application
       - ./node_modules:/application/node_modules
+      - ./nginx.conf:/etc/nginx/nginx.conf
+
