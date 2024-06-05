@@ -5,7 +5,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 
-import { SettingsController } from './controllers/Settings.controller';
+import { SettingsController } from './controllers/settings.controller';
 import { AuthService } from '../auth/services/auth.service';
 import { UsersService } from '../users/services/users.service';
 import { SettingsService } from './services/settings.service';
