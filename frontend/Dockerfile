@@ -1,38 +1,32 @@
 FROM node:20.14 AS build-phase
 
-WORKDIR /usr/src/app
+WORKDIR /app-build
 
 COPY . .
 
-COPY --chown=node:node package*.json ./
-
 RUN npm install typescript -g
-RUN npm ci
-#RUN npm run build
+RUN npm i
+RUN npm run build
 
 
 FROM node:20.14-alpine
 
 ENV NODE_ENV development
 
-EXPOSE 80
-EXPOSE 3000
+WORKDIR /app-frontend
 
 RUN apk update && apk add nginx openrc build-base
-#RUN rc-update add nginx default
+RUN rc-update add nginx default
 
-WORKDIR /application
+COPY --from=build-phase /app-build/ /app-frontend
 
-COPY --from=build-phase --chown=node:node /usr/src/app/ /application
-
-COPY --from=build-phase --chown=node:node /usr/src/app/package*.json ./
-
-RUN npm install typescript -g
-RUN npm ci
-RUN npm run build
+RUN cp .env.docker.sample .env.development
 
 #RUN rc-service nginx restart
 
-#CMD ["nginx","-g","daemon off;"]
+EXPOSE 80
+EXPOSE 3000
 
-ENTRYPOINT ["npm","run","--prefix","/application","start:dev"]
+CMD ["nginx","-g","daemon off;"]
+
+CMD ["npm", "run", "start:dev"]

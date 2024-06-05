@@ -3,6 +3,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as session from 'express-session';
 import * as morgan from 'morgan';
+import { setDefaultResultOrder } from "dns";
 
 import { AppModule } from './app.module';
 import { CORS } from './constants';
@@ -18,6 +19,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true
   });
+  
+  setDefaultResultOrder("ipv4first");
 
   app.use(morgan('dev'));
 

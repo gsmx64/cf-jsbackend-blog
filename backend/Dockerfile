@@ -1,33 +1,26 @@
 FROM node:20.14 AS build-phase
 
-WORKDIR /usr/src/app
+WORKDIR /app-build
 
 COPY . .
 
-COPY --chown=node:node package*.json ./
-
 RUN npm install -g @nestjs/cli@10.3.0
-RUN npm ci
-#RUN npm run build
+RUN npm i
+RUN npm run build
 
 
 FROM node:20.14-alpine
 
 ENV NODE_ENV development
 
-EXPOSE 3001
+WORKDIR /app-backend
 
 RUN apk update && apk add build-base
 
-WORKDIR /application
+COPY --from=build-phase /app-build/ /app-backend
 
-COPY --from=build-phase --chown=node:node /usr/src/app/ /application
+RUN cp .env.docker.sample .env.development
 
-COPY --from=build-phase --chown=node:node /usr/src/app/package*.json ./
+EXPOSE 3001
 
-RUN npm install -g @nestjs/cli@10.3.0
-RUN npm ci
-#RUN npm run build
-
-ENTRYPOINT ["npm","run","--prefix","/application","start:dev"]
-
+CMD ["npm", "run", "start:dev"]
