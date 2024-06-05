@@ -8,10 +8,13 @@ declare namespace NodeJS {
     APP_AUTH_SECRET: string;
     APP_AUTH_HASH_SALT: number;
     APP_AUTH_TOKEN_EXPIRATION: number;
+    APP_AUTH_FACEBOOK_ENABLE: string;
     APP_AUTH_FACEBOOK_KEY: string;
     APP_AUTH_FACEBOOK_SECRET: string;
+    APP_AUTH_GOOGLE_ENABLE: string;
     APP_AUTH_GOOGLE_ID: string;
     APP_AUTH_GOOGLE_SECRET: string;
+    APP_AUTH_TWITTER_ENABLE: string;
     APP_AUTH_TWITTER_KEY: string;
     APP_AUTH_TWITTER_SECRET: string;        
     APP_DB_HOST: string;
