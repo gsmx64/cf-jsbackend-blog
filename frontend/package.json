@@ -11,7 +11,7 @@
     "startw:debug": "set NODE_ENV=testing && vite",
     "startw:prod": "set NODE_ENV=production && tsc && vite build",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -20,7 +20,6 @@
     "@hookform/resolvers": "^3.3.4",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
-    "formik": "^2.4.5",
     "i": "^0.3.7",
     "npm": "^10.5.2",
     "react": "^18.2.0",
