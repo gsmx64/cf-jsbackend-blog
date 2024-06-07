@@ -1,0 +1,29 @@
+FROM node:20.14 AS build-phase
+
+WORKDIR /app-build
+
+COPY src .
+COPY package*.json .
+COPY .env.docker.${NODE_ENV}.sample .
+COPY .dockerignore .
+
+RUN cp .env.docker.${NODE_ENV}.sample .env.${NODE_ENV}
+
+RUN npm install typescript -g
+RUN npm i --production
+RUN npm run build
+
+
+FROM nginx:1.27.0-alpine
+
+WORKDIR /usr/share/nginx/html
+
+RUN rm -rf ./*
+
+RUN apk update && apk add  build-base
+
+COPY --from=build-phase /app-build/dist/ /usr/share/nginx/html
+
+EXPOSE 82
+
+CMD ["nginx","-g","daemon off;"]

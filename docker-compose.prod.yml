@@ -1,0 +1,86 @@
+services:
+  cf-blog-database:
+    image: postgres:15.5
+    container_name: ${APP_DATABASE_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${APP_DB_NAME}
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+    ports:
+      - ${APP_DATABASE_PORT}:5432
+    networks:
+      - network-cf-blog
+    volumes:
+      - database-cf-blog:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  cf-blog-backend:
+    image: cf-blog-backend:0.0.3
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    working_dir: /app-backend
+    container_name: ${APP_BACKEND_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - cf-blog-database
+    ports:
+      - ${APP_BACKEND_PORT}:3001
+    networks:
+      - network-cf-blog
+    volumes:
+      - ./backend:/app-backend
+
+  cf-blog-frontend:
+    image: cf-blog-frontend:0.0.3
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    working_dir: /app-frontend
+    container_name: ${APP_FRONTEND_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      NODE_ENV: production
+    depends_on:
+      - cf-blog-backend
+    ports:
+      - ${APP_FRONTEND_PORT}:3000
+    networks:
+      - network-cf-blog
+    volumes:
+      - ./frontend:/app-frontend
+
+  cf-blog-reverse-proxy:
+    image: nginx:1.27.0-alpine
+    container_name: ${APP_PROXY_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      APP_ENV: production
+    depends_on:
+      - cf-blog-backend
+      - cf-blog-frontend
+    ports:
+      - ${APP_PROD_HTTP_PORT}:80
+      - ${APP_PROD_HTTPS_PORT}:443
+    networks:
+      - network-cf-blog
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+
+networks:
+  network-cf-blog:
+  
+volumes:
+  database-cf-blog:
+    driver: local
