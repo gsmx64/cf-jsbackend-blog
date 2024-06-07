@@ -1,16 +1,18 @@
 services:
   cf-blog-database:
     image: postgres:15.5
-    container_name: ${APP_DB_HOST}
+    container_name: ${APP_DATABASE_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      NODE_ENV: development
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
       POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
     ports:
-      - ${APP_DB_PORT}:5432
+      - ${APP_DATABASE_PORT}:5432
     networks:
       - network-cf-blog
     volumes:
@@ -24,6 +26,8 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      NODE_ENV: development
     depends_on:
       - cf-blog-database
     ports:
@@ -41,16 +45,16 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+    environment:
+      NODE_ENV: development
     depends_on:
       - cf-blog-backend
     ports:
       - ${APP_FRONTEND_PORT}:3000
-      - ${APP_FRONTEND_PROD_PORT}:80
     networks:
       - network-cf-blog
     volumes:
       - .:/app-build
-      - ./nginx.conf:/etc/nginx/nginx.conf
 
 networks:
   network-cf-blog:
