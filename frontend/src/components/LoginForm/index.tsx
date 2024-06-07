@@ -23,8 +23,12 @@ const LoginForm = ({ loading, alertMessage, errorMessage, onLoginUserSaveClick }
   } );
 
   const onSubmitHandler = (body: AuthBody) => {
-    const saveSuccessful = onLoginUserSaveClick(body);
-    if (saveSuccessful !== undefined) {
+    const { username, password } = body;
+    const saveSuccessful = onLoginUserSaveClick(username, password);
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       navigate('/');
     }
   }

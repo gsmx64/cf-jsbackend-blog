@@ -24,6 +24,7 @@ import PanelSettingsView from "../views/PanelSettings";
 import PanelEditCategoryView from "../views/PanelEditCategory";
 import PanelEditCommentView from "../views/PanelEditComment";
 import PanelEditPostView from "../views/PanelEditPost";
+import SetupView from "../views/Setup";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -253,6 +254,13 @@ const routes: RouteDefinition[] = [
     search: false,
     Component: PanelSettingsView,
     ComponentOnACLFail: Error401View,
+  },
+  {
+    name: 'Setup',
+    urlPath: 'setup',
+    acl: true,
+    search: false,
+    Component: SetupView,
   }
 ];
 

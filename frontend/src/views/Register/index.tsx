@@ -31,6 +31,7 @@ const RegisterView = () => {
       <div className="container">
         <RegisterForm
           settings={settings}
+          isSetup={false}
           loading={loading}
           alertMessage={alertMessage}
           errorMessage={errorMessage}

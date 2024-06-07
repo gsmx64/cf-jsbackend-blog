@@ -32,6 +32,7 @@ const PanelNewCategoryView = ({searchTerm}: any) => {
               loading={loading}
               onNewCategorySaveClick={handleNewCategorySaveClick}
               onNewCategoryCancelClick={handleNewCategoryCancelClick}
+              isSetup={false}
             />
           </div>
         </>

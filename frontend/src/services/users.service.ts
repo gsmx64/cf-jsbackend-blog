@@ -64,8 +64,8 @@ const emailIsAvailable = (email: string) => {
     return api
     .get(`users/verify/email/${email}`)
     .then((response: AxiosResponse) => {
-      const usernameOnDB = String(response.data)
-      if (usernameOnDB === 'true') {
+      const emailOnDB = String(response.data)
+      if (emailOnDB === 'true') {
         return false;
       }
       return true;

@@ -5,6 +5,7 @@ import { Button, Modal } from "react-bootstrap";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import AuthService from "../../services/auth.service";
 import validationSchema from "./utils/validationSchema";
 import { initICommentCreate } from "../../interfaces/comment.interface";
 import Alerts from "../Alerts";
@@ -34,13 +35,16 @@ const CommentForm = ({ postId, loading, alertMessage, errorMessage, onNewComment
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onNewCommentSaveClick(postId, body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       navigate(`/post/${postId}`, { state: postId });
       handleNewCommentClose();
     }
   }
 
-  return (
+  const commentFormResult = (
     <div className="row align-items-end">
       <div className="col">
         <form
@@ -112,6 +116,9 @@ const CommentForm = ({ postId, loading, alertMessage, errorMessage, onNewComment
       </div>
     </div>
   );
+
+  return (AuthService.isLoggedIn()) ? commentFormResult : '';
+
 }
 
 export default CommentForm;

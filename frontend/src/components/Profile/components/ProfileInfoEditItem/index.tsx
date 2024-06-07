@@ -40,7 +40,10 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onProfileEditSaveClick(id, body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       if(urlPath.pathname === '/profile/edit') {
         navigate(`/profile`);
       } else if(urlPath.pathname === `/user/edit/${id}`) {

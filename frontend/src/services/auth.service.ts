@@ -23,18 +23,11 @@ const register = (body: IUserRegister) => {
     return UsersService.register(body);
 };
 
-const login = async (username: AuthBody | string, password: AuthBody | string) => {
-  return api
-    .post('auth/login', {
-      username,
-      password,
-    })
-    .then((response: any) => {
-      if (response.data.access_token) {
-        localStorage.setItem('user', JSON.stringify(response.data));
-      }
-      return response.data;
-    });
+const login = (username: string, password: string) => {
+  return api.post<any>(
+    'auth/login',
+    { username, password }
+  );
 };
 
 const logout = () => {

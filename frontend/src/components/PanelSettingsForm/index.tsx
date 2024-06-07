@@ -10,7 +10,7 @@ import Loading from "../Loading";
 
 const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
   linkedin, youtube, tiktok, loading, alertMessage, errorMessage,
-  onEditSettingsSaveClick, onEditSettingsCancelClick }: any) => {
+  onEditSettingsSaveClick, onEditSettingsCancelClick, isSetup }: any) => {
 
   const {
     register,
@@ -247,15 +247,21 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                 </div>
 
                 <div className="mt-3 mb-3">
-                  <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                  <button
+                    type="submit"
+                    className={(isSetup && alertMessage && !errorMessage) ? "btn btn-secondary btn-block" : "btn btn-primary btn-block"}
+                    disabled={(isSetup && alertMessage && !errorMessage) ? true : loading}
+                  >
                     {loading && (
                       <span className="spinner-border spinner-border-sm"></span>
                     )}
                     <span>Save</span>
                   </button>
-                  <button type="submit" onClick={handleSettingsCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
-                    <span>Cancel</span>
-                  </button>
+                  { !isSetup &&
+                    <button type="submit" onClick={handleSettingsCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
+                      <span>Cancel</span>
+                    </button>
+                  }
                 </div>
                 <Alerts
                   alertMessage={alertMessage}

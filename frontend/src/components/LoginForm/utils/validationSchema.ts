@@ -18,10 +18,10 @@ const validationSchema = yup
         val.toString().length <= 20
       )
       .required('This field is required!')
-      .matches(
+      /*.matches(
         VALID_USERNAME_REGEX,
         'Cannot contain spaces and only these special characters: . _ -'
-      ),
+      )*/,
     password: yup.string()
       .test(
         'len',

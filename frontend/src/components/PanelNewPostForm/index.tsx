@@ -26,7 +26,10 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onNewPostSaveClick(body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       navigate(`/list-posts`);
     }
   };

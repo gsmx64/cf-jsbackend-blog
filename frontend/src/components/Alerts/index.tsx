@@ -10,13 +10,13 @@ const Alerts = ({ alertMessage, errorMessage }: any) => {
         </symbol>
       </svg>
       {alertMessage && (
-        <div className="alert alert-success d-flex align-items-center" role="alert">
+        <div className="alert alert-success d-flex align-items-center overflow-auto" role="alert">
           <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlinkHref="#check-circle-fill"/></svg>
           <h5 className="alert-heading">{alertMessage}</h5>
         </div>
       )}
       {errorMessage && (
-        <div className="alert alert-danger d-flex align-items-center" role="alert">
+        <div className="alert alert-danger d-flex align-items-center overflow-auto" role="alert">
           <svg className="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlinkHref="#exclamation-triangle-fill"/></svg>
           <h5 className="alert-heading">Error! {errorMessage}</h5>
         </div>

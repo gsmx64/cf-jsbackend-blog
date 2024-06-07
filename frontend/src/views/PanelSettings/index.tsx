@@ -55,6 +55,7 @@ const PanelSettingsView = () => {
           errorMessage={errorMessage}
           onEditSettingsSaveClick={handleEditSettingsSaveClick}
           onEditSettingsCancelClick={handleSettingsCancelClick}
+          isSetup={false}
         />
       </div>
     </>

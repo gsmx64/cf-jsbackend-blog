@@ -37,7 +37,10 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onEditCommentSaveClick(commentId, body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       navigate(`/list-comments`);
     }
   }

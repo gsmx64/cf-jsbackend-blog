@@ -43,7 +43,10 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onEditCategorySaveClick(categoryId, body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '')
+    ) {
       navigate(`/list-categories`);
     }
   }

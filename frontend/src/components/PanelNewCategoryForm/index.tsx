@@ -8,7 +8,7 @@ import Alerts from "../Alerts";
 
 
 const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
-  onNewCategorySaveClick, onNewCategoryCancelClick }: any) => {
+  onNewCategorySaveClick, onNewCategoryCancelClick, isSetup }: any) => {
   const navigate = useNavigate();
 
   const {
@@ -24,7 +24,11 @@ const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
 
   const onSubmitHandler = (body: any) => {
     const saveSuccessful = onNewCategorySaveClick(body);
-    if (saveSuccessful !== undefined) {
+    if (
+      (saveSuccessful !== undefined) &&
+      (errorMessage == '') &&
+      (!isSetup)
+    ) {
       navigate(`/list-categories`);
     }
   }
@@ -133,22 +137,24 @@ const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
           <div className="mb-3">
             <button
               type="submit"
-              className="btn btn-primary btn-block"
-              disabled={loading}
+              className={(isSetup && alertMessage && !errorMessage) ? "btn btn-secondary btn-block" : "btn btn-primary btn-block"}
+              disabled={(isSetup && alertMessage && !errorMessage) ? true : loading}
             >
               {loading && (
                 <span className="spinner-border spinner-border-sm"></span>
               )}
               <span>Save</span>
             </button>
-            <button
-              type="submit"
-              onClick={handleNewCategoryCancelClick}
-              className="btn btn-primary btn-block ms-2"
-              disabled={loading}
-            >
-              <span>Cancel</span>
-            </button>
+            { !isSetup &&
+              <button
+                type="submit"
+                onClick={handleNewCategoryCancelClick}
+                className="btn btn-primary btn-block ms-2"
+                disabled={loading}
+              >
+                <span>Cancel</span>
+              </button>
+            }
           </div>
           <Alerts
             alertMessage={alertMessage}
