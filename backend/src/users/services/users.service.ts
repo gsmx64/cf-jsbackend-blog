@@ -191,9 +191,7 @@ export class UsersService {
       const currentUserId = manageToken.sub;
       const currentUserRole = manageToken.role;
       
-      const user: UpdateResult = ( currentUserRole == ROLES.ADMIN) ?
-        await this.userRepository.update(id, body) :
-        await this.userRepository.update(currentUserId, body);
+      const user: UpdateResult = await this.userRepository.update(id, body);
 
       if(user.affected === 0){
         throw new ErrorManager({
