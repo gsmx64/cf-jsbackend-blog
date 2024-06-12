@@ -1,40 +1,36 @@
 import RegisterForm from "../../components/RegisterForm";
 import { isZustandEnabled } from "../../constants/defaultConstants";
-import useAuth from "../../hooks/useAuth";
-import useSettings from "../../hooks/useSettings";
-import useAuthStore from "../../state/stores/auth";
-import useSettingsStore from "../../state/stores/settings";
+import useCurrentUser from "../../hooks/useCurrentUser";
+import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const RegisterViewDefault = () => {
-  const { settings } = useSettings();
-  const { loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = useAuth();
-  return { settings, loading, alertMessage, errorMessage, handleRegisterUserSaveClick };
+  const { loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = useCurrentUser();
+  return { loading, alertMessage, errorMessage, handleRegisterUserSaveClick };
 }
 
 const RegisterViewZustand= () => {
-  const settings = useSettingsStore((state) => state.settings);
-  const loading = useAuthStore((state) => state.loading);
-  const alertMessage = useAuthStore((state) => state.alertMessage);
-  const errorMessage = useAuthStore((state) => state.errorMessage);
-  const handleRegisterUserSaveClick = useAuthStore((state) => state.handleRegisterUserSaveClick);
+  const loading = useCurrentUserStore((state) => state.loading);
+  const alertMessage = useCurrentUserStore((state) => state.alertMessage);
+  const errorMessage = useCurrentUserStore((state) => state.errorMessage);
+  const handleRegisterUserSaveClick = useCurrentUserStore((state) => state.handleRegisterUserSaveClick);
 
-  return { settings, loading, alertMessage, errorMessage, handleRegisterUserSaveClick }
+  return { loading, alertMessage, errorMessage, handleRegisterUserSaveClick }
 }
 
-const RegisterView = () => {
-  const { settings, loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = (
+const RegisterView = ({ settings }: any) => {
+  const { loading, alertMessage, errorMessage, handleRegisterUserSaveClick } = (
     isZustandEnabled) ? RegisterViewZustand() : RegisterViewDefault();
 
   return (
     <>
       <div className="container">
         <RegisterForm
-          settings={settings}
           isSetup={false}
           loading={loading}
           alertMessage={alertMessage}
           errorMessage={errorMessage}
+          settings={settings}
           onRegisterUserSaveClick={handleRegisterUserSaveClick}
         />
       </div>

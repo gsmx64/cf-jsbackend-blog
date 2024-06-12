@@ -1,8 +1,7 @@
-const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
-  city, country, createAt, canEdit, onProfileEditClick }: any) => {
+const ProfileInfoItem = ({ user, canEdit, onProfileEditClick }: any) => {
   const handleProfileEditClick = (event: any) => {
     event.stopPropagation();
-    onProfileEditClick(id);
+    onProfileEditClick(user?.id);
   };
 
   var formatDate = (currentDate: string) => {
@@ -19,7 +18,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Username</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {username}
+            {user?.username}
           </div>
         </div>
         <hr />
@@ -28,7 +27,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Name</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {firstName}
+            {user?.firstName}
           </div>
         </div>
         <hr />
@@ -37,7 +36,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Lastname</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {lastName}
+            {user?.lastName}
           </div>
         </div>
         <hr />
@@ -46,7 +45,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Email</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {email}
+            {user?.email}
           </div>
         </div>
         <hr />
@@ -55,7 +54,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Age</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {age}
+            {user?.age}
           </div>
         </div>
         <hr />
@@ -64,7 +63,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">City</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {city}
+            {user?.city}
           </div>
         </div>
         <hr />
@@ -73,7 +72,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Country</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {country}
+            {user?.country}
           </div>
         </div>
         <hr />
@@ -82,7 +81,7 @@ const ProfileInfoItem = ({ id, username, email, firstName, lastName, age,
             <h6 className="mb-0">Created</h6>
           </div>
           <div className="col-sm-9 text-secondary">
-            {formatDate(createAt)}
+            {formatDate(user?.createAt)}
           </div>
         </div>
         <hr />

@@ -1,4 +1,3 @@
-import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
@@ -6,11 +5,8 @@ import validationSchema from "./utils/validationSchema";
 import Alerts from "../../../Alerts";
 
 
-const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
-  age, city, country, createAt, userRole, loading, alertMessage,
-  errorMessage, onProfileEditCancelClick, onProfileEditSaveClick }: any) => {
-  const urlPath = useLocation();
-  
+const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
+  onProfileEditCancelClick, onProfileEditSaveClick }: any) => {
   const {
     register,
     handleSubmit,
@@ -19,41 +15,25 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
   } = useForm(
     { 
       resolver: yupResolver(validationSchema),
-      defaultValues: {
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        age: age,
-        city: city,
-        country: country,
+      values: {
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+        age: user?.age,
+        city: user?.city,
+        country: user?.country,
       },
     }
   );
 
-  const navigate: NavigateFunction = useNavigate();
-
   const handleProfileCancelClick = (event: any) => {
     event.stopPropagation();
     reset();
-    onProfileEditCancelClick(id);
+    onProfileEditCancelClick(user?.id);
   };
 
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onProfileEditSaveClick(id, body);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '')
-    ) {
-      if(urlPath.pathname === '/profile/edit') {
-        navigate(`/profile`);
-      } else if(urlPath.pathname === `/user/edit/${id}`) {
-        if(userRole === 'ADMIN' || userRole === 'MODERATOR') {
-          navigate(`/user/${id}`, { state: id });
-        } else {
-          navigate(`/`);
-        }
-      }
-    }
+    onProfileEditSaveClick(user?.id, body);
   }
 
   var formatDate = (currentDate: string) => {
@@ -75,7 +55,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <h6 className="mb-0">Username</h6>
             </div>
             <div className="col-sm-9 text-secondary">
-              {username}
+              {user?.username}
             </div>
           </div>
           <hr />
@@ -87,7 +67,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="firstName"
-                placeholder={firstName}
+                placeholder={user?.firstName}
                 className={`${(
                   (isSubmitted && errors?.firstName) ?
                   "form-control is-invalid text-center" :
@@ -109,7 +89,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="lastName"
-                placeholder={lastName}
+                placeholder={user?.lastName}
                 className={`${(
                   (isSubmitted && errors?.lastName) ?
                   "form-control is-invalid text-center" :
@@ -131,7 +111,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="email"
-                placeholder={email}
+                placeholder={user?.email}
                 autoComplete="off"
                 className={`${(
                   (isSubmitted && errors?.email) ?
@@ -154,7 +134,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="age"
-                placeholder={age}
+                placeholder={user?.age}
                 className={`${(
                   (isSubmitted && errors?.age) ?
                   "form-control is-invalid text-center" :
@@ -176,7 +156,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="city"
-                placeholder={city}
+                placeholder={user?.city}
                 className={`${(
                   (isSubmitted && errors?.city) ?
                   "form-control is-invalid text-center" :
@@ -198,7 +178,7 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <input
                 type="text"
                 id="country"
-                placeholder={country}
+                placeholder={user?.country}
                 autoComplete="off"
                 className={`${(
                   (isSubmitted && errors?.country) ?
@@ -218,19 +198,28 @@ const ProfileInfoEditItem = ({ id, username, firstName, lastName, email,
               <h6 className="mb-0">Created</h6>
             </div>
             <div className="col-sm-9">
-              {formatDate(createAt)}
+              {formatDate(user?.createAt)}
             </div>
           </div>
           <hr />
           <div className="mb-3">
-            <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+            <button
+              type="submit"
+              className="btn btn-primary btn-block"
+              disabled={loading}
+            >
               {loading && (
                 <span className="spinner-border spinner-border-sm"></span>
               )}
               <span>Save</span>
             </button>
-            <button type="submit" onClick={handleProfileCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
-              <span>Cancel</span>
+            <button
+              type="submit"
+              onClick={handleProfileCancelClick}
+              className="btn btn-primary btn-block ms-2"
+              disabled={loading}
+            >
+              <span>Close</span>
             </button>
           </div>
           <Alerts

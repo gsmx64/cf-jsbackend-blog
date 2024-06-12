@@ -5,7 +5,6 @@ import Posts from "../../components/Posts";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import usePosts from "../../hooks/usePosts";
 import usePostsStore from "../../state/stores/posts";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const PostsViewDefault = () => {
@@ -13,9 +12,6 @@ const PostsViewDefault = () => {
 }
 
 const PostsViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const posts = usePostsStore((state) => state.posts);
   const currentPage = usePostsStore((state) => state.currentPage);
   const totalPages = usePostsStore((state) => state.totalPages);
@@ -27,17 +23,16 @@ const PostsViewZustand = () => {
   const fetchPosts = usePostsStore((state) => state.fetchPosts);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchPosts(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
   return { posts, currentPage, totalPages, totalItems, itemsPerPage,
-    loading, errorMessage, currentUser, setCurrentPage }
+    loading, errorMessage, setCurrentPage }
 }
 
-const PostsView = ({searchTerm}: any) => {
+const PostsView = ({ currentUser, settings, searchTerm }: any) => {
   const { posts, currentPage, totalPages, totalItems, itemsPerPage, loading,
-    errorMessage, currentUser, setCurrentPage } = (
+    errorMessage, setCurrentPage } = (
       isZustandEnabled) ? PostsViewZustand() : PostsViewDefault();
 
   return (
@@ -50,12 +45,11 @@ const PostsView = ({searchTerm}: any) => {
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
-          errorMessage={errorMessage}
           loading={loading}
+          errorMessage={errorMessage}
+          currentUser={currentUser}
+          settings={settings}
           searchTerm={searchTerm}
-          userRole={
-            (currentUser?.role != null) ?
-            (currentUser.role) : null}
         />
       </div>
     </>

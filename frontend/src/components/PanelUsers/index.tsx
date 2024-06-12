@@ -1,16 +1,14 @@
-import { memo } from "react";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import PanelUserItem from "./components/PanelUserItem";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import Alerts from "../Alerts";
-import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
+import BootstrapLink from "../BootstrapLink";
 
 
 const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, searchTerm, alertMessage,
-  errorMessage, userRole, onUpdateUserRole, onBanUser, onActivateUser, onDeleteUser}: any) => {
+  errorMessage, currentUser, onUpdateUserRole, onBanUser, onActivateUser, onDeleteUser}: any) => {
   const handleUserItemUpdateUserRole = (id: string, username: string, role: string) => {
     onUpdateUserRole(id, username, role);
   };
@@ -57,45 +55,46 @@ const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, sea
               </div>
             ) : (
               <div className="container-fluid">
-                <div className="row border-bottom">
-                  <div className="col">Username</div>
-                  <div className="col">Email</div>
-                  <div className="col">Karma</div>
-                  <div className="col">Status</div>
-                  <div className="col">Role</div>
-                  <div className="col">Created Date</div>
-                  <div className="col"></div>
-                </div>
-                {currentData?.map((userItem: any, idx: number) => {
-                  if (searchTerm !== '') {
-                    if (
-                      !userItem.username.toLowerCase().includes(searchTerm) &&
-                      !userItem.email.toLowerCase().includes(searchTerm)
-                    ) {
-                      return '';
-                    }
-                  }
+                <BootstrapLink />
+                <table className="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Username</th>
+                      <th scope="col">Email</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Role</th>
+                      <th scope="col">Created Date</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData?.map((user: any, idx: number) => {
+                      if (searchTerm !== '') {
+                        if (
+                          !user.username.toLowerCase().includes(searchTerm) &&
+                          !user.email.toLowerCase().includes(searchTerm)
+                        ) {
+                          return '';
+                        }
+                      }
 
-                  return (
-                    <PanelUserItem
-                      key={`user-item-${userItem.id}`}
-                      row_state={(idx % 2) ? 'odd' : 'even'}
-                      username={userItem.username}
-                      avatar={userItem.avatar ? userItem.avatar : DEFAULT_NO_AVATAR_TINY}
-                      email={userItem.email}
-                      karma={userItem.karma}
-                      status={userItem.status}
-                      role={userItem.role}
-                      createAt={userItem.createAt}
-                      userRole={userRole}
-                      onUserItemUpdateUserRole={handleUserItemUpdateUserRole}
-                      onUserItemBanUser={handleUserItemBanUser}
-                      onUserItemActivateUser={handleUserItemActivateUser}
-                      onUserItemDeleteUser={handleUserItemDeleteUser}
-                      id={userItem.id}
-                    />
-                  );
-                })}
+                      return (
+                        <PanelUserItem
+                          key={`user-item-${user.id}`}
+                          idx={idx}
+                          row_state={(idx % 2) ? 'odd' : 'even'}
+                          user={user}
+                          onUserItemUpdateUserRole={handleUserItemUpdateUserRole}
+                          onUserItemBanUser={handleUserItemBanUser}
+                          onUserItemActivateUser={handleUserItemActivateUser}
+                          onUserItemDeleteUser={handleUserItemDeleteUser}
+                          currentUser={currentUser}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             )}
             <Pagination
@@ -115,4 +114,4 @@ const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, sea
   );
 };
 
-export default memo(PanelUsers);
+export default PanelUsers;

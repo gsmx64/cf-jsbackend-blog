@@ -2,15 +2,13 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 
-import { initICategoryArray, ICategoryArray } from '../interfaces/category.interface';
+import ICategory, { initICategory } from '../interfaces/category.interface';
 import CategoriesService from '../services/categories.service';
-import useCurrentUser from './useCurrentUser';
 
 
 const useCategory = () => {
   const { categoryId } = useParams();
-  const { currentUser } = useCurrentUser();
-  const [category, setCategory] = useState<ICategoryArray>(initICategoryArray);
+  const [category, setCategory] = useState<ICategory>(initICategory);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -71,7 +69,7 @@ const useCategory = () => {
     fetchCategory(categoryId);
   }, []);
 
-  return { currentUser, categoryId, category, loading, alertMessage,
+  return { categoryId, category, loading, alertMessage,
     errorMessage, handleNewCategorySaveClick };
 };
 

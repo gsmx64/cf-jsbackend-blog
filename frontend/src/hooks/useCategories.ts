@@ -3,11 +3,9 @@ import { AxiosResponse } from 'axios';
 
 import { initICategoryArray, ICategoryArray } from '../interfaces/category.interface';
 import CategoriesService from '../services/categories.service';
-import useCurrentUser from './useCurrentUser';
 
 
 const useCategories = () => {
-  const { currentUser } = useCurrentUser();
   const [categories, setCategories] = useState<ICategoryArray>(initICategoryArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -84,6 +82,7 @@ const useCategories = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Status change to "${status}" for category: "${title}".`);
+          fetchCategories(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error changing status to category: "${title}". Category not found.`);
         }
@@ -110,6 +109,7 @@ const useCategories = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Deleted category: ${title}.`);
+          fetchCategories(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error deleting category: ${title}. Category not found.`);
         }
@@ -129,7 +129,7 @@ const useCategories = () => {
     fetchCategories(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  return { currentUser, categories, currentPage, totalPages, totalItems,
+  return { categories, currentPage, totalPages, totalItems,
     itemsPerPage, loading, alertMessage, errorMessage, setCurrentPage,
     setItemsPerPage, handleNewCategorySaveClick, handleUpdateStatusCategory,
     handleDeleteCategory };

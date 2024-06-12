@@ -1,11 +1,24 @@
 import api from "../utils/useApi";
 import UsersService from "./users.service";
-import { IUserRegister } from "../interfaces/user.interface";
-import { AuthBody } from "../interfaces/auth.interface";
+import IUser, { IUserPassword, IUserRegister } from "../interfaces/user.interface";
 import { AxiosResponse } from "axios";
 
 
 const authHeader = () => {
+  const userStr = localStorage.getItem('user');
+  let user = null;
+
+  if (userStr)
+  user = JSON.parse(userStr);
+
+  if (user && user.access_token) {
+      return { 'access_token': `${user.access_token}`, "Content-Type": "application/json;charset=UTF-8" };
+  } else {
+      return { 'access_token': '', "Content-Type": "application/json;charset=UTF-8" };
+  }
+}
+
+const authHeaderFetch = () => {
   const userStr = localStorage.getItem('user');
   let user = null;
 
@@ -34,6 +47,23 @@ const logout = () => {
   localStorage.removeItem('user');
 };
 
+const changeOwnPassword = (data: IUserPassword) => {
+  const id = AuthService.getCurrentUserId();
+  return api.put(
+    `users/password/${id}`,
+    data,
+    { headers: AuthService.authHeader() }
+  );
+};
+
+const resetPassword = (id: string | undefined, data: IUserPassword) => {
+  return (id != undefined) ? api.put(
+    `users/password/${id}`,
+    data,
+    { headers: AuthService.authHeader() }
+  ) : Promise.reject('User ID is required');;
+};
+
 const userRole = () => {
   const userStr = localStorage.getItem('user');
   if (userStr) {
@@ -51,22 +81,31 @@ const userRole = () => {
   }
 }
 
+const changeOwnAvatar = (avatar: string) => {
+  const id = AuthService.getCurrentUserId();
+  return api.put(
+    `users/edit/${id}`,
+    { 'avatar': `${avatar}` },
+    { headers: AuthService.authHeader() }
+  );
+};
+
 const isLoggedIn = () => {
   return (localStorage.getItem('user') != null);
 }
 
 const isRoleAuthorized = async (roles: Array<string>) => {
-  const role = await userRole();
+  const role = await AuthService.userRole();
   return roles.includes(role);
 }
 
 const isAdmin = async () => {
-  const role = await userRole();
+  const role = await AuthService.userRole();
   return (role === 'ADMIN');
 }
 
 const getCurrentUserId = () => {
-  if (isLoggedIn()) {
+  if (AuthService.isLoggedIn()) {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
@@ -78,22 +117,21 @@ const getCurrentUserId = () => {
 };
 
 const getCurrentUser = () => {
-  if (isLoggedIn()) {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      return UsersService.get(user.user.id);
-    }
-  }
-
-  return undefined;
+  return api.get<IUser>(
+    'users/profile',
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const AuthService = {
   authHeader,
+  authHeaderFetch,
   register,
   login,
   logout,
+  changeOwnPassword,
+  resetPassword,
+  changeOwnAvatar,
   isLoggedIn,
   isRoleAuthorized,
   isAdmin,

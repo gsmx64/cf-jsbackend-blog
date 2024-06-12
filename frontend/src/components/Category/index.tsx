@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import MiniPostsItem from "./components/MiniPostsItem";
@@ -9,17 +8,22 @@ import styles from "./Category.module.css";
 import BootstrapLink from "../BootstrapLink";
 import Alerts from "../Alerts";
 import ICategory from "../../interfaces/category.interface";
+import IUser from "../../interfaces/user.interface";
+import ISettings from "../../interfaces/settings.interface";
 import { IPostArray } from "../../interfaces/post.interface";
+
 
 interface CategoryProps {
   category: ICategory;
   loading: boolean;
   errorMessage: Error | string | unknown;
+  currentUser: IUser | undefined;
+  settings: ISettings;
   setSearchTerm: (term: string) => void;
-  userRole: string | null | undefined;
 }
 
-const Category = ({category, loading, errorMessage, setSearchTerm, userRole}: CategoryProps) => {
+const Category = ({category, loading, errorMessage, setSearchTerm,
+  currentUser, /*settings,*/}: CategoryProps) => {
   const navigate = useNavigate();
 
   const handleMiniPostItemClick = (id: string) => {
@@ -27,8 +31,8 @@ const Category = ({category, loading, errorMessage, setSearchTerm, userRole}: Ca
   };
 
   const date = new Date(category?.updateAt);
-  loading = (category.id === '') ? true : loading;
-  const categoryPosts = category.posts || [];
+  loading = (category?.id === '') ? true : loading;
+  const categoryPosts = category?.posts || [];
   setSearchTerm('');
 
   return (
@@ -41,31 +45,31 @@ const Category = ({category, loading, errorMessage, setSearchTerm, userRole}: Ca
             <BootstrapLink />
             <div className={styles.imageContainer}>
               <img
-                src={category.image}
+                src={category?.image}
                 width={200}
                 height={200}
-                alt={category.title}
+                alt={category?.title}
               />
             </div>
-            <h4 className="h4">{category.title}</h4>
-            <p className="lead">{category.description}</p>
+            <h4 className="h4">{category?.title}</h4>
+            <p className="lead">{category?.description}</p>
             <div className="align-self-end float-end ps-1">
               <div className="col input-group input-group-sm">
                 <div className="input-group-text">
                   <i className="bi bi-person-circle pb-1"></i>
-                  <Link to={`/user/${category.author.id}`} className="badge">
-                    <span className="text-info font-weight-bold">{category.author.username}</span>
-                    {(category.author.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                  <Link to={`/user/${category?.author?.id}`} className="badge">
+                    <span className="text-info font-weight-bold">{category?.author?.username}</span>
+                    {(category?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
                 </div>
                 {(
-                  (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
+                  (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
                     <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-1"></i>
                       <small>
-                        {(category.status == 'PUBLISHED') && ' Published'}
-                        {(category.status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(category.status == 'ARCHIVED') && ' Archived'}
-                        {(category.status == 'TRASHED') && ' Trashed'}
+                        {(category?.status == 'PUBLISHED') && ' Published'}
+                        {(category?.status == 'UNPUBLISHED') && ' Unpublished'}
+                        {(category?.status == 'ARCHIVED') && ' Archived'}
+                        {(category?.status == 'TRASHED') && ' Trashed'}
                       </small>
                     </div>
                 )}
@@ -88,21 +92,13 @@ const Category = ({category, loading, errorMessage, setSearchTerm, userRole}: Ca
                   </div>
                 ) : (
                   <>
-                    {(categoryPosts as IPostArray[]).map((categoryPostItem: any) => {
+                    {(categoryPosts as IPostArray[]).map((categoryPost: any) => {
                       return (
                         <MiniPostsItem
-                          key={`mini-post-item-${categoryPostItem.id}`}
-                          title={categoryPostItem.title}
-                          description={categoryPostItem.description}
-                          image={categoryPostItem.image}
-                          status={categoryPostItem.status}
-                          post_author_id={categoryPostItem.author?.id}
-                          post_author_username={categoryPostItem.author?.username}
-                          post_author_status={categoryPostItem.author?.status}
-                          updateAt={categoryPostItem.updateAt}
-                          userRole={userRole}
+                          key={`mini-post-item-${categoryPost?.id}`}
+                          post={categoryPost}
                           onMiniPostClick={handleMiniPostItemClick}
-                          id={categoryPostItem.id}
+                          currentUser={currentUser}
                         />
                       );
                     })}

@@ -3,11 +3,9 @@ import { AxiosResponse } from 'axios';
 
 import { initIUserArray, IUserArray } from '../interfaces/user.interface';
 import UsersService from '../services/users.service';
-import useCurrentUser from './useCurrentUser';
 
 
 const useUsers = () => {
-  const { currentUser } = useCurrentUser();
   const [users, setUsers] = useState<IUserArray>(initIUserArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,6 +52,7 @@ const useUsers = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Role changed to ${role} to the user: "${username}"`);
+          fetchUsers(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error changing role to user "${username}". User not found.`);
         }
@@ -81,8 +80,10 @@ const useUsers = () => {
       .then((response: AxiosResponse) => {
         if (ban && response.data.affected === 1) {
           setAlertMessage(`The user "${username}" was banned. Status: "${data.status}"`);
+          fetchUsers(currentPage, itemsPerPage);
         } else if (!ban && response.data.affected === 1) {
           setAlertMessage(`The user "${username}" was unbanned. Status: "${data.status}"`);
+          fetchUsers(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error changing ban status to user "${username}". User not found.`);
         }
@@ -110,8 +111,10 @@ const useUsers = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1 && activate) {
           setAlertMessage(`The user "${username}" was activate. Status: "${data.status}".`);
+          fetchUsers(currentPage, itemsPerPage);
         } else if (response.data.affected === 1 && !activate) {
           setAlertMessage(`The user "${username}" was deactivate. Status: "${data.status}".`);
+          fetchUsers(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error changing activation status to user "${username}". User not found.`);
         }
@@ -138,6 +141,7 @@ const useUsers = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Deleted user: "${username}".`);
+          fetchUsers(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error deleting user: "${username}". User not found.`);
         }
@@ -157,7 +161,7 @@ const useUsers = () => {
     fetchUsers(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  return { currentUser, users, currentPage, totalPages, totalItems,
+  return { users, currentPage, totalPages, totalItems,
     itemsPerPage, loading, alertMessage, errorMessage, setCurrentPage,
     setItemsPerPage, handleUpdateUserRole, handleBanUser,
     handleActivateUser, handleDeleteUser};

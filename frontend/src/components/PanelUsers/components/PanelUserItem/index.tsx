@@ -1,85 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import BootstrapLink from "../../../BootstrapLink";
+
+import { DEFAULT_NO_AVATAR_TINY } from "../../../../constants/defaultConstants";
 
 
-const PanelUserItem = ({ id, username, avatar, email, karma, status,
-  role, createAt, row_state, userRole, onUserItemUpdateUserRole,
+const PanelUserItem = ({ idx, user, currentUser, onUserItemUpdateUserRole,
   onUserItemBanUser, onUserItemActivateUser, onUserItemDeleteUser }: any) => {
-  const [selectedRole, setSelectedRole] = useState(role);
-  const [selectedStatus, setSelectedStatus] = useState(status);
+  const [selectedRole, setSelectedRole] = useState(user?.role);
+  const [selectedStatus, setSelectedStatus] = useState(user?.status);
   
   const handlePostItemUpdateUserRole = (event: any) => {
     event.stopPropagation();
     setSelectedRole(event.target.value);
-    onUserItemUpdateUserRole(id, username, event.target.value);
+    onUserItemUpdateUserRole(user?.id, user?.username, event.target.value);
   };
 
   const handleUserItemBanUser = (event: any) => {
     event.stopPropagation();
-    onUserItemBanUser(id, username, true);
-
+    onUserItemBanUser(user?.id, user?.username, true);
     setSelectedStatus('BANNED');
   };
 
   const handleUserItemUnBanUser = (event: any) => {
     event.stopPropagation();
-    onUserItemBanUser(id, username, false);
-
+    onUserItemBanUser(user?.id, user?.username, false);
     setSelectedStatus('ENABLED');
   };
 
   const handleUserItemActivateUser = (event: any) => {
     event.stopPropagation();
-    onUserItemActivateUser(id, username, true);
-
+    onUserItemActivateUser(user?.id, user?.username, true);
     setSelectedStatus('ENABLED');
   };
 
   const handleUserItemUnActivateUser = (event: any) => {
     event.stopPropagation();
-    onUserItemActivateUser(id, username, false);
+    onUserItemActivateUser(user?.id, user?.username, false);
 
     setSelectedStatus('PENDING');
   };
 
   const handleUserItemDeleteUser = (event: any) => {
     event.stopPropagation();
-    onUserItemDeleteUser(id, username);
+    onUserItemDeleteUser(user?.id, user?.username);
   };
 
-  const createAtDate = new Date(createAt);
+  const createAtDate = new Date(user?.createAt);
+
+  useEffect(() => {
+    setSelectedRole(user?.role)
+    setSelectedStatus(user?.status);
+  }, [user?.role, user?.status]);
 
   return (
-    <div className={"item-list row " + row_state}>
-      <BootstrapLink />
-      <div className="col">
-        <Link to={`/user/${id}`}>
+    <tr>
+      <th scope="row">{(idx+1)}</th>
+      <td>
+        <Link to={`/user/${user?.id}`}>
           <img
-            src={avatar}
+            src={user?.avatar ? user?.avatar : DEFAULT_NO_AVATAR_TINY}
             width={38}
             height={38}
-            alt={username}
+            alt={user?.username}
             className="rounded"
           />
           <span className="ms-2">
-            {username}
-            {(selectedStatus === 'BANNED') && <i className="bi bi-ban"></i>}
+            {user?.username}
+            {(selectedStatus === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
           </span>
         </Link>
-      </div>
-      <div className="col">
-        {email}
-      </div>
-      <div className="col">
-        {karma}
-      </div>
-      <div className="col">
+      </td>
+      <td>
+        {user?.email}
+      </td>
+      <td>
         {
-          (userRole === 'ADMIN') ?
+          (currentUser?.role === 'ADMIN') ?
           (
             <select
-              id={`user-select-role-${id}`}
+              id={`user-select-role-${user?.id}`}
               value={selectedRole}
               onChange={event => handlePostItemUpdateUserRole(event)}
               className="form-select form-select-sm pe-14"
@@ -99,21 +98,21 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
             </>
           )
         }
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {(selectedStatus === 'BANNED') && 'Banned'}
         {(selectedStatus === 'ENABLED') && 'Enabled'}
         {(selectedStatus === 'PENDING') && 'Activation Pending'}
-      </div>
-      <div className="col">
+      </td>
+      <td>
         <span>{createAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {
-        ((userRole === 'ADMIN') || (userRole === 'MODERATOR')) && (
+        ((currentUser?.role === 'ADMIN') || (currentUser?.role === 'MODERATOR')) && (
           <>
             <button
-              className="btn btn-outline-secondary ms-1"
+              className="btn btn-outline-danger ms-1"
               onClick={handleUserItemBanUser}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -122,7 +121,7 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
               <i className="bi bi-ban"></i>
             </button>
             <button
-              className="btn btn-outline-secondary ms-1"
+              className="btn btn-outline-success ms-1"
               onClick={handleUserItemUnBanUser}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -132,10 +131,10 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
             </button>
           </>
         )}
-        {(userRole === 'ADMIN') && (
+        {(currentUser?.role === 'ADMIN') && (
           <>
             <button
-              className="btn btn-outline-secondary ms-2"
+              className="btn btn-outline-primary ms-2"
               onClick={handleUserItemActivateUser}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -144,7 +143,7 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
               <i className="bi bi-toggle-on"></i>
             </button>
             <button
-              className="btn btn-outline-secondary ms-1"
+              className="btn btn-outline-info ms-1"
               onClick={handleUserItemUnActivateUser}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -154,7 +153,7 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
             </button>
           </>
         )}
-        {(userRole === 'ADMIN') && (
+        {(currentUser?.role === 'ADMIN') && (
           <button
             className="btn btn-outline-secondary ms-2"
             onClick={handleUserItemDeleteUser}
@@ -165,8 +164,8 @@ const PanelUserItem = ({ id, username, avatar, email, karma, status,
             <i className="bi bi-trash3-fill"></i>
           </button>
         )}
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 

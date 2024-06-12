@@ -19,7 +19,7 @@ export interface IUsePostStore {
 export const initialPostStoreState = {
   post: initIPost,
   activeCategories: initICategory,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
 }

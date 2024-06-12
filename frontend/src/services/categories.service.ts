@@ -12,18 +12,18 @@ const create = (data: ICategoryCreate) => {
 };
 
 const update = (id: string | undefined, data: any) => {
-  return api.put<any>(
+  return (id != undefined) ? api.put<any>(
     `categories/edit/${id}`,
     data,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Category ID is required');
 };
 
-const remove = (id: string) => {
-  return api.delete<any>(
+const remove = (id: string | undefined) => {
+  return (id != undefined) ? api.delete<any>(
     `categories/delete/${id}`,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Category ID is required');
 };
 
 const get = (id: string | undefined) => {

@@ -15,7 +15,7 @@ export interface IUseCategoryStore {
 
 export const initialCategoryStoreState = {
   category: initICategory,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
 }

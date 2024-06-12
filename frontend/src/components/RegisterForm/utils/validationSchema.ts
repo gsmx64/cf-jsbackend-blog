@@ -143,10 +143,6 @@ const validationSchema = yup
         VALID_URL_REGEX,
         { message: 'Only url direct link allowed.', excludeEmptyString: true }
       ),
-    /*termsCheck: yup
-    .bool()
-    .oneOf([true],'You must accept the terms and conditions!')
-    .required('This field is required!')*/
   })
   .required();
 

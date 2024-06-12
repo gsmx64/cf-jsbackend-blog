@@ -14,7 +14,7 @@ export interface IUseCommentStore {
 
 export const initialCommentStoreState = {
   comment: initIComment,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
 }

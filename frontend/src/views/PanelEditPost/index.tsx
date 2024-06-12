@@ -7,7 +7,6 @@ import PanelPostsView from "../PanelPosts";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import usePostStore from "../../state/stores/post";
 import usePost from "../../hooks/usePost";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const PanelEditPostViewDefault = () => {
@@ -15,9 +14,6 @@ const PanelEditPostViewDefault = () => {
 }
 
 const PanelEditPostViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const { postId } = useParams();
   const post = usePostStore((state) => state.post);
   const activeCategories = usePostStore((state) => state.activeCategories);
@@ -29,18 +25,17 @@ const PanelEditPostViewZustand = () => {
   const handleEditPostSaveClick = usePostStore((state) => state.handleEditPostSaveClick);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchPost(postId);
     fetchActiveCategories();
   }, []);
 
-  return { postId, post, activeCategories, loading, alertMessage, errorMessage, currentUser,
+  return { postId, post, activeCategories, loading, alertMessage, errorMessage,
     handleEditPostSaveClick
    }
 }
 
-const PanelEditPostView = ({searchTerm}: any) => {
-  const { postId, post, activeCategories, loading, alertMessage, errorMessage, currentUser,
+const PanelEditPostView = ({ currentUser, settings, searchTerm }: any) => {
+  const { postId, post, activeCategories, loading, alertMessage, errorMessage,
     handleEditPostSaveClick } = (
     isZustandEnabled) ? PanelEditPostViewZustand() : PanelEditPostViewDefault();
   const navigate = useNavigate();
@@ -59,14 +54,13 @@ const PanelEditPostView = ({searchTerm}: any) => {
               postId={postId}
               post={post}
               categories={activeCategories}
+              loading={loading}
               alertMessage={alertMessage}
               errorMessage={errorMessage}
-              loading={loading}
-              userRole={
-                (currentUser?.role != null) ?
-                (currentUser.role) : null}
               onEditPostSaveClick={handleEditPostSaveClick}
               onEditPostCancelClick={handleEditPostCancelClick}
+              currentUser={currentUser}
+              settings={settings}
             />
           </div>
         </>

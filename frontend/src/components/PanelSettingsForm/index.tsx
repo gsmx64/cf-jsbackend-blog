@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -8,8 +7,7 @@ import Alerts from "../Alerts";
 import Loading from "../Loading";
 
 
-const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
-  linkedin, youtube, tiktok, loading, alertMessage, errorMessage,
+const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
   onEditSettingsSaveClick, onEditSettingsCancelClick, isSetup }: any) => {
 
   const {
@@ -21,14 +19,14 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
     { 
       resolver: yupResolver(validationSchema),
       values: {
-        brand: brand,
-        terms: terms,
-        facebook: facebook,
-        instagram: instagram,
-        twitterx: twitterx,
-        linkedin: linkedin,
-        youtube: youtube,
-        tiktok: tiktok,
+        brand: settings?.brand,
+        terms: settings?.terms,
+        facebook: settings?.facebook,
+        instagram: settings?.instagram,
+        twitterx: settings?.twitterx,
+        linkedin: settings?.linkedin,
+        youtube: settings?.youtube,
+        tiktok: settings?.tiktok,
       },
     }
   );
@@ -45,7 +43,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
 
   return (
     <>
-      {brand && loading ? (
+      {settings?.brand && loading ? (
         <Loading />
       ) : (
         <>
@@ -70,7 +68,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="brand"
-                          placeholder={brand ? brand : 'Blog Brand Name'}
+                          placeholder={settings?.brand ? settings?.brand : 'Blog Brand Name'}
                           className={`${(
                             (isSubmitted && errors?.brand) ?
                             "form-control is-invalid text-center" :
@@ -91,7 +89,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                       <div className="col-sm-9 text-secondary">
                         <textarea
                           id={`settings-terms-textarea`}
-                          placeholder={terms ? terms : 'Write here your terms and conditions.'}
+                          placeholder={settings?.terms ? settings?.terms : 'Write here your terms and conditions.'}
                           autoComplete="off"
                           className={`${(
                             (isSubmitted && errors?.terms) ?
@@ -120,7 +118,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="facebook"
-                          placeholder={facebook ? facebook : 'Facebook Link'}
+                          placeholder={settings?.facebook ? settings?.facebook : 'Facebook Link'}
                           className={`${(
                             (isSubmitted && errors?.facebook) ?
                             "form-control is-invalid text-center" :
@@ -142,7 +140,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="instagram"
-                          placeholder={instagram ? instagram : 'Instagram Link'}
+                          placeholder={settings?.instagram ? settings?.instagram : 'Instagram Link'}
                           className={`${(
                             (isSubmitted && errors?.instagram) ?
                             "form-control is-invalid text-center" :
@@ -164,7 +162,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="twitterx"
-                          placeholder={twitterx ? twitterx : 'X Link'}
+                          placeholder={settings?.twitterx ? settings?.twitterx : 'X Link'}
                           className={`${(
                             (isSubmitted && errors?.twitterx) ?
                             "form-control is-invalid text-center" :
@@ -186,7 +184,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="linkedin"
-                          placeholder={linkedin ? linkedin : 'LinkedIn Link'}
+                          placeholder={settings?.linkedin ? settings?.linkedin : 'LinkedIn Link'}
                           className={`${(
                             (isSubmitted && errors?.linkedin) ?
                             "form-control is-invalid text-center" :
@@ -208,7 +206,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="youtube"
-                          placeholder={youtube ? youtube : 'Youtube Link'}
+                          placeholder={settings?.youtube ? settings?.youtube : 'Youtube Link'}
                           className={`${(
                             (isSubmitted && errors?.youtube) ?
                             "form-control is-invalid text-center" :
@@ -230,7 +228,7 @@ const PanelSettingsForm = ({ brand, terms, facebook, instagram, twitterx,
                         <input
                           type="text"
                           id="tiktok"
-                          placeholder={tiktok ? tiktok : 'TikTok Link'}
+                          placeholder={settings?.tiktok ? settings?.tiktok : 'TikTok Link'}
                           className={`${(
                             (isSubmitted && errors?.tiktok) ?
                             "form-control is-invalid text-center" :

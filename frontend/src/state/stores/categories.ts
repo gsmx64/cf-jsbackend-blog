@@ -5,7 +5,7 @@ import CategoriesService from "../../services/categories.service";
 import { initialCategoriesStoreState, IUseCategoriesStore } from "../interfaces/categories.interface";
 
 
-const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
+const useCategoriesStore = create<IUseCategoriesStore>((set, get) => ({
   ...initialCategoriesStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
   fetchCategories: (currentPage: number, itemsPerPage: number) => {
@@ -43,6 +43,7 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Status change to "${status}" for category: "${title}"` }));
+          get().fetchCategories(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error changing status to category: "${title}". Category not found.` }));
         }
@@ -66,6 +67,7 @@ const useCategoriesStore = create<IUseCategoriesStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Deleted category: "${title}".` }));
+          get().fetchCategories(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error deleting category: "${title}". Category not found.` }));
         }

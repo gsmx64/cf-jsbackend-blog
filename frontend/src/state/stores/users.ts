@@ -5,7 +5,7 @@ import UsersService from "../../services/users.service";
 import { initialUsersStoreState, IUseUsersStore } from "../interfaces/users.interface";
 
 
-const useUsersStore = create<IUseUsersStore>((set) => ({
+const useUsersStore = create<IUseUsersStore>((set, get) => ({
   ...initialUsersStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
   fetchUsers: (currentPage: number, itemsPerPage: number) => {
@@ -43,6 +43,7 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Role changed to "${role}" to the user: "${username}"` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error changing role to user "${username}". User not found.` }));
         }
@@ -67,8 +68,10 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (ban && response.data.affected === 1) {
           set(() => ({ alertMessage: `The user "${username}" was banned. Status: "${data.status}"` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else if (!ban && response.data.affected === 1) {
           set(() => ({ alertMessage: `The user "${username}" was unbanned. Status: "${data.status}"` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error changing ban status to user "${username}"! User not found.` }));
         }
@@ -93,8 +96,10 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1 && activate) {
           set(() => ({ alertMessage: `The user ${username} was activate. Status: "${data.status}"` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else if (response.data.affected === 1 && !activate) {
           set(() => ({ alertMessage: `The user ${username} was deactivate. Status: "${data.status}"` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error changing activation status to user "${username}"! User not found.` }));
         }
@@ -118,6 +123,7 @@ const useUsersStore = create<IUseUsersStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Deleted user: "${username}".` }));
+          get().fetchUsers(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error deleting user: "${username}". User not found.` }));
         }

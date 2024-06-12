@@ -1,4 +1,4 @@
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -10,8 +10,7 @@ import { DEFAULT_NO_AVATAR_MEDIUM } from "../../constants/defaultConstants";
 import Alerts from "../Alerts";
 
 
-const LoginForm = ({ loading, alertMessage, errorMessage, onLoginUserSaveClick }: any) => {
-  let navigate: NavigateFunction = useNavigate();
+const LoginForm = ({ currentUser, loading, alertMessage, errorMessage, onLoginUserSaveClick }: any) => {
 
   const {
     register,
@@ -24,16 +23,11 @@ const LoginForm = ({ loading, alertMessage, errorMessage, onLoginUserSaveClick }
 
   const onSubmitHandler = (body: AuthBody) => {
     const { username, password } = body;
-    const saveSuccessful = onLoginUserSaveClick(username, password);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '')
-    ) {
-      navigate('/');
-    }
+    onLoginUserSaveClick(username, password);
   }
 
   return (
+    (currentUser === undefined) ? (
     <div className="container">
       <div className="row">
         <div className="offset-md-3 col-md-6 offset-md-3">
@@ -101,6 +95,11 @@ const LoginForm = ({ loading, alertMessage, errorMessage, onLoginUserSaveClick }
         </div>
       </div>
     </div>
+    ) : (
+      <>
+        <Navigate to="/" replace />
+      </>
+    )
   );
 }
 

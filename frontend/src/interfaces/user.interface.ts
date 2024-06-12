@@ -65,7 +65,12 @@ export interface IUserRegister {
   age: number;
   city: string;
   country: string;
-  termsCheck: boolean;
+}
+
+export interface IUserPassword {
+  current_password: string;
+  password: string;
+  repeat_password: string;
 }
 
 export const initIUser: IUser = {
@@ -135,5 +140,4 @@ export const initIUserRegister: IUserRegister = {
   age: 0,
   city: '',
   country: '',
-  termsCheck: false,
 }

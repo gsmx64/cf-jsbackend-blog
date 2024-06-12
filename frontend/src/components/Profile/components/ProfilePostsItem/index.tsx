@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 
 
-
-const ProfilePostsItem = ({ posts }: any) => {//, role
+const ProfilePostsItem = ({ posts }: any) => {
   var formatDate = (currentDate: string) => {
     var new_date = new Date(currentDate);
     return currentDate ? `${new_date.toLocaleString()}hs.` : '';
   }
-
-  //if(role == 'BASIC') return <></>;
 
   return (
     <div className="col-sm-6 mb-3">

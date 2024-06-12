@@ -11,19 +11,19 @@ const register = (data: IUserRegister) => {
   );
 };
 
-const update = (id: string, data: any) => {
-  return api.put<any>(
+const update = (id: string | undefined, data: any) => {
+  return (id != undefined) ? api.put<any>(
     `users/edit/${id}`,
     data,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('User ID is required');
 };
 
-const remove = (id: string) => {
-  return api.delete<any>(
+const remove = (id: string | undefined) => {
+  return (id != undefined) ? api.delete<any>(
     `users/delete/${id}`,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('User ID is required');
 };
 
 const get = (id: string | undefined) => {
@@ -38,6 +38,13 @@ const getAll = (currentPage: number | null = null, itemsPerPage: number | null =
   const itemsPerPageQuery = (itemsPerPage != null) ? `&limit=${itemsPerPage}` : ``;
 
   return api.get<Array<IUser>>(`users/list${currentPageQuery}${itemsPerPageQuery}`, { headers: AuthService.authHeader() });
+};
+
+const getProfile = () => {
+  return api.get<IUser>(
+    'users/profile',
+    { headers: AuthService.authHeader() }
+  );
 };
 
 const usernameIsAvailable = (username: string) => {
@@ -92,6 +99,7 @@ const UsersService = {
   remove,
   get,
   getAll,
+  getProfile,
   usernameIsAvailable,
   emailIsAvailable,
   search,

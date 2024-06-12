@@ -4,24 +4,23 @@ import styles from './CategoryItem.module.css';
 import BootstrapLink from "../../../BootstrapLink";
 
 
-const CategoryItem = ({ id, title, description, image, status,
-  author, postsCount, updateAt, userRole, onCategoryClick }: any) => {
+const CategoryItem = ({ category, postsCount, currentUser, onCategoryClick }: any) => {
   const handleSeeMoreClick = (event: any) => {
     event.stopPropagation();
-    onCategoryClick(id);
+    onCategoryClick(category?.id);
   };
 
-  const date = new Date(updateAt);
+  const date = new Date(category?.updateAt);
 
   return (
     <div className={styles.categoryContainer}>
       <BootstrapLink />
       <div className={styles.imageContainer}>
-        <img src={image} width={200} height={200} alt={title} className="rounded" />
+        <img src={category?.image} width={200} height={200} alt={category?.title} className="rounded" />
       </div>
       <div className={styles.categoryContentContainer}>
-        <h4 className="h4">{title}</h4>
-        <p className="lead">{description}</p>
+        <h4 className="h4">{category?.title}</h4>
+        <p className="lead">{category?.description}</p>
         <div className="d-flex">
           <div className="align-self-start">
             <button onClick={handleSeeMoreClick} className="btn btn-outline-secondary">
@@ -36,19 +35,19 @@ const CategoryItem = ({ id, title, description, image, status,
               </div>
               <div className="input-group-text">
                 <i className="bi bi-person-circle pb-1 pe-2"></i>
-                <Link to={`/user/${author.id}`} className="">
-                  <small>{author.username}</small>
-                  {(author.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                <Link to={`/user/${category?.author.id}`} className="">
+                  <small>{category?.author?.username}</small>
+                  {(category?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                 </Link>
               </div>
               {(
-                (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
+                (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
                   <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-2"></i>
                     <small>
-                      {(status == 'PUBLISHED') && ' Published'}
-                      {(status == 'UNPUBLISHED') && ' Unpublished'}
-                      {(status == 'ARCHIVED') && ' Archived'}
-                      {(status == 'TRASHED') && ' Trashed'}
+                      {(category?.status == 'PUBLISHED') && ' Published'}
+                      {(category?.status == 'UNPUBLISHED') && ' Unpublished'}
+                      {(category?.status == 'ARCHIVED') && ' Archived'}
+                      {(category?.status == 'TRASHED') && ' Trashed'}
                     </small>
                   </div>
               )}

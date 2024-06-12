@@ -1,9 +1,9 @@
 import Error from "../../interfaces/error.interface";
-import IComment, { initIComment } from "../../interfaces/comment.interface";
+import { ICommentArray, initICommentArray } from "../../interfaces/comment.interface";
 
 
 export interface IUseCommentsStore {
-  comments: IComment;
+  comments: ICommentArray;
   currentPage: number;
   totalPages: number;
   totalItems: number;
@@ -17,12 +17,12 @@ export interface IUseCommentsStore {
 }
 
 export const initialCommentsStoreState = {
-  comments: initIComment,
+  comments: initICommentArray,
   currentPage: 1,
   totalPages: 1,
   totalItems: 0,
   itemsPerPage: 10,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
   setCurrentPage: () => {},

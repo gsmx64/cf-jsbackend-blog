@@ -6,13 +6,11 @@ import IPost, { initIPost } from '../interfaces/post.interface';
 import { ICategoryArray, initICategoryArray } from "../interfaces/category.interface";
 import PostsService from '../services/posts.service';
 import CategoriesService from "../services/categories.service";
-import useCurrentUser from './useCurrentUser';
 
 
 
 const usePost = () => {
   const { postId } = useParams();
-  const { currentUser } = useCurrentUser();
   const [post, setPost] = useState<IPost>(initIPost);
   const [activeCategories, setActiveCategories] = useState<ICategoryArray>(initICategoryArray);
   const [loading, setLoading] = useState(false);
@@ -121,7 +119,7 @@ const usePost = () => {
     fetchActiveCategories();
   }, []);
 
-  return { currentUser, postId, post, loading, alertMessage, errorMessage,
+  return { postId, post, loading, alertMessage, errorMessage,
     activeCategories, handleNewPostSaveClick, handleEditPostSaveClick };
 };
 

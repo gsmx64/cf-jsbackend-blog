@@ -4,26 +4,25 @@ import BootstrapLink from '../../../BootstrapLink';
 import styles from './MiniPostsItem.module.css';
 
 
-const MiniPostsItem = ({ id, title, description, image, status, post_author_id, post_author_username,
-  post_author_status, updateAt, userRole, onMiniPostClick }: any) => {
+const MiniPostsItem = ({ post, currentUser, onMiniPostClick }: any) => {
   
   const handleSeeMoreClick = (event: any) => {
     event.stopPropagation();
-    onMiniPostClick(id);
+    onMiniPostClick(post?.id);
   };
 
-  const date = new Date(updateAt);
+  const date = new Date(post?.updateAt);
 
   return (
     <div className="col-6">
       <div className="p-3 border bg-light">
         <BootstrapLink />
         <div className={styles.imageContainer}>
-          <img src={image} width={200} height={200} alt={title} className="rounded" />
+          <img src={post?.image} width={200} height={200} alt={post?.title} className="rounded" />
         </div>
         <div className={styles.postsContentContainer}>
-          <h4 className="h4">{title}</h4>
-          <p className="lead">{description}</p>
+          <h4 className="h4">{post?.title}</h4>
+          <p className="lead">{post?.description}</p>
           <div className="d-flex">
             <div className="align-self-start">
               <button onClick={handleSeeMoreClick} className="btn btn-outline-secondary">
@@ -34,20 +33,20 @@ const MiniPostsItem = ({ id, title, description, image, status, post_author_id, 
               <div className="col input-group input-group-sm">
                 <div className="input-group-text">
                   <i className="bi bi-person-circle pb-2"></i>
-                  <Link to={`/user/${post_author_id}`} className="badge">
-                  <span className="text-info font-weight-bold">{post_author_username}</span>
-                    {(post_author_status === 'BANNED') && <i className="bi bi-ban"></i>}
+                  <Link to={`/user/${post?.author?.id}`} className="badge">
+                  <span className="text-info font-weight-bold">{post?.author?.username}</span>
+                    {(post?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
                 </div>
                 {(
-                  (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
+                  (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
                     <div className="input-group-text">
                       <i className="bi bi-toggle-on pb-1 pe-2"></i>
                       <small>
-                        {(status == 'PUBLISHED') && ' Published'}
-                        {(status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(status == 'ARCHIVED') && ' Archived'}
-                        {(status == 'TRASHED') && ' Trashed'}
+                        {(post?.status == 'PUBLISHED') && ' Published'}
+                        {(post?.status == 'UNPUBLISHED') && ' Unpublished'}
+                        {(post?.status == 'ARCHIVED') && ' Archived'}
+                        {(post?.status == 'TRASHED') && ' Trashed'}
                       </small>
                     </div>
                 )}

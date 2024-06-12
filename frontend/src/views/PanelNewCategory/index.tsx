@@ -7,8 +7,8 @@ import { initICategoryCreate } from "../../interfaces/category.interface";
 import useCategory from "../../hooks/useCategory";
 
 
-const PanelNewCategoryView = ({searchTerm}: any) => {
-  const { currentUser, loading, alertMessage, errorMessage,
+const PanelNewCategoryView = ({ currentUser, settings, searchTerm }: any) => {
+  const { loading, alertMessage, errorMessage,
     handleNewCategorySaveClick } = useCategory();
   const navigate = useNavigate();
 
@@ -24,14 +24,13 @@ const PanelNewCategoryView = ({searchTerm}: any) => {
           <div className="container">
             <PanelNewCategoryForm
               category={initICategoryCreate}
-              userRole={
-                (currentUser?.role != null) ? 
-                (currentUser.role) : null}
               alertMessage={alertMessage}
               errorMessage={errorMessage}
               loading={loading}
               onNewCategorySaveClick={handleNewCategorySaveClick}
               onNewCategoryCancelClick={handleNewCategoryCancelClick}
+              currentUser={currentUser}
+              settings={settings}
               isSetup={false}
             />
           </div>

@@ -6,6 +6,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import validationSchema from "./utils/validationSchema";
 import Alerts from "../Alerts";
 import IComment from "../../interfaces/comment.interface";
+import IUser from "../../interfaces/user.interface";
+import ISettings from "../../interfaces/settings.interface";
 
 
 interface PanelEditCommentFormProps {
@@ -14,7 +16,8 @@ interface PanelEditCommentFormProps {
   loading: boolean;
   alertMessage: string;
   errorMessage: Error | string | unknown;
-  userRole: string | undefined | null;
+  currentUser: IUser | undefined;
+  settings: ISettings;
   onEditCommentSaveClick: (id: string | undefined, data: any) => void;
   onEditCommentCancelClick: () => void;
 }

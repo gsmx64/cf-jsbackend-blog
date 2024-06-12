@@ -7,6 +7,8 @@ import Pagination from "../Pagination";
 import Loading from "../Loading";
 import Alerts from "../Alerts";
 import { IPostArray } from "../../interfaces/post.interface";
+import ISettings from "../../interfaces/settings.interface";
+import IUser from "../../interfaces/user.interface";
 
 
 interface PostsProps {
@@ -18,12 +20,13 @@ interface PostsProps {
   setCurrentPage: (page: number) => void;
   loading: boolean;
   errorMessage: Error | string | unknown;
+  currentUser: IUser | undefined;
+  settings: ISettings;
   searchTerm: string;
-  userRole: string | null | undefined;
 }
 
-const Posts = ({posts, currentPage, setCurrentPage, totalPages,
-  errorMessage, loading, searchTerm, userRole}: PostsProps) => {
+const Posts = ({ posts, currentPage, setCurrentPage, totalPages, currentUser,
+  /*settings,*/ errorMessage, loading, searchTerm }: PostsProps) => {
   const navigate = useNavigate();
   let filteredPosts = 0;
 
@@ -48,11 +51,11 @@ const Posts = ({posts, currentPage, setCurrentPage, totalPages,
             </div>
           ) : (
             <div className="justify-content-center">
-              {(postsData).map((postItem: any) => {
+              {(postsData).map((post: any) => {
                 if (searchTerm !== '') {
                   if (
-                    !postItem.title.toLowerCase().includes(searchTerm) &&
-                    !postItem.content.toLowerCase().includes(searchTerm)
+                    !post.title.toLowerCase().includes(searchTerm) &&
+                    !post.content.toLowerCase().includes(searchTerm)
                   ) {
                     filteredPosts++;
                     return;
@@ -61,20 +64,10 @@ const Posts = ({posts, currentPage, setCurrentPage, totalPages,
 
                 return (
                   <PostItem
-                    key={`post-item-${postItem.id}`}
-                    title={postItem.title}
-                    image={postItem.image}
-                    content={postItem.content}
-                    status={postItem.status}
-                    author_id={postItem?.author?.id}
-                    author_username={postItem?.author?.username}
-                    author_status={postItem?.author?.status}
-                    category_id={postItem?.category?.id}
-                    category_title={postItem?.category?.title}
-                    updateAt={postItem.updateAt}
-                    userRole={userRole}
+                    key={`post-item-${post?.id}`}
+                    post={post}
+                    currentUser={currentUser}
                     onPostClick={handlePostItemClick}
-                    id={postItem.id}
                   />
                 );
               })}

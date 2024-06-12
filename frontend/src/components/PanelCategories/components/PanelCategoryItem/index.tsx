@@ -1,71 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import BootstrapLink from "../../../BootstrapLink";
+
+import { DEFAULT_NO_AVATAR_TINY } from "../../../../constants/defaultConstants";
 
 
-const PanelCategoryItem = ({ id, title, image, status, author_id, author_username,
-  author_avatar, author_status, createAt, updateAt, row_state, userRole,
+const PanelCategoryItem = ({ idx, category, currentUser,
   onCategoryItemUpdateStatusCategory, onCategoryItemEditCategory,
   onCategoryItemDeleteCategory }: any) => {
-  const [selectedStatus, setSelectedStatus] = useState(status);
+  const [selectedStatus, setSelectedStatus] = useState(category?.status);
   
   const handleCategoryItemUpdateStatusCategory = (event: any) => {
     event.stopPropagation();
-    setSelectedStatus(event.target.value);
-    onCategoryItemUpdateStatusCategory(id, event.target.value);
+    onCategoryItemUpdateStatusCategory(category?.id, event.target.value, category?.title );
   };
 
   const handleCategoryItemEditCategory = (event: any) => {
     event.stopPropagation();
-    onCategoryItemEditCategory(id);
+    onCategoryItemEditCategory(category?.id);
   };
 
   const handleCategoryItemDeleteCategory = (event: any) => {
     event.stopPropagation();
-    onCategoryItemDeleteCategory(id, title);
+    onCategoryItemDeleteCategory(category?.id, category?.title);
   };
 
-  const createAtDate = new Date(createAt);
-  const updateAtDate = new Date(updateAt);
+  const createAtDate = new Date(category?.createAt);
+  const updateAtDate = new Date(category?.updateAt);
+
+  useEffect(() => {
+    setSelectedStatus(category?.status);
+  }, [category?.status]);
 
   return (
-    <div className={"item-list row " + row_state}>
-      <BootstrapLink />
-      <div className="col">
+    <tr>
+      <th scope="row">{(idx+1)}</th>
+      <td>
         <img
-          src={image}
-          width={38}
-          height={38}
-          alt={title}
-          className="rounded"
-        />
-      </div>
-      <div className="col">
-        <Link to={`/category/${id}`}>
-          {title}
-        </Link>
-      </div>
-      <div className="col">
-        <Link to={`/user/${author_id}`}>
-          <img
-            src={author_avatar}
+            src={category?.image}
             width={38}
             height={38}
-            alt={author_username}
+            alt={category?.title}
+            className="rounded"
+          />
+      </td>
+      <td>
+        <Link to={`/category/${category?.id}`}>
+          {category?.title}
+        </Link>
+      </td>
+      <td>
+        <Link to={`/user/${category?.author?.id}`}>
+          <img
+            src={category?.author?.avatar ? category?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
+            width={38}
+            height={38}
+            alt={category?.author?.username}
             className="rounded"
           />
           <span className="ms-2">
-            {author_username}
-            {(author_status === 'BANNED') && <i className="bi bi-ban"></i>}
+            {category?.author?.username}
+            {(category?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
           </span>
         </Link>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {(
-          (userRole === 'ADMIN' || userRole === 'MODERATOR') ?
+          (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR') ?
           (
             <select
-              id={`category-select-status-${id}`}
+              id={`category-select-status-${category?.id}`}
               value={selectedStatus}
               onChange={event => handleCategoryItemUpdateStatusCategory(event)}
               className="form-select form-select-sm pe-14"
@@ -85,19 +88,19 @@ const PanelCategoryItem = ({ id, title, image, status, author_id, author_usernam
             </>
           )
         )}
-      </div>
-      <div className="col">
+      </td>
+      <td>
         <span>{createAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         <span>{updateAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {
-          ((userRole === 'ADMIN') || (userRole === 'MODERATOR')) && (
+          ((currentUser?.role === 'ADMIN') || (currentUser?.role === 'MODERATOR')) && (
           <>
             <button
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-warning"
               onClick={handleCategoryItemEditCategory}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -117,8 +120,8 @@ const PanelCategoryItem = ({ id, title, image, status, author_id, author_usernam
           </>
          )
         }
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 

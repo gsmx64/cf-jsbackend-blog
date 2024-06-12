@@ -2,12 +2,12 @@ import { create } from "zustand";
 import { AxiosResponse } from "axios";
 
 import UsersService from "../../services/users.service";
-import { initialUserStoreState, IUseUserStore } from "../interfaces/user.interface";
 import PostsService from "../../services/posts.service";
 import CommentsService from "../../services/comments.service";
+import { initialUserStoreState, IUseUserStore } from "../interfaces/user.interface";
 
 
-const usePostStore = create<IUseUserStore>((set) => ({
+const useUserStore = create<IUseUserStore>((set) => ({
   ...initialUserStoreState,
   fetchUser: (id: string | undefined) => {
     try {
@@ -71,7 +71,18 @@ const usePostStore = create<IUseUserStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if(response.data.affected === 1) {
-          set(() => ({ alertMessage: `Profile updated!` }));
+          set(() => ({ alertMessage: 'Profile updated!' }));
+          set((state) => ({
+            user: {
+              ...state.user,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              age: data.age,
+              city: data.city,
+              country: data.country,
+            }
+          }));
         }
       })
       .catch((error: any) => {
@@ -86,4 +97,4 @@ const usePostStore = create<IUseUserStore>((set) => ({
   }
 }));
 
-export default usePostStore;
+export default useUserStore;

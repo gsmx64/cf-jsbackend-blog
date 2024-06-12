@@ -7,7 +7,6 @@ import PostsView from "../Posts";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import usePost from "../../hooks/usePost";
 import usePostStore from "../../state/stores/post";
-import useCurrentUserStore from "../../state/stores/currentUser";
 import Error404View from "../Error404";
 import useComment from "../../hooks/useComment";
 import useCommentStore from "../../state/stores/comment";
@@ -19,9 +18,6 @@ const PostViewDefault = () => {
 }
 
 const PostViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const { postId } = useParams();
   const post = usePostStore((state) => state.post);
   const loading = usePostStore((state) => state.loading);
@@ -31,17 +27,15 @@ const PostViewZustand = () => {
   const handleNewCommentSaveClick = useCommentStore((state) => state.handleNewCommentSaveClick);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchPost(postId);
   }, []);
 
   return { post, loading, alertMessage, errorMessage,
-    currentUser, handleNewCommentSaveClick }
+    handleNewCommentSaveClick }
 }
 
-const PostView = ({searchTerm, setSearchTerm}: any) => {
-  const { post, loading, alertMessage, errorMessage, currentUser,
-    handleNewCommentSaveClick } = (
+const PostView = ({ currentUser, settings, searchTerm, setSearchTerm }: any) => {
+  const { post, loading, alertMessage, errorMessage, handleNewCommentSaveClick } = (
     isZustandEnabled) ? PostViewZustand() : PostViewDefault();
 
   return (
@@ -61,9 +55,8 @@ const PostView = ({searchTerm, setSearchTerm}: any) => {
                     errorMessage={errorMessage}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
-                    userRole={
-                      (currentUser?.role != null) ?
-                      (currentUser.role) : null}
+                    currentUser={currentUser}
+                    settings={settings}
                     handleNewCommentSaveClick={handleNewCommentSaveClick}
                   />
                 )

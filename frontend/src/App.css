@@ -94,15 +94,16 @@ header {
   transition: all 150ms ease-in-out;
 }
 
-.nav-item a span {
-  margin-left: 0.2rem;
-}
-
-.nav-item button {
+a.nav-btn {
   margin-left: 0.3rem;
 }
 
-.nav-item button span {
+button.nav-btn {
+  margin-left: 0.3rem;
+}
+
+a.nav-btn span,
+button.nav-btn span {
   margin-left: 0.3rem;
 }
 
@@ -123,7 +124,7 @@ header {
 }
 
 .nav-item-menu > a,
-  .nav-item-menu button {
+.nav-item-menu button {
   text-align: left;
   padding: 0.7rem 1rem;
 }
@@ -157,14 +158,17 @@ header {
 }
 
 .nav-item-menu button {
-  display: flex;
-  align-items: center;
+  display: block;
   color: inherit;
   font-size: inherit;
-  border: none;
+  border: 1px solid transparent;
   background-color: transparent;
   cursor: pointer;
   width: 100%;
+}
+
+.nav-item-menu button span {
+  margin-left: 0.4rem;
 }
 
 .arrow::after {
@@ -201,4 +205,8 @@ header {
   position: absolute;
   left: 100%;
   top: -7px;
+}
+
+.rounded-circle {
+  border-radius: 100% !important;
 }

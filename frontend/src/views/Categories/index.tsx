@@ -5,7 +5,6 @@ import Categories from "../../components/Categories";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import useCategories from "../../hooks/useCategories";
 import useCategoriesStore from "../../state/stores/categories";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const CategoriesViewDefault = () => {
@@ -13,9 +12,6 @@ const CategoriesViewDefault = () => {
 }
 
 const CategoriesViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const categories = useCategoriesStore((state) => state.categories);
   const currentPage = useCategoriesStore((state) => state.currentPage);
   const totalPages = useCategoriesStore((state) => state.totalPages);
@@ -27,16 +23,15 @@ const CategoriesViewZustand = () => {
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchCategories(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, currentUser, setCurrentPage }
+  return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading, errorMessage, setCurrentPage }
 }
 
-const CategoriesView = ({searchTerm}: any) => {
+const CategoriesView = ({ currentUser, settings, searchTerm }: any) => {
   const { categories, currentPage, totalPages, totalItems, itemsPerPage, loading,
-    errorMessage, currentUser, setCurrentPage } = (isZustandEnabled) ? CategoriesViewZustand() : CategoriesViewDefault();
+    errorMessage, setCurrentPage } = (isZustandEnabled) ? CategoriesViewZustand() : CategoriesViewDefault();
 
   return (
     <>
@@ -48,12 +43,11 @@ const CategoriesView = ({searchTerm}: any) => {
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
-          errorMessage={errorMessage}
           loading={loading}
+          errorMessage={errorMessage}
+          currentUser={currentUser}
+          settings={settings}
           searchTerm={searchTerm.toLowerCase()}
-          userRole={
-            (currentUser?.role != null) && 
-            (currentUser.role)}
         />
       </div>
     </>

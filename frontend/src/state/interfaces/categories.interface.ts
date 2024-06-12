@@ -23,7 +23,7 @@ export const initialCategoriesStoreState = {
   totalPages: 1,
   totalItems: 0,
   itemsPerPage: 10,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
   setCurrentPage: () => {},

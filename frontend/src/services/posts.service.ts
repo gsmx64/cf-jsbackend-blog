@@ -12,18 +12,18 @@ const create = (data: IPostCreate) => {
 };
 
 const update = (id: string | undefined, data: any) => {
-  return api.put<any>(
+  return (id != undefined) ? api.put<any>(
     `posts/edit/${id}`,
     data,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Post ID is required');
 };
 
-const remove = (id: string) => {
-  return api.delete<any>(
+const remove = (id: string | undefined) => {
+  return (id != undefined) ? api.delete<any>(
     `posts/delete/${id}`,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Post ID is required');
 };
 
 const get = (id: string | undefined) => {
@@ -47,7 +47,9 @@ const getUserPosts = (id: string | undefined, limit: number | null = null) => {
   const limitQuery = (limit != null) ? `?limit=${limit}` : ``;
 
   return (id != undefined) ? api.get<Array<IPost>>(
-    `posts/user/${id}${limitQuery}`, { headers: AuthService.authHeader() }) : initIPostArray as any;
+    `posts/user/${id}${limitQuery}`,
+    { headers: AuthService.authHeader() }
+  ) : initIPostArray as any;
 };
 
 const findByTitle = (title: string | undefined) => {

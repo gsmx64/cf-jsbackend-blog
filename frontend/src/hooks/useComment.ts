@@ -4,12 +4,10 @@ import { AxiosResponse } from 'axios';
 import IComment, { ICommentCreate, initIComment } from '../interfaces/comment.interface';
 import CommentsService from '../services/comments.service';
 import { useParams } from 'react-router-dom';
-import useCurrentUser from './useCurrentUser';
 
 
 const useComment = (getData: boolean = true) => {
   const { commentId } = useParams();
-  const { currentUser } = useCurrentUser();
   const [comment, setComment] = useState<IComment>(initIComment);
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
@@ -94,7 +92,7 @@ const useComment = (getData: boolean = true) => {
     getData && fetchComment(commentId);
   }, []);
 
-  return { commentId, comment, loading, alertMessage, errorMessage, currentUser,
+  return { commentId, comment, loading, alertMessage, errorMessage,
     handleEditCommentSaveClick, handleNewCommentSaveClick };
 };
 

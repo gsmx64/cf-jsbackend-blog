@@ -1,117 +1,118 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import BootstrapLink from "../../../BootstrapLink";
+
+import { DEFAULT_NO_AVATAR_TINY } from "../../../../constants/defaultConstants";
 
 
-const PanelPostItem = ({ id, title, image, status, author_id, author_username,
-  author_avatar, author_status, category_id, category_title, createAt, updateAt,
-  row_state, userRole, currentUser, onPostItemUpdateStatusPost,
+const PanelPostItem = ({ idx, post, currentUser, onPostItemUpdateStatusPost,
   onPostItemEditPost, onPostItemDeletePost }: any) => {
-  const [selectedStatus, setSelectedStatus] = useState(status);
+  const [selectedStatus, setSelectedStatus] = useState(post?.status);
   
   const handlePostItemUpdateStatusPost = (event: any) => {
     event.stopPropagation();
     setSelectedStatus(event.target.value);
-    onPostItemUpdateStatusPost(id, event.target.value);
+    onPostItemUpdateStatusPost(post?.id, event.target.value, post?.title);
   };
 
   const handlePostItemEditPost = (event: any) => {
     event.stopPropagation();
-    onPostItemEditPost(id);
+    onPostItemEditPost(post?.id);
   };
 
   const handlePostItemDeletePost = (event: any) => {
     event.stopPropagation();
-    onPostItemDeletePost(id, title);
+    onPostItemDeletePost(post?.id, post?.title);
   };
 
-  const createAtDate = new Date(createAt);
-  const updateAtDate = new Date(updateAt);
+  const createAtDate = new Date(post?.createAt);
+  const updateAtDate = new Date(post?.updateAt);
+
+  useEffect(() => {
+    setSelectedStatus(post?.status);
+  }, [post?.status]);
 
   return (
-    <div className={"item-list row " + row_state}>
-      <BootstrapLink />
-      <div className="col">
+    <tr>
+      <th scope="row">{(idx+1)}</th>
+      <td>
         <img
-          src={image}
+          src={post?.image}
           width={38}
           height={38}
-          alt={title}
+          alt={post?.title}
           className="rounded"
         />
-      </div>
-      <div className="col">
-        <Link to={`/post/${id}`}>
-          {title}
+      </td>
+      <td>
+        <Link to={`/post/${post?.id}`}>
+          {post?.title}
         </Link>
-      </div>
-      <div className="col">
-        <Link to={`/category/${category_id}`}>
-          {category_title}
+      </td>
+      <td>
+        <Link to={`/category/${post?.category?.id}`}>
+          {post?.category?.title}
         </Link>
-      </div>
-      <div className="col">
-        <Link to={`/user/${author_id}`}>
+      </td>
+      <td>
+        <Link to={`/user/${post?.author?.id}`}>
           <img
-            src={author_avatar}
+            src={post?.author?.avatar ? post?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
             width={38}
             height={38}
-            alt={author_username}
+            alt={post?.author?.username}
             className="rounded"
           />
           <span className="ms-2">
-            {author_username}
-            {(author_status === 'BANNED') && <i className="bi bi-ban"></i>}
+            {post?.author?.username}
+            {(post?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
           </span>
         </Link>
-      </div>
+      </td>
+      <td>
       {(
-        (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
-        <div className="col">
-          {
-            (
-              (userRole === 'ADMIN') ||
-              (userRole === 'MODERATOR') ||
-              (userRole === 'EDITOR' && currentUser.id === author_id)
-            ) ? (
-              <select
-                id={`post-select-status-${id}`}
-                value={selectedStatus}
-                onChange={event => handlePostItemUpdateStatusPost(event)}
-                className="form-select form-select-sm pe-14"
-                style={{minWidth:124 }}
-              >
-                <option value="PUBLISHED">Published</option>
-                <option value="UNPUBLISHED">Unpublished</option>
-                <option value="ARCHIVED">Archived</option>
-                <option value="TRASHED">Trashed</option>
-              </select>
-            ) : (
-              <>
-                {(selectedStatus === 'PUBLISHED') && 'Published'}
-                {(selectedStatus === 'UNPUBLISHED') && 'Unpublished'}
-                {(selectedStatus === 'ARCHIVED') && 'Archived'}
-                {(selectedStatus === 'TRASHED') && 'Trashed'}
-              </>
-            )
-          }
-        </div>
+        (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
+        (
+          (currentUser?.role === 'ADMIN') ||
+          (currentUser?.role === 'MODERATOR') ||
+          (currentUser?.role === 'EDITOR' && currentUser.id === post?.author?.id)
+        ) ? (
+          <select
+            id={`post-select-status-${post?.id}`}
+            value={selectedStatus}
+            onChange={event => handlePostItemUpdateStatusPost(event)}
+            className="form-select form-select-sm pe-14"
+            style={{minWidth:124 }}
+          >
+            <option value="PUBLISHED">Published</option>
+            <option value="UNPUBLISHED">Unpublished</option>
+            <option value="ARCHIVED">Archived</option>
+            <option value="TRASHED">Trashed</option>
+          </select>
+        ) : (
+          <>
+            {(selectedStatus === 'PUBLISHED') && 'Published'}
+            {(selectedStatus === 'UNPUBLISHED') && 'Unpublished'}
+            {(selectedStatus === 'ARCHIVED') && 'Archived'}
+            {(selectedStatus === 'TRASHED') && 'Trashed'}
+          </>
+        )
       )}
-      <div className="col">
+      </td>
+      <td>
         <span>{createAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         <span>{updateAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {
           (
-            (userRole === 'ADMIN') ||
-            (userRole === 'MODERATOR') ||
-            (userRole === 'EDITOR' && currentUser.id === author_id)
+            (currentUser?.role === 'ADMIN') ||
+            (currentUser?.role === 'MODERATOR') ||
+            (currentUser?.role === 'EDITOR' && currentUser.id === post?.author?.id)
           ) && (
             <button
-              className="btn btn-outline-secondary"
+              className="btn btn-outline-warning"
               onClick={handlePostItemEditPost}
               data-bs-toggle="tooltip"
               data-bs-placement="top"
@@ -122,7 +123,7 @@ const PanelPostItem = ({ id, title, image, status, author_id, author_username,
           )
         }
         {
-          ((userRole === 'ADMIN') || (userRole === 'MODERATOR')) && (
+          ((currentUser?.role === 'ADMIN') || (currentUser?.role === 'MODERATOR')) && (
             <button
               className="btn btn-outline-secondary ms-1"
               onClick={handlePostItemDeletePost}
@@ -134,8 +135,8 @@ const PanelPostItem = ({ id, title, image, status, author_id, author_username,
             </button>
           )
         }
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 

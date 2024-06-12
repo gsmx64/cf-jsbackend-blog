@@ -7,6 +7,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import validationSchema from "./utils/validationSchema";
 import Alerts from "../Alerts";
 import ICategory from "../../interfaces/category.interface";
+import IUser from "../../interfaces/user.interface";
+import ISettings from "../../interfaces/settings.interface";
 
 
 interface PanelEditCategoryViewProps {
@@ -15,7 +17,8 @@ interface PanelEditCategoryViewProps {
   loading: boolean;
   alertMessage: string;
   errorMessage: Error | string | unknown;
-  userRole: string | undefined | null;
+  currentUser: IUser | undefined;
+  settings: ISettings;
   onEditCategorySaveClick: (id: string | undefined, data: any) => void | undefined;
   onEditCategoryCancelClick: () => void;
 }

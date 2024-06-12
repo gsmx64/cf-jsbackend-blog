@@ -13,18 +13,18 @@ const create = (data: ICommentCreate) => {
 };
 
 const update = (id: string | undefined, data: any) => {
-  return api.put<any>(
+  return (id != undefined) ? api.put<any>(
     `comments/edit/${id}`,
     data,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Comment ID is required');
 };
 
-const remove = (id: string) => {
-  return api.delete<any>(
+const remove = (id: string | undefined) => {
+  return (id != undefined) ? api.delete<any>(
     `comments/delete/${id}`,
     { headers: AuthService.authHeader() }
-  );
+  ) : Promise.reject('Comment ID is required');
 };
 
 const get = (id: string | undefined) => {

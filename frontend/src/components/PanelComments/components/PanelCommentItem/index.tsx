@@ -1,61 +1,67 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import BootstrapLink from "../../../BootstrapLink";
+import { DEFAULT_NO_AVATAR_TINY } from "../../../../constants/defaultConstants";
 
 
-const PanelCommentItem = ({ id, author_id, author_username, author_avatar, author_status,
-  post_id, post_title, message, createAt, updateAt, row_state, userRole,
-  onCommentItemEditComment, onCommentItemDeleteComment }: any) => {
+const PanelCommentItem = ({ idx, comment, currentUser, onCommentItemEditComment,
+  onCommentItemDeleteComment }: any) => {
+  const [messageBox, setMessageBox] = useState(comment?.message);
+
   const handleCommentItemEditComment = (event: any) => {
     event.stopPropagation();
-    onCommentItemEditComment(id);
+    onCommentItemEditComment(comment?.id);
   };
 
   const handleCommentItemDeleteComment = (event: any) => {
     event.stopPropagation();
-    onCommentItemDeleteComment(id, author_username);
+    onCommentItemDeleteComment(comment?.id, comment?.author?.username);
   };
 
-  const createAtDate = new Date(createAt);
-  const updateAtDate = new Date(updateAt);
+  const createAtDate = new Date(comment?.createAt);
+  const updateAtDate = new Date(comment?.updateAt);
+
+  useEffect(() => {
+    setMessageBox(comment?.message);
+  }, [comment?.message]);
 
   return (
-    <div className={"item-list row " + row_state}>
-      <BootstrapLink />
-      <div className="col">
-        <Link to={`/user/${author_id}`}>
-          <img src={author_avatar} width={38} height={38} alt={author_username} className="rounded" />
+    <tr>
+      <th scope="row">{(idx+1)}</th>
+      <td>
+        <Link to={`/user/${comment?.author?.id}`}>
+          <img src={comment?.author?.avatar ? comment?.author?.avatar : DEFAULT_NO_AVATAR_TINY} width={38} height={38} alt={comment?.author?.username} className="rounded" />
           <span className="ms-2">
-            {author_username}
-            {(author_status === 'BANNED') && <i className="bi bi-ban"></i>}
+            {comment?.author?.username}
+            {(comment?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
           </span>
         </Link>
-      </div>
-      <div className="col">
-        <Link to={`/post/${post_id}`}>
-          {post_title}
+      </td>
+      <td>
+        <Link to={`/post/${comment?.post?.id}`}>
+          {comment?.post?.title}
         </Link>
-      </div>
-      <div className="col-4">
+      </td>
+      <td>
         <textarea
-          id={`comment-textarea-${id}`}
-          defaultValue={message}
+          id={`comment-textarea-${comment?.id}`}
+          defaultValue={messageBox}
           className="form-control"
           rows={1}
         />
-      </div>
-      <div className="col">
+      </td>
+      <td>
         <span>{createAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+        </td>
+      <td>
         <span>{updateAtDate.toLocaleString()}hs.</span>
-      </div>
-      <div className="col">
+      </td>
+      <td>
         {
-          ((userRole === 'ADMIN') || (userRole === 'MODERATOR')) && (
+          ((currentUser?.role === 'ADMIN') || (currentUser?.role === 'MODERATOR')) && (
             <>
               <button
-                className="btn btn-outline-secondary"
+                className="btn btn-outline-warning"
                 onClick={handleCommentItemEditComment}
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
@@ -75,8 +81,8 @@ const PanelCommentItem = ({ id, author_id, author_username, author_avatar, autho
             </>
           )
         }
-      </div>
-    </div>
+      </td>
+    </tr>
   );
 };
 

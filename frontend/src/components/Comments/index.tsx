@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { DEFAULT_NO_AVATAR_MEDIUM } from "../../constants/defaultConstants";
@@ -35,25 +34,25 @@ const Comments = ({ comments }: CommentsProps) => {
                   <div className="float-start">
                     <span className="pe-1" style={{fontSize:12}}>Comment by: </span>
                     <img
-                      src={comment.author?.avatar ? comment.author?.avatar : DEFAULT_NO_AVATAR_MEDIUM}
-                      alt={comment.author?.username}
+                      src={comment?.author?.avatar ? comment?.author?.avatar : DEFAULT_NO_AVATAR_MEDIUM}
+                      alt={comment?.author?.username}
                       className="rounded-circle" width="26" />
                     <Link
-                      to={`/user/${comment.author?.id}`}
+                      to={`/user/${comment?.author?.id}`}
                       className="badge"
                       >
-                      <span className="text-info">{comment.author?.username}</span>
-                      {(comment.author?.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                      <span className="text-info">{comment?.author?.username}</span>
+                      {(comment?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                     </Link>
                     </div>
                 </div>
                 <div className="card-body">
                   <blockquote className="blockquote mb-0">
                     <p className="card-text" style={{fontSize:12}}>
-                      {comment.message}
+                      {comment?.message}
                     </p>  
                     <footer className="blockquote-footer float-end">
-                      <span style={{fontSize:11}}>{formatDate(comment.updateAt)}</span>
+                      <span style={{fontSize:11}}>{formatDate(comment?.updateAt)}</span>
                     </footer>
                   </blockquote>
                 </div>

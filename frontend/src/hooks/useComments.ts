@@ -3,11 +3,9 @@ import { AxiosResponse } from 'axios';
 
 import { initICommentArray, ICommentArray } from '../interfaces/comment.interface';
 import CommentsService from '../services/comments.service';
-import useCurrentUser from './useCurrentUser';
 
 
 const useComments = () => {
-  const { currentUser } = useCurrentUser();
   const [comments, setComments] = useState<ICommentArray>(initICommentArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -42,7 +40,7 @@ const useComments = () => {
     }
   }
 
-  const handleDeleteComment = (id: string) => {
+  const handleDeleteComment = (id: string | undefined) => {
     try {
       setAlertMessage('');
       setErrorMessage('');
@@ -53,6 +51,7 @@ const useComments = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Comment deleted!`);
+          fetchComments(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error deleting comment! Comment not found.`);
         }
@@ -72,7 +71,7 @@ const useComments = () => {
     fetchComments(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  return { currentUser, comments, currentPage, totalPages, totalItems,
+  return { comments, currentPage, totalPages, totalItems,
     itemsPerPage, loading, alertMessage, errorMessage, setCurrentPage,
     setItemsPerPage, handleDeleteComment };
 };

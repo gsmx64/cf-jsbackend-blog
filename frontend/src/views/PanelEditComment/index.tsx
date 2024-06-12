@@ -6,7 +6,6 @@ import PanelEditCommentForm from "../../components/PanelEditCommentForm";
 import PanelCommentsView from "../PanelComments";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import useCommentStore from "../../state/stores/comment";
-import useCurrentUserStore from "../../state/stores/currentUser";
 import useComment from "../../hooks/useComment";
 
 
@@ -15,9 +14,6 @@ const PanelEditCommentViewDefault = () => {
 }
 
 const PanelEditCommentViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const { commentId } = useParams();
   const comment = useCommentStore((state) => state.comment);
   const loading = useCommentStore((state) => state.loading);
@@ -27,17 +23,16 @@ const PanelEditCommentViewZustand = () => {
   const handleEditCommentSaveClick = useCommentStore((state) => state.handleEditCommentSaveClick);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchComment(commentId);
   }, []);
 
-  return { commentId, comment, loading, alertMessage, errorMessage, currentUser,
+  return { commentId, comment, loading, alertMessage, errorMessage,
     handleEditCommentSaveClick
    }
 }
 
-const PanelEditCommentView = ({searchTerm}: any) => {
-  const { commentId, comment, loading, alertMessage, errorMessage, currentUser,
+const PanelEditCommentView = ({ currentUser, settings, searchTerm }: any) => {
+  const { commentId, comment, loading, alertMessage, errorMessage,
     handleEditCommentSaveClick } = (
     isZustandEnabled) ? PanelEditCommentViewZustand() : PanelEditCommentViewDefault();
   const navigate = useNavigate();
@@ -55,14 +50,13 @@ const PanelEditCommentView = ({searchTerm}: any) => {
             <PanelEditCommentForm
               commentId={commentId}
               comment={comment}
-              userRole={
-                (currentUser?.role != null) ?
-                (currentUser.role) : null}
+              loading={loading}
               alertMessage={alertMessage}
               errorMessage={errorMessage}
-              loading={loading}
               onEditCommentSaveClick={(id: string | undefined, data: any) => handleEditCommentSaveClick(id as string, data)}
               onEditCommentCancelClick={handleEditCommentCancelClick}
+              currentUser={currentUser}
+              settings={settings}
             />
           </div>
         </>

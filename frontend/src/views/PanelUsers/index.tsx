@@ -5,7 +5,6 @@ import PanelUsers from "../../components/PanelUsers";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import useUsers from "../../hooks/useUsers";
 import useUsersStore from "../../state/stores/users";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const PanelUsersViewDefault = () => {
@@ -13,9 +12,6 @@ const PanelUsersViewDefault = () => {
 }
 
 const PanelUsersViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const users = useUsersStore((state) => state.users);
   const currentPage = useUsersStore((state) => state.currentPage);
   const totalPages = useUsersStore((state) => state.totalPages);
@@ -32,18 +28,17 @@ const PanelUsersViewZustand = () => {
   const handleDeleteUser = useUsersStore((state) => state.handleDeleteUser);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchUsers(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
   return { users, currentPage, totalPages, totalItems, itemsPerPage, loading,
-    alertMessage, errorMessage, currentUser, setCurrentPage, handleUpdateUserRole,
+    alertMessage, errorMessage, setCurrentPage, handleUpdateUserRole,
     handleBanUser, handleActivateUser, handleDeleteUser }
 }
 
-const PanelUsersView = ({searchTerm}: any) => {
+const PanelUsersView = ({ currentUser, settings, searchTerm }: any) => {
   const { users, currentPage, totalPages, totalItems, itemsPerPage,
-    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    loading, alertMessage, errorMessage, setCurrentPage,
     handleUpdateUserRole, handleBanUser, handleActivateUser, handleDeleteUser
   } = (isZustandEnabled) ? PanelUsersViewZustand() : PanelUsersViewDefault();
 
@@ -65,9 +60,8 @@ const PanelUsersView = ({searchTerm}: any) => {
           onBanUser={handleBanUser}
           onActivateUser={handleActivateUser}
           onDeleteUser={handleDeleteUser}
-          userRole={
-            (currentUser?.role != null) &&
-            (currentUser.role)}
+          currentUser={currentUser}
+          settings={settings}
         />
       </div>
     </>

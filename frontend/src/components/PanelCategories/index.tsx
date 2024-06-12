@@ -1,17 +1,15 @@
-import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import PanelCategoryItem from "./components/PanelCategoryItem";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import Alerts from "../Alerts";
-import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
+import BootstrapLink from "../BootstrapLink";
 
 
 const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMessage,
-  errorMessage, loading, searchTerm, userRole, onUpdateStatusCategory, onDeleteCategory}: any) => {
+  errorMessage, loading, searchTerm, currentUser, onUpdateStatusCategory, onDeleteCategory}: any) => {
   const navigate = useNavigate();
 
   const handleCategoryItemUpdateStatusCategory = (id: string, status: string, title: string) => {
@@ -48,48 +46,46 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
               </div>
             ) : (
               <div className="container-fluid">
-                <div className="row border-bottom">
-                  <div className="col">Image</div>
-                  <div className="col">Post Title</div>
-                  <div className="col">Category</div>
-                  <div className="col">Author</div>
-                  <div className="col">Status</div>
-                  <div className="col">Created Date</div>
-                  <div className="col">Updated Date</div>
-                  <div className="col"></div>
-                </div>
-                {currentData?.map((categoryItem: any, idx: number) => {
-                  if (searchTerm !== '') {
-                    if (
-                      !categoryItem.title.toLowerCase().includes(searchTerm) &&
-                      !categoryItem.description.toLowerCase().includes(searchTerm)
-                    ) {
-                      return '';
-                    }
-                  }
+                <BootstrapLink />
+                <table className="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Image</th>
+                      <th scope="col">Category Title</th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Created Date</th>
+                      <th scope="col">Updated Date</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData?.map((category: any, idx: number) => {
+                      if (searchTerm !== '') {
+                        if (
+                          !category.title.toLowerCase().includes(searchTerm) &&
+                          !category.description.toLowerCase().includes(searchTerm)
+                        ) {
+                          return '';
+                        }
+                      }
 
-                  return (
-                    <PanelCategoryItem
-                      key={`category-item-${categoryItem.id}`}
-                      row_state={(idx % 2) ? 'odd' : 'even'}
-                      title={categoryItem.title}
-                      image={categoryItem.image}
-                      content={categoryItem.content}
-                      status={categoryItem.status}
-                      author_id={categoryItem?.author?.id}
-                      author_username={categoryItem?.author?.username}
-                      author_avatar={categoryItem?.author?.avatar ? categoryItem?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
-                      author_status={categoryItem?.author?.status}
-                      createAt={categoryItem.createAt}
-                      updateAt={categoryItem.updateAt}
-                      userRole={userRole}
-                      onCategoryItemUpdateStatusCategory={handleCategoryItemUpdateStatusCategory}
-                      onCategoryItemEditCategory={handleCategoryEditCategory}
-                      onCategoryItemDeleteCategory={handleCategoryItemDeleteCategory}
-                      id={categoryItem.id}
-                    />
-                  );
-                })}
+                      return (
+                        <PanelCategoryItem
+                          key={`category-item-${category.id}`}
+                          idx={idx}
+                          //row_state={(idx % 2) ? 'odd' : 'even'}
+                          category={category}
+                          onCategoryItemUpdateStatusCategory={handleCategoryItemUpdateStatusCategory}
+                          onCategoryItemEditCategory={handleCategoryEditCategory}
+                          onCategoryItemDeleteCategory={handleCategoryItemDeleteCategory}
+                          currentUser={currentUser}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             )}
             <Pagination
@@ -108,4 +104,4 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
   );
 };
 
-export default memo(PanelCategories);
+export default PanelCategories;

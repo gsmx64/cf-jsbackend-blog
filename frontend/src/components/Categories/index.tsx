@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import CategoryItem from "./components/CategoryItem";
@@ -9,7 +8,7 @@ import Alerts from "../Alerts";
 
 
 const Categories = ({data, currentPage, setCurrentPage, totalPages,
-  errorMessage, loading, searchTerm, userRole}: any) => {
+  errorMessage, loading, searchTerm, currentUser, /*settings,*/}: any) => {
   const navigate = useNavigate();
   let filteredPosts = 0;
 
@@ -36,11 +35,11 @@ const Categories = ({data, currentPage, setCurrentPage, totalPages,
                 </div>
               ) : (
                 <div className="justify-content-center">
-                  {currentData?.map((categoryItem: any) => {
+                  {currentData?.map((category: any) => {
                     if (searchTerm !== '') {
                       if (
-                        !categoryItem.title.toLowerCase().includes(searchTerm) &&
-                        !categoryItem.description.toLowerCase().includes(searchTerm)
+                        !category.title.toLowerCase().includes(searchTerm) &&
+                        !category.description.toLowerCase().includes(searchTerm)
                       ) {
                         filteredPosts++;
                         return;
@@ -49,17 +48,11 @@ const Categories = ({data, currentPage, setCurrentPage, totalPages,
 
                     return (
                       <CategoryItem
-                        key={`category-item-${categoryItem.id}`}
-                        title={categoryItem.title}
-                        image={categoryItem.image}
-                        description={categoryItem.description}
-                        status={categoryItem.status}
-                        author={categoryItem.author}        
-                        updateAt={categoryItem.updateAt}
-                        postsCount={categoryItem.posts.length}
-                        userRole={userRole}
+                        key={`category-item-${category?.id}`}
+                        category={category}
+                        postsCount={category?.posts?.length}
+                        currentUser={currentUser}
                         onCategoryClick={handleCategoryItemClick}
-                        id={categoryItem.id}
                         />
                       );
                   })}

@@ -5,7 +5,6 @@ import PanelComments from "../../components/PanelComments";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import useComments from "../../hooks/useComments";
 import useCommentsStore from "../../state/stores/comments";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const PanelCommentsViewDefault = () => {
@@ -13,9 +12,6 @@ const PanelCommentsViewDefault = () => {
 }
 
 const PanelCommentsViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const comments = useCommentsStore((state) => state.comments);
   const currentPage = useCommentsStore((state) => state.currentPage);
   const totalPages = useCommentsStore((state) => state.totalPages);
@@ -29,18 +25,17 @@ const PanelCommentsViewZustand = () => {
   const handleDeleteComment = useCommentsStore((state) => state.handleDeleteComment);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchComments(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
   return { comments, currentPage, totalPages, totalItems, itemsPerPage, loading,
-    alertMessage, errorMessage, currentUser, setCurrentPage,
+    alertMessage, errorMessage, setCurrentPage,
     handleDeleteComment }
 }
 
-const PanelCommentsView = ({searchTerm}: any) => {
+const PanelCommentsView = ({currentUser, settings, searchTerm }: any) => {
   const { comments, currentPage, totalPages, totalItems, itemsPerPage,
-    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    loading, alertMessage, errorMessage, setCurrentPage,
     handleDeleteComment
   } = (isZustandEnabled) ? PanelCommentsViewZustand() : PanelCommentsViewDefault();
 
@@ -54,14 +49,13 @@ const PanelCommentsView = ({searchTerm}: any) => {
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
+          loading={loading}
           alertMessage={alertMessage}
           errorMessage={errorMessage}
-          loading={loading}
-          searchTerm={searchTerm}
           onDeleteComment={handleDeleteComment}
-          userRole={
-            (currentUser?.role != null) &&
-            (currentUser.role)}
+          currentUser={currentUser}
+          settings={settings}
+          searchTerm={searchTerm}
         />
       </div>
     </>

@@ -42,14 +42,7 @@ const PanelSettingsView = () => {
     <>
       <div className="container">
         <PanelSettingsForm
-          brand={settings?.brand}
-          terms={settings?.terms}
-          facebook={settings?.facebook}
-          instagram={settings?.instagram}
-          twitterx={settings?.twitterx}
-          linkedin={settings?.linkedin}
-          youtube={settings?.youtube}
-          tiktok={settings?.tiktok}
+          settings={settings}
           loading={loading}
           alertMessage={alertMessage}
           errorMessage={errorMessage}

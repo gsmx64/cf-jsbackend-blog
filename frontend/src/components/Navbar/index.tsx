@@ -1,56 +1,22 @@
-import { ChangeEvent, forwardRef, KeyboardEvent, memo, useEffect,
+import { ChangeEvent, forwardRef, KeyboardEvent,
+  useEffect,
   useImperativeHandle, useState } from "react";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import AuthService from "../../services/auth.service";
 import BootstrapLink from "../BootstrapLink";
 import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
-import { isZustandEnabled } from "../../constants/defaultConstants";
-import useCurrentUser from "../../hooks/useCurrentUser";
-import useSettings from "../../hooks/useSettings";
-import useCurrentUserStore from "../../state/stores/currentUser";
-import useSettingsStore from "../../state/stores/settings";
+import ChangePassword from "../ChangePassword";
+import ChangeAvatar from "../ChangeAvatar";
 
 
-const NavbarDefault = () => {
-  const { currentUser, loading, handleLogOutClick } = useCurrentUser();
-  const { settings } = useSettings();
-
-  return { settings, currentUser, loading, handleLogOutClick }
-}
-
-const NavbarZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const loading = useCurrentUserStore((state) => state.loading);
-  const setCurrentUser = useCurrentUserStore((state) => state.setCurrentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
-  const settings = useSettingsStore((state) => state.settings);
-  const fetchSettings = useSettingsStore((state) => state.fetchSettings);
-
-  useEffect(() => {
-    fetchCurrentUser();
-    fetchSettings(false);
-  }, []);
-
-  const handleLogOutClick = (event: any) => {
-    event.stopPropagation();
-    AuthService.logout();
-    setCurrentUser(undefined);
-  }
-
-  return { settings, currentUser, loading, handleLogOutClick }
-}
-
-const Navbar = forwardRef(({ onSearch }: any, ref: any) => { 
+const Navbar = forwardRef(({ currentUser, loading, alertMessage, errorMessage,
+  settings, handleChangePasswordSaveClick, handleChangeAvatarSaveClick,
+  handleLogOutClick, onSearch }: any, ref: any) => {
   const [search, setSearch] = useState<string>('');
   const [profileDropdown, setProfileDropdown] = useState(false);
   const [panelDropdown, setPanelDropdown] = useState(false);
-  const { settings, currentUser, loading, handleLogOutClick } = (
-    isZustandEnabled) ? NavbarZustand() : NavbarDefault();
-
-  const envAppName: string = loading ? settings.brand : import.meta.env.VITE_APP_NAME;
+  const [avatarUser, setAvatarUser] = useState<string>(currentUser?.avatar);
 
   useImperativeHandle(ref, () => ({
     search,
@@ -65,8 +31,11 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
     if (event.key = 'Enter') {
       (onSearch !== undefined) && onSearch(search);
     }
-    
   }
+
+  useEffect(() => {
+    setAvatarUser(currentUser?.avatar);
+  }, [currentUser?.avatar]);
 
   return (
     <div ref={ref} className="search">
@@ -75,19 +44,19 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
         <div className="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2 ps-1">       
           <ul className="navbar-nav me-auto">
             <li className="nav-item ms-2">
-              <Link to={"/"}>
+              <Link to={"/"} className="nav-btn">
                 <i className="bi bi-house"></i>
                 <span>Home</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/categories"}>
+              <Link to={"/categories"} className="nav-btn">
                 <i className="bi bi-tags"></i>
                 <span>Categories</span>
               </Link>
             </li>
             <li className="nav-item">
-              <Link to={"/posts"}>
+              <Link to={"/posts"} className="nav-btn">
                 <i className="bi bi-file-earmark-post"></i>
                 <span>Posts</span>
               </Link>
@@ -96,22 +65,22 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
         </div>
         <div className="mx-auto order-0">
           <Link to={"/"} className="navbar-brand mx-auto">
-            {envAppName}
+            {settings.brand ? settings.brand : ''}
           </Link>
         </div>
         <div className="navbar-collapse collapse w-100 order-3 dual-collapse2 pe-1">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
-              <div className="input-group">
+              <div className="input-group pe-2">
                 <span className="input-group-text" id="basic-addon1">
                   <i className="bi bi-search"></i>
                 </span>
                 {((onSearch === undefined)) ?
                   (
                     <input
-                      id="search"
+                      id="nosearch"
                       placeholder="Buscar en el blog"
-                      value={undefined}
+                      value=""
                       disabled
                       className="form-control"
                     />
@@ -121,7 +90,7 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                       placeholder="Buscar en el blog"
                       onChange={handleInputChange}
                       onKeyDown={handleInputKeyDown}
-                      value={search}
+                      value={search || ''}
                       className="form-control"
                     />
                   )
@@ -130,19 +99,18 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
             </li>
             {
               (
-                (currentUser == undefined) &&
-                (loading == false)
+                (currentUser === undefined)
               ) && 
               (
                 <>
                   <li className="nav-item pb-1 ms-2">
-                    <Link to={"/login"} className="mt-1">
+                    <Link to={"/login"} className="nav-btn mt-1">
                       <i className="bi bi-box-arrow-in-right"></i>
                       <span>Login</span>
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/register"} className="mt-1">
+                    <Link to={"/register"} className="nav-btn mt-1">
                       <i className="bi bi-door-open"></i>
                       <span>Register</span>
                     </Link>
@@ -164,6 +132,7 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                       aria-haspopup="menu"
                       aria-expanded={panelDropdown ? "true" : "false"}
                       onClick={() => setPanelDropdown((prev) => !prev)}
+                      className="nav-btn"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" className="bi bi-shield-check" viewBox="0 0 16 16">
                         <path d="M5.338 1.59a61 61 0 0 0-2.837.856.48.48 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.7 10.7 0 0 0 2.287 2.233c.346.244.652.42.893.533q.18.085.293.118a1 1 0 0 0 .101.025 1 1 0 0 0 .1-.025q.114-.034.294-.118c.24-.113.547-.29.893-.533a10.7 10.7 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.8 11.8 0 0 1-2.517 2.453 7 7 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7 7 0 0 1-1.048-.625 11.8 11.8 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 63 63 0 0 1 5.072.56"/>
@@ -263,15 +232,15 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                       aria-haspopup="menu"
                       aria-expanded={profileDropdown ? "true" : "false"}
                       onClick={() => setProfileDropdown((prev) => !prev)}
-                      className="button"
+                      className="nav-btn"
                     >
                       <img
-                        src={currentUser.avatar ? currentUser.avatar : DEFAULT_NO_AVATAR_TINY}
-                        className="rounded-circle img-thumbnail"
-                        style={{height:26,width:26}}
+                        src={avatarUser ? avatarUser : DEFAULT_NO_AVATAR_TINY}
+                        className="rounded-circle border border-2 border-light"
+                        style={{height:28,width:28}}
                         alt="User Panel"
                       />
-                      <span>{currentUser.username}</span>
+                      <span>{currentUser?.username}</span>
                     </button>
                     <ul className={`dropdown ${profileDropdown ? "show" : ""}`}>
                       <li className="nav-item-menu">
@@ -279,6 +248,22 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
                           <i className="bi bi-person-lines-fill"></i>
                           <span className="ms-2">Profile</span>
                         </Link>
+                      </li>
+                      <li className="nav-item-menu">
+                        <ChangePassword
+                          loading={loading}
+                          alertMessage={alertMessage}
+                          errorMessage={errorMessage}
+                          onChangePasswordSaveClick={handleChangePasswordSaveClick}
+                        />
+                      </li>
+                      <li className="nav-item-menu">
+                        <ChangeAvatar
+                          loading={loading}
+                          alertMessage={alertMessage}
+                          errorMessage={errorMessage}
+                          onChangeAvatarSaveClick={handleChangeAvatarSaveClick}
+                        />
                       </li>
                       <li className="nav-item-menu">
                         <a href="/login" onClick={handleLogOutClick}>
@@ -298,4 +283,4 @@ const Navbar = forwardRef(({ onSearch }: any, ref: any) => {
   );
 });
 
-export default memo(Navbar);
+export default Navbar;

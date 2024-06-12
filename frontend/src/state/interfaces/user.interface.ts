@@ -12,8 +12,8 @@ export interface IUseUserStore {
   alertMessage: string;
   errorMessage: Error | null | unknown;
   fetchUser: (id: string | undefined) => void;
-  fetchUserComments: (userId: string | undefined, limit: number | null) => void;
-  fetchUserPosts: (userId: string | undefined, limit: number | null) => void;
+  fetchUserComments: (id: string | undefined, limit: number | null) => void;
+  fetchUserPosts: (id: string | undefined, limit: number | null) => void;
   handleEditUserSaveClick: (id: string, data: any) => void;
 }
 
@@ -21,7 +21,7 @@ export const initialUserStoreState = {
   user: initIUser,
   userPosts: initIPostArray,
   userComments: initICommentArray,
-  loading: true,
+  loading: false,
   alertMessage: '',
   errorMessage: '',
   setCurrentPage: () => {},

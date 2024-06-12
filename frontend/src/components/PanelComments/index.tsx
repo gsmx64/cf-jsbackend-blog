@@ -1,17 +1,15 @@
-import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import PanelCommentItem from "./components/PanelCommentItem";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
 import Alerts from "../Alerts";
-import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
+import BootstrapLink from "../BootstrapLink";
 
 
 const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMessage,
-  errorMessage, loading, searchTerm, userRole, onDeleteComment}: any) => {
+  errorMessage, loading, searchTerm, currentUser, onDeleteComment}: any) => {
   const navigate = useNavigate();
 
   const handleCommentEditComment = (id: string) => {
@@ -20,7 +18,6 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
 
   const handleCommentItemDeleteComment = (id: string, username: string) => {
     const shouldRemove = confirm(`Are you sure you want to delete the message of user "${username}"?`);
-  
     if (shouldRemove) {
       onDeleteComment(id);
     }
@@ -45,45 +42,46 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
                 </div>
               ) : (
                 <div className="container-fluid">
-                  <div className="row border-bottom">
-                    <div className="col">Author</div>
-                    <div className="col">Post Title</div>
-                    <div className="col">Message</div>
-                    <div className="col">Created Date</div>
-                    <div className="col">Updated Date</div>
-                    <div className="col"></div>
-                  </div>
-                  {currentData?.map((commentItem: any, idx: number) => {
-                    if (searchTerm !== '') {
-                      if (
-                        !commentItem.message.toLowerCase().includes(searchTerm) &&
-                        !commentItem?.author?.username.toLowerCase().includes(searchTerm) &&
-                        !commentItem?.post?.title.toLowerCase().includes(searchTerm)
-                      ) {
-                        return '';
-                      }
-                    }
+                  <BootstrapLink />
+                  <table className="table table-striped table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Category Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Updated Date</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentData?.map((comment: any, idx: number) => {
+                        if (searchTerm !== '') {
+                          if (
+                            !comment.message.toLowerCase().includes(searchTerm) &&
+                            !comment?.author?.username.toLowerCase().includes(searchTerm) &&
+                            !comment?.post?.title.toLowerCase().includes(searchTerm)
+                          ) {
+                            return '';
+                          }
+                        }
 
-                    return (
-                      <PanelCommentItem
-                        key={`comment-item-${commentItem.id}`}
-                        row_state={(idx % 2) ? 'odd' : 'even'}
-                        author_id={commentItem?.author?.id}
-                        author_username={commentItem?.author?.username}
-                        author_avatar={commentItem?.author?.avatar ? commentItem?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
-                        author_status={commentItem?.author?.status}
-                        post_id={commentItem?.post?.id}
-                        post_title={commentItem?.post?.title}
-                        message={commentItem.message}
-                        createAt={commentItem.createAt}
-                        updateAt={commentItem.updateAt}
-                        userRole={userRole}
-                        onCommentItemEditComment={handleCommentEditComment}
-                        onCommentItemDeleteComment={handleCommentItemDeleteComment}
-                        id={commentItem.id}
-                      />
-                    );
-                  })}
+                        return (
+                          <PanelCommentItem
+                            key={`comment-item-${comment.id}`}
+                            idx={idx}
+                            //row_state={(idx % 2) ? 'odd' : 'even'}
+                            comment={comment}
+                            onCommentItemEditComment={handleCommentEditComment}
+                            onCommentItemDeleteComment={handleCommentItemDeleteComment}
+                            currentUser={currentUser}
+                          />
+                        );
+                      })}
+                    </tbody>
+                  </table>
                 </div>
               )}
               <Pagination
@@ -102,4 +100,4 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
   );
 };
 
-export default memo(PanelComments);
+export default PanelComments;

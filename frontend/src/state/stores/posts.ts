@@ -5,7 +5,7 @@ import PostsService from "../../services/posts.service";
 import { initialPostsStoreState, IUsePostsStore } from "../interfaces/posts.interface";
 
 
-const usePostsStore = create<IUsePostsStore>((set) => ({
+const usePostsStore = create<IUsePostsStore>((set, get) => ({
   ...initialPostsStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
   fetchPost: (postId: string | undefined) => {
@@ -61,6 +61,7 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Status change to "${status}" for post: "${title}".` }));
+          get().fetchPosts(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error changing status to post: "${title}". Post not found.` }));
         }
@@ -84,6 +85,7 @@ const usePostsStore = create<IUsePostsStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Deleted post: "${title}".` }));
+          get().fetchPosts(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error deleting post: "${title}". Post not found.` }));
         }

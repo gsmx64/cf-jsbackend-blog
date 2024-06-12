@@ -5,7 +5,6 @@ import PanelCategories from "../../components/PanelCategories";
 import { isZustandEnabled } from "../../constants/defaultConstants";
 import useCategories from "../../hooks/useCategories";
 import useCategoriesStore from "../../state/stores/categories";
-import useCurrentUserStore from "../../state/stores/currentUser";
 
 
 const PanelCategoriesViewDefault = () => {
@@ -13,9 +12,6 @@ const PanelCategoriesViewDefault = () => {
 }
 
 const PanelCategoriesViewZustand = () => {
-  const currentUser = useCurrentUserStore((state) => state.currentUser);
-  const fetchCurrentUser = useCurrentUserStore((state) => state.fetchCurrentUser);
-
   const categories = useCategoriesStore((state) => state.categories);
   const currentPage = useCategoriesStore((state) => state.currentPage);
   const totalPages = useCategoriesStore((state) => state.totalPages);
@@ -30,18 +26,17 @@ const PanelCategoriesViewZustand = () => {
   const handleDeleteCategory = useCategoriesStore((state) => state.handleDeleteCategory);
 
   useEffect(() => {
-    fetchCurrentUser();
     fetchCategories(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
   return { categories, currentPage, totalPages, totalItems, itemsPerPage, loading,
-    alertMessage, errorMessage, currentUser, setCurrentPage,
+    alertMessage, errorMessage, setCurrentPage,
     handleUpdateStatusCategory, handleDeleteCategory }
 }
 
-const PanelCategoriesView = ({searchTerm}: any) => {
+const PanelCategoriesView = ({ currentUser, settings, searchTerm }: any) => {
   const { categories, currentPage, totalPages, totalItems, itemsPerPage,
-    loading, alertMessage, errorMessage, currentUser, setCurrentPage,
+    loading, alertMessage, errorMessage, setCurrentPage,
     handleUpdateStatusCategory, handleDeleteCategory
   } = (isZustandEnabled) ? PanelCategoriesViewZustand() : PanelCategoriesViewDefault();
 
@@ -55,15 +50,14 @@ const PanelCategoriesView = ({searchTerm}: any) => {
           totalPages={totalPages}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
+          loading={loading}
           alertMessage={alertMessage}
           errorMessage={errorMessage}
-          loading={loading}
-          searchTerm={searchTerm}
           onUpdateStatusCategory={handleUpdateStatusCategory}
           onDeleteCategory={handleDeleteCategory}
-          userRole={
-            (currentUser?.role != null) &&
-            (currentUser.role)}
+          currentUser={currentUser}
+          settings={settings}
+          searchTerm={searchTerm}
         />
       </div>
     </>

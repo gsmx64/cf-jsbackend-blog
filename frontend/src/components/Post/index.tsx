@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import styles from "./Post.module.css";
@@ -7,7 +8,8 @@ import Comments from "../Comments";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
 import IPost from "../../interfaces/post.interface";
-import { useEffect } from "react";
+import IUser from "../../interfaces/user.interface";
+import ISettings from "../../interfaces/settings.interface";
 
 
 interface PostProps {
@@ -15,16 +17,17 @@ interface PostProps {
   loading: boolean;
   alertMessage: string;
   errorMessage: Error | string | unknown;
+  currentUser: IUser | undefined;
+  settings: ISettings;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  userRole: string | null | undefined;
   handleNewCommentSaveClick: (postId: string, data: any) => void;
 }
 
-const Post = ({ post, alertMessage, errorMessage, loading, searchTerm,
-  setSearchTerm, userRole, handleNewCommentSaveClick }: PostProps) => {
-  const date = new Date(post.updateAt);
-  loading = (post.id === '') ? true : loading;
+const Post = ({ post, alertMessage, errorMessage, loading, currentUser, /*settings,*/
+  searchTerm, setSearchTerm, handleNewCommentSaveClick }: PostProps) => {
+  const date = new Date(post?.updateAt);
+  loading = (post?.id === '') ? true : loading;
 
   useEffect(() => {
     setSearchTerm('');
@@ -39,34 +42,34 @@ const Post = ({ post, alertMessage, errorMessage, loading, searchTerm,
           <div className={styles.postContainer}>
             <BootstrapLink />
             <div className={styles.imageContainer}>
-              <img src={post.image} alt={post.title} className="rounded img-thumbnail mx-auto d-block" />
+              <img src={post?.image} alt={post?.title} className="rounded img-thumbnail mx-auto d-block" />
             </div>
-            <h4 className="h4">{post.title}</h4>
-            <small className="text-muted">{post.description}</small>
-            <p className="lead">{post.content}</p>
+            <h4 className="h4">{post?.title}</h4>
+            <small className="text-muted">{post?.description}</small>
+            <p className="lead">{post?.content}</p>
             <div className="align-self-end float-end ps-2">
               <div className="col input-group input-group-sm">
                 <div className="input-group-text">
                   <i className="bi bi-tags pb-1"></i>
-                  <Link to={`/category/${post.category.id}`} className="badge">
-                    <span className="text-info">{post.category.title}</span>
+                  <Link to={`/category/${post?.category?.id}`} className="badge">
+                    <span className="text-info">{post?.category?.title}</span>
                   </Link>
                 </div>
                 <div className="input-group-text">
                   <i className="bi bi-person-circle pb-1"></i>                
-                  <Link to={`/user/${post.author.id}`} className="badge">
-                    <span className="text-info">{post.author.username}</span>
-                    {(post.author.status === 'BANNED') && <i className="bi bi-ban"></i>}
+                  <Link to={`/user/${post?.author?.id}`} className="badge">
+                    <span className="text-info">{post?.author?.username}</span>
+                    {(post?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
                 </div>
                 {(
-                  (userRole === 'ADMIN' || userRole === 'MODERATOR' || userRole === 'EDITOR') &&
+                  (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
                     <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-2"></i>
                       <small>
-                        {(post.status == 'PUBLISHED') && ' Published'}
-                        {(post.status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(post.status == 'ARCHIVED') && ' Archived'}
-                        {(post.status == 'TRASHED') && ' Trashed'}
+                        {(post?.status == 'PUBLISHED') && ' Published'}
+                        {(post?.status == 'UNPUBLISHED') && ' Unpublished'}
+                        {(post?.status == 'ARCHIVED') && ' Archived'}
+                        {(post?.status == 'TRASHED') && ' Trashed'}
                       </small>
                     </div>
                 )}
@@ -77,10 +80,10 @@ const Post = ({ post, alertMessage, errorMessage, loading, searchTerm,
               </div>
             </div>
             <div className="align-self-end float-end pt-4">
-              {(userRole !== undefined) &&
+              {(currentUser?.role !== undefined) &&
                 <div className="container-new-comment">
                   <CommentForm
-                    postId={post.id}
+                    postId={post?.id}
                     loading={loading}
                     alertMessage={alertMessage}
                     errorMessage={errorMessage}
@@ -89,7 +92,7 @@ const Post = ({ post, alertMessage, errorMessage, loading, searchTerm,
                 </div>
               }
               <div className="container-comments">
-                <Comments comments={post.comments} />
+                <Comments comments={post?.comments} />
               </div>
             </div>
           </div>

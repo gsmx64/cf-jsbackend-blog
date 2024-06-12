@@ -7,9 +7,9 @@ import { initIPostCreate } from "../../interfaces/post.interface";
 import usePost from "../../hooks/usePost";
 
 
-const PanelNewPostView = ({searchTerm}: any) => {
+const PanelNewPostView = ({ currentUser, settings, searchTerm }: any) => {
   const { activeCategories, loading, alertMessage, errorMessage,
-    currentUser, handleNewPostSaveClick } = usePost();
+    handleNewPostSaveClick } = usePost();
   const navigate = useNavigate();
 
   const handleNewPostCancelClick = () => {
@@ -25,14 +25,13 @@ const PanelNewPostView = ({searchTerm}: any) => {
             <PanelNewPostForm
               data={initIPostCreate}
               categories={activeCategories}
+              loading={loading}
               alertMessage={alertMessage}
               errorMessage={errorMessage}
-              loading={loading}
-              userRole={
-                (currentUser?.role != null) ? 
-                (currentUser.role) : null}
               onNewPostSaveClick={handleNewPostSaveClick}
               onNewPostCancelClick={handleNewPostCancelClick}
+              currentUser={currentUser}
+              settings={settings}
             />
           </div>
         </>

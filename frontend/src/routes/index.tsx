@@ -1,9 +1,12 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AuthService from "../services/auth.service";
+import RouteDefinition, { IProps } from "../interfaces/router.interface";
 import ErrorBoundary from "../components/ErrorBoundary";
 import HomeView from "../views/Home";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import Error401View from "../views/Error401";
 import Error404View from "../views/Error404";
 import LoginView from "../views/Login";
@@ -25,27 +28,11 @@ import PanelEditCategoryView from "../views/PanelEditCategory";
 import PanelEditCommentView from "../views/PanelEditComment";
 import PanelEditPostView from "../views/PanelEditPost";
 import SetupView from "../views/Setup";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 
-
-type RouteDefinition = {
-  name: string;
-  urlPath: string;
-  acl: boolean | undefined;
-  search?: boolean;
-  Component: React.ComponentType<React.PropsWithChildren> | any;
-  children?: RouteDefinition[];
-  ComponentOnACLFail?: React.ComponentType<React.PropsWithChildren> | any;
-  ComponentOnError?: React.ComponentType<React.PropsWithChildren> | any;
-};
 
 const createRouteElementsFromObject = (
   routeDefinitions: RouteDefinition[],
-  searchTerm: string,
-  setSearchTerm: any,
-  handleNavbarSearch: any,
-  containerRef: any) => {
+  props: IProps) => {
   let routesArray: any = {};
 
   routesArray = routeDefinitions.map(({ urlPath, acl, search, Component,
@@ -58,33 +45,90 @@ const createRouteElementsFromObject = (
             <Suspense fallback={null}>
               <ErrorBoundary>
                 <Navbar
-                  onSearch={search ? handleNavbarSearch : undefined}
-                  ref={containerRef}
+                  currentUser={props.currentUser}
+                  settings={props.settings}
+                  loading={props.loading}
+                  alertMessage={props.alertMessage}
+                  errorMessage={props.errorMessage}
+                  handleChangePasswordSaveClick={props.handleChangePasswordSaveClick}
+                  handleChangeAvatarSaveClick={props.handleChangeAvatarSaveClick}
+                  handleLogOutClick={props.handleLogOutClick}
+                  onSearch={search ? props.handleNavbarSearch : undefined}
+                  ref={props.containerRef}
                 />
-                <Component
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
+                {(urlPath === 'login' || urlPath === 'register') ? (
+                  <Component
+                    currentUser={props.currentUser}
+                    settings={props.settings}
+                    loading={props.loading}
+                    alertMessage={props.alertMessage}
+                    errorMessage={props.errorMessage}
+                    searchTerm={props.searchTerm}
+                    setSearchTerm={props.setSearchTerm}
+                    handleRegisterUserSaveClick={props.handleRegisterUserSaveClick}
+                    handleLoginUserSaveClick={props.handleLoginUserSaveClick}
+                  />
+                ) : (
+                  <Component
+                    currentUser={props.currentUser}
+                    settings={props.settings}
+                    searchTerm={props.searchTerm}
+                    setSearchTerm={props.setSearchTerm}
+                  />
+                )}
+                <Footer
+                  currentUser={props.currentUser}
+                  settings={props.settings}
                 />
-                <Footer />
               </ErrorBoundary>
             </Suspense>
           ) : (
             <Suspense fallback={null}>
               <ErrorBoundary>
-                <Navbar onSearch={undefined} />
+                <Navbar
+                  currentUser={props.currentUser}
+                  settings={props.settings}
+                  loading={props.loading}
+                  alertMessage={props.alertMessage}
+                  errorMessage={props.errorMessage}
+                  handleChangePasswordSaveClick={props.handleChangePasswordSaveClick}
+                  handleChangeAvatarSaveClick={props.handleChangeAvatarSaveClick}
+                  handleLogOutClick={props.handleLogOutClick}
+                  onSearch={undefined}
+                  ref={props.containerRef}
+                />
                 <ComponentOnACLFail />
-                <Footer />
+                <Footer
+                  currentUser={props.currentUser}
+                  settings={props.settings}
+                  handleRegisterUserSaveClick={props.handleRegisterUserSaveClick}
+                  handleLoginUserSaveClick={props.handleLoginUserSaveClick}
+                />
               </ErrorBoundary>
             </Suspense>
           )
         ),
-        children: children?.length ? createRouteElementsFromObject(children, '', '', '', '') : [],
+        children: children?.length ? createRouteElementsFromObject(children, props) : [],
         errorElement: (
           (ComponentOnError) ? (
             <ErrorBoundary>
-              <Navbar />
+              <Navbar
+                currentUser={props.currentUser}
+                settings={props.settings}
+                loading={props.loading}
+                alertMessage={props.alertMessage}
+                errorMessage={props.errorMessage}
+                handleChangePasswordSaveClick={props.handleChangePasswordSaveClick}
+                handleChangeAvatarSaveClick={props.handleChangeAvatarSaveClick}
+                handleLogOutClick={props.handleLogOutClick}
+                onSearch={search ? props.handleNavbarSearch : undefined}
+                ref={props.containerRef}
+              />
               <ComponentOnError />
-              <Footer />
+              <Footer
+                currentUser={props.currentUser}
+                settings={props.settings}
+              />
             </ErrorBoundary>
           ) : ( <></> )
         ),
@@ -264,8 +308,8 @@ const routes: RouteDefinition[] = [
   }
 ];
 
-const MyRoutes =  (searchTerm: string, setSearchTerm: any, handleNavbarSearch: any, containerRef: any) => {
-  return createRouteElementsFromObject(routes, searchTerm, setSearchTerm, handleNavbarSearch, containerRef)
+const MyRoutes = (props: IProps) => {
+  return createRouteElementsFromObject(routes, props);
 };
 
 export default MyRoutes;

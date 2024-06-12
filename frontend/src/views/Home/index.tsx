@@ -1,10 +1,14 @@
 import PostsView from "../Posts";
 
 
-const HomeView = ({searchTerm}: any) => {
+const HomeView = ({ currentUser, settings, searchTerm }: any) => {
   return (
     <>
-      <PostsView searchTerm={searchTerm} />
+      <PostsView
+        currentUser={currentUser}
+        settings={settings}
+        searchTerm={searchTerm}
+      />
     </>
   );
 };

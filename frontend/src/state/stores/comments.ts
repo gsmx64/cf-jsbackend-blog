@@ -5,7 +5,7 @@ import CommentsService from "../../services/comments.service";
 import { initialCommentsStoreState, IUseCommentsStore } from "../interfaces/comments.interface";
 
 
-const useCommentsStore = create<IUseCommentsStore>((set) => ({
+const useCommentsStore = create<IUseCommentsStore>((set, get) => ({
   ...initialCommentsStoreState,
   setCurrentPage: (page: number) => set(() => ({ currentPage: page })),
   fetchComments: (currentPage: number, itemsPerPage: number) => {
@@ -42,6 +42,7 @@ const useCommentsStore = create<IUseCommentsStore>((set) => ({
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           set(() => ({ alertMessage: `Comment deleted!` }));
+          get().fetchComments(get().currentPage, get().itemsPerPage);
         } else {  
           set(() => ({ errorMessage: `Error deleting comment! Comment not found.` }));
         }

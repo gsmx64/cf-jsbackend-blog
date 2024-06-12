@@ -3,11 +3,9 @@ import { AxiosResponse } from 'axios';
 
 import { initIPostArray, IPostArray } from '../interfaces/post.interface';
 import PostsService from '../services/posts.service';
-import useCurrentUser from './useCurrentUser';
 
 
 const usePosts = () => {
-  const { currentUser } = useCurrentUser();
   const [posts, setPosts] = useState<IPostArray>(initIPostArray);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -54,6 +52,7 @@ const usePosts = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Status change to "${status}" for post: "${title}".`);
+          fetchPosts(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error changing status to post: "${title}". Post not found.`);
         }
@@ -80,6 +79,7 @@ const usePosts = () => {
       .then((response: AxiosResponse) => {
         if (response.data.affected === 1) {
           setAlertMessage(`Deleted post: "${title}".`);
+          fetchPosts(currentPage, itemsPerPage);
         } else {  
           setErrorMessage(`Error deleting post: "${title}". Post not found.`);
         }
@@ -99,7 +99,7 @@ const usePosts = () => {
     fetchPosts(currentPage, itemsPerPage);
   }, [currentPage, itemsPerPage]);
 
-  return { currentUser, posts, currentPage, totalPages, totalItems,
+  return { posts, currentPage, totalPages, totalItems,
     itemsPerPage, loading, alertMessage, errorMessage, setCurrentPage,
     setItemsPerPage, handleUpdateStatusPost, handleDeletePost };
 };

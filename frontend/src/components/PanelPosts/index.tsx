@@ -1,17 +1,15 @@
-import { memo } from "react";
 import { useNavigate } from "react-router-dom";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import PanelPostItem from "./components/PanelPostItem";
 import Pagination from "../Pagination";
 import Loading from "../Loading";
-import Alerts from "../Alerts";
-import { DEFAULT_NO_AVATAR_TINY } from "../../constants/defaultConstants";
+import Alerts from "../Alerts"
+import BootstrapLink from "../BootstrapLink";
 
 
 const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage,
-  errorMessage, loading, searchTerm, userRole, currentUser, onUpdateStatusPost,
+  errorMessage, loading, searchTerm, currentUser, onUpdateStatusPost,
   onDeletePost}: any) => {
   const navigate = useNavigate();
 
@@ -49,51 +47,47 @@ const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage
               </div>
             ) : (
               <div className="container-fluid">
-                <div className="row border-bottom">
-                  <div className="col">Image</div>
-                  <div className="col">Post Title</div>
-                  <div className="col">Category</div>
-                  <div className="col">Author</div>
-                  <div className="col">Status</div>
-                  <div className="col">Created Date</div>
-                  <div className="col">Updated Date</div>
-                  <div className="col"></div>
-                </div>
-                {currentData?.map((postItem: any, idx: number) => {
-                  if (searchTerm !== '') {
-                    if (
-                      !postItem.title.toLowerCase().includes(searchTerm) &&
-                      !postItem.content.toLowerCase().includes(searchTerm)
-                    ) {
-                      return '';
-                    }
-                  }
+                <BootstrapLink />
+                <table className="table table-striped table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Image</th>
+                      <th scope="col">Post Title</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Author</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Created Date</th>
+                      <th scope="col">Updated Date</th>
+                      <th scope="col"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentData?.map((post: any, idx: number) => {
+                      if (searchTerm !== '') {
+                        if (
+                          !post.title.toLowerCase().includes(searchTerm) &&
+                          !post.content.toLowerCase().includes(searchTerm)
+                        ) {
+                          return '';
+                        }
+                      }
 
-                  return (
-                    <PanelPostItem
-                      key={`post-item-${postItem.id}`}
-                      row_state={(idx % 2) ? 'odd' : 'even'}
-                      title={postItem.title}
-                      image={postItem.image}
-                      content={postItem.content}
-                      status={postItem.status}
-                      author_id={postItem?.author?.id}
-                      author_username={postItem?.author?.username}
-                      author_avatar={postItem?.author?.avatar ? postItem?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
-                      author_status={postItem?.author?.status}
-                      category_id={postItem?.category?.id}
-                      category_title={postItem?.category?.title}
-                      createAt={postItem.createAt}
-                      updateAt={postItem.updateAt}
-                      userRole={userRole}
-                      currentUser={currentUser}
-                      onPostItemUpdateStatusPost={handlePostItemUpdateStatusPost}
-                      onPostItemEditPost={handlePostEditPost}
-                      onPostItemDeletePost={handlePostItemDeletePost}
-                      id={postItem.id}
-                    />
-                  );
-                })}
+                      return (
+                        <PanelPostItem
+                          key={`post-item-${post.id}`}
+                          idx={idx}
+                          //row_state={(idx % 2) ? 'odd' : 'even'}
+                          post={post}
+                          onPostItemUpdateStatusPost={handlePostItemUpdateStatusPost}
+                          onPostItemEditPost={handlePostEditPost}
+                          onPostItemDeletePost={handlePostItemDeletePost}
+                          currentUser={currentUser}
+                        />
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             )}
             <Pagination
@@ -112,4 +106,4 @@ const PanelPosts = ({data, currentPage, setCurrentPage, totalPages, alertMessage
   );
 };
 
-export default memo(PanelPosts);
+export default PanelPosts;

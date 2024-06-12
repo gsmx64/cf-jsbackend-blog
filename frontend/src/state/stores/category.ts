@@ -97,7 +97,6 @@ const useCategoryStore = create<IUseCategoryStore>((set) => ({
     } catch (error: any) {
       set(() => ({ errorMessage: error.toString(), loading: false }));
     }
-    return undefined;
   }
 }));
 
