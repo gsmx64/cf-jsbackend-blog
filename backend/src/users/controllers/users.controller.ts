@@ -21,6 +21,7 @@ import { USERS_FILTER_CONFIG } from '../filters/users.filter';
 import { SWAGGER_ID_EXAMPLE, 
   SWAGGER_USER_BODY_EXAMPLE } from '../../constants/swagger.examples';
 import { USERS_DEFAULT_CONFIG } from '../filters/users.default';
+import { IUserPassword } from '../interfaces/user.interface';
 
 
 /**
@@ -111,6 +112,31 @@ export class UsersController {
     @Request() request: Request
   ) {
     return this.usersService.updateUser(body, id, request);
+  }
+
+  /**
+   * Update a user's password.
+   * @param id - The user uuid to edit their password.
+   * @param body - The updated user password.
+   * @param request - The request object.
+   * @returns The updated user password.
+   */
+  @ApiParam({
+    name: 'id',
+    type: 'string',
+    required: true,
+    example: SWAGGER_ID_EXAMPLE,
+    description: 'The user uuid to edit their password.'
+  })
+  @ApiBearerAuth('access_token')
+  @UseGuards(LocalAuthGuard)
+  @Put('password/:id')
+  public async updateUserPassword(
+    @Param('id') id: string, 
+    @Body() body: IUserPassword,
+    @Request() request: Request
+  ) {
+    return this.usersService.updateUserPassword(body, id, request);
   }
 
   /**

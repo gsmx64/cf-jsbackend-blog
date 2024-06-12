@@ -62,3 +62,22 @@ export interface IUser {
      */
     comments: CommentsEntity[];
 }
+
+/**
+ * Represents a user in the system.
+ */
+export interface IUserPassword {
+    /**
+     * The password of the user.
+     */
+    current_password: string;
+    /**
+     * The password of the user.
+     */
+    password: string;
+    /**
+     * The password of the user.
+     */
+    repeat_password: string;
+    data: string;
+}

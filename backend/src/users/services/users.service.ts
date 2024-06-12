@@ -28,6 +28,7 @@ import {
 import {
   USERS_DEFAULT_CONFIG,
   USERS_DEFAULT_CONFIG_LOW } from '../filters/users.default';
+import { IUserPassword } from '../interfaces/user.interface';
 
 
 /**
@@ -186,12 +187,75 @@ export class UsersService {
     request: any
   ): Promise<UpdateResult | undefined>{
     try {
-      const currentToken = request.headers['access_token'];
+      /*const currentToken = request.headers['access_token'];
       const manageToken: any = useToken(currentToken); 
       const currentUserId = manageToken.sub;
-      const currentUserRole = manageToken.role;
+      const currentUserRole = manageToken.role;*/
+      const hashedPassword = (body?.password != undefined) ? await bcrypt.hash(
+        body?.password, 
+        Number(process.env.APP_AUTH_HASH_SALT)
+      ) : '';
       
-      const user: UpdateResult = await this.userRepository.update(id, body);
+      const user: UpdateResult = (body?.password != undefined) ? 
+      await this.userRepository.update(id,
+        { ...body, password: hashedPassword }
+      ) : await this.userRepository.update(id, body);
+
+      if(user.affected === 0){
+        throw new ErrorManager({
+          type: 'NO_CONTENT',
+          message: 'No changes made while updating the user.'
+        });
+      }
+
+      LoggingMessages.log(user, 'UsersService.updateUser(body, id) -> user', this.dataForLog);
+      return user;
+    } catch(error){
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  /**
+   * Updates the user's password.
+   * @param body - The updated user password.
+   * @param id - The ID of the user to update password.
+   * @param request - The request object.
+   * @returns The update result.
+   */
+  public async updateUserPassword(
+    body: IUserPassword,
+    id: string,
+    request: any
+  ): Promise<UpdateResult | undefined>{
+    try {
+      const userExists = await this.findPasswordById(id);
+      if (!userExists) {
+        throw new ErrorManager({
+          type: 'NO_CONTENT',
+          message: 'User not found!',
+        });
+      }
+
+      const isCurrentPasswordCorrect = await bcrypt.compare(
+        body.current_password,
+        userExists.password
+      );
+
+      if (!isCurrentPasswordCorrect) {
+        throw new ErrorManager({
+          type: 'UNAUTHORIZED',
+          message: 'Incorrect current password.',
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(
+        body.password, 
+        Number(process.env.APP_AUTH_HASH_SALT)
+      );
+
+      const user: UpdateResult = await this.userRepository.update(id,
+        { password: hashedPassword }
+      );
 
       if(user.affected === 0){
         throw new ErrorManager({
@@ -248,6 +312,28 @@ export class UsersService {
         .getOne();
 
         LoggingMessages.log(user, 'UsersService.findLoginBy({key, value}) -> user', this.dataForLog);
+        return user;
+    } catch (error) {
+      throw ErrorManager.createSignatureError(error.message);
+    }
+  }
+
+  /**
+   * Finds a user by a specified key-value pair.
+   * @param key - The key to search for (e.g., 'username', 'email').
+   * @param value - The value to match against the specified key.
+   * @returns The user object if found, otherwise null.
+   * @throws Error if an error occurs during the search.
+   */
+  private async findPasswordById(id: string) {
+    try {
+      const user: UsersEntity = await this.userRepository
+        .createQueryBuilder('user')
+        .select(['user.password'])
+        .where({id})
+        .getOne();
+
+        LoggingMessages.log(user, 'UsersService.findPasswordById(id) -> user', this.dataForLog);
         return user;
     } catch (error) {
       throw ErrorManager.createSignatureError(error.message);
