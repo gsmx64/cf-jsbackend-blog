@@ -44,12 +44,12 @@ const PanelCategoryItem = ({ idx, category, currentUser,
           />
       </td>
       <td>
-        <Link to={`/category/${category?.id}`}>
+        <Link to={`/category/${category?.id}`} style={{color: 'inherit'}}>
           {category?.title}
         </Link>
       </td>
       <td>
-        <Link to={`/user/${category?.author?.id}`}>
+        <Link to={`/user/${category?.author?.id}`} style={{color: 'inherit'}}>
           <img
             src={category?.author?.avatar ? category?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
             width={38}

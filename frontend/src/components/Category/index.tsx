@@ -49,34 +49,35 @@ const Category = ({category, loading, errorMessage, setSearchTerm,
                 width={200}
                 height={200}
                 alt={category?.title}
+                className="rounded"
               />
             </div>
             <h4 className="h4">{category?.title}</h4>
             <p className="lead">{category?.description}</p>
-            <div className="align-self-end float-end ps-1">
-              <div className="col input-group input-group-sm">
-                <div className="input-group-text">
-                  <i className="bi bi-person-circle pb-1"></i>
-                  <Link to={`/user/${category?.author?.id}`} className="badge">
-                    <span className="text-info font-weight-bold">{category?.author?.username}</span>
+            <div className="align-self-end">
+              <div className="btn-group align-self-end" role="group">
+                <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
+                  
+                  <Link to={`/user/${category?.author?.id}`} style={{color: 'inherit'}}>
+                    <i className="bi bi-person-circle pb-1 pe-2"></i>
+                    {category?.author?.username}
                     {(category?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
-                </div>
+                </span>
                 {(
                   (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
-                    <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-1"></i>
-                      <small>
-                        {(category?.status == 'PUBLISHED') && ' Published'}
-                        {(category?.status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(category?.status == 'ARCHIVED') && ' Archived'}
-                        {(category?.status == 'TRASHED') && ' Trashed'}
-                      </small>
-                    </div>
+                    <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
+                      <i className="bi bi-toggle-on pb-1 pe-1"></i>
+                      {(category?.status == 'PUBLISHED') && ' Published'}
+                      {(category?.status == 'UNPUBLISHED') && ' Unpublished'}
+                      {(category?.status == 'ARCHIVED') && ' Archived'}
+                      {(category?.status == 'TRASHED') && ' Trashed'}
+                    </span>
                 )}
-                <div className="input-group-text">
+                <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
                   <i className="bi bi-tags pb-1 pe-1"></i>
                   <small>{date.toLocaleString()}hs.</small>
-                </div>
+                </span>
               </div>
             </div>
             <div className="container overflow-hidden mt-3">

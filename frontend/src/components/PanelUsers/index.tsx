@@ -56,7 +56,7 @@ const PanelUsers = ({data, currentPage, setCurrentPage, totalPages, loading, sea
             ) : (
               <div className="container-fluid">
                 <BootstrapLink />
-                <table className="table table-striped table-hover">
+                <table className="table table-striped table-hover align-middle">
                   <thead>
                     <tr>
                       <th scope="col">#</th>

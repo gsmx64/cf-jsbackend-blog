@@ -43,7 +43,7 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
               ) : (
                 <div className="container-fluid">
                   <BootstrapLink />
-                  <table className="table table-striped table-hover">
+                  <table className="table table-striped table-hover align-middle">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
@@ -52,7 +52,6 @@ const PanelComments = ({data, currentPage, setCurrentPage, totalPages, alertMess
                         <th scope="col">Author</th>
                         <th scope="col">Status</th>
                         <th scope="col">Created Date</th>
-                        <th scope="col">Updated Date</th>
                         <th scope="col"></th>
                       </tr>
                     </thead>

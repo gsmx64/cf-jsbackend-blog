@@ -47,36 +47,35 @@ const Post = ({ post, alertMessage, errorMessage, loading, currentUser, /*settin
             <h4 className="h4">{post?.title}</h4>
             <small className="text-muted">{post?.description}</small>
             <p className="lead">{post?.content}</p>
-            <div className="align-self-end float-end ps-2">
-              <div className="col input-group input-group-sm">
-                <div className="input-group-text">
-                  <i className="bi bi-tags pb-1"></i>
-                  <Link to={`/category/${post?.category?.id}`} className="badge">
+            <div className="align-self-end ps-2">
+              <div className="btn-group align-self-end" role="group">
+                <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
+                  <i className="bi bi-tags pb-1 pe-2"></i>
+                  <Link to={`/category/${post?.category?.id}`} style={{color: 'inherit'}}>
                     <span className="text-info">{post?.category?.title}</span>
                   </Link>
-                </div>
-                <div className="input-group-text">
-                  <i className="bi bi-person-circle pb-1"></i>                
-                  <Link to={`/user/${post?.author?.id}`} className="badge">
+                </span>
+                <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
+                  <i className="bi bi-person-circle pb-1 pe-2"></i>                
+                  <Link to={`/user/${post?.author?.id}`} style={{color: 'inherit'}}>
                     <span className="text-info">{post?.author?.username}</span>
                     {(post?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
-                </div>
+                </span>
                 {(
                   (currentUser?.role === 'ADMIN' || currentUser?.role === 'MODERATOR' || currentUser?.role === 'EDITOR') &&
-                    <div className="input-group-text"><i className="bi bi-toggle-on pb-1 pe-2"></i>
-                      <small>
-                        {(post?.status == 'PUBLISHED') && ' Published'}
-                        {(post?.status == 'UNPUBLISHED') && ' Unpublished'}
-                        {(post?.status == 'ARCHIVED') && ' Archived'}
-                        {(post?.status == 'TRASHED') && ' Trashed'}
-                      </small>
-                    </div>
+                    <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
+                      <i className="bi bi-toggle-on pb-1 pe-1"></i>
+                      {(post?.status == 'PUBLISHED') && ' Published'}
+                      {(post?.status == 'UNPUBLISHED') && ' Unpublished'}
+                      {(post?.status == 'ARCHIVED') && ' Archived'}
+                      {(post?.status == 'TRASHED') && ' Trashed'}
+                    </span>
                 )}
-                <div className="input-group-text">
+                <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
                   <i className="bi bi-calendar2-date pb-1 pe-2"></i>
-                  <small>{date.toLocaleString()}hs.</small>
-                </div>
+                  {date.toLocaleString()}hs.
+                </span>
               </div>
             </div>
             <div className="align-self-end float-end pt-4">

@@ -47,7 +47,7 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
             ) : (
               <div className="container-fluid">
                 <BootstrapLink />
-                <table className="table table-striped table-hover">
+                <table className="table table-striped table-hover align-middle">
                   <thead>
                     <tr>
                       <th scope="col">#</th>

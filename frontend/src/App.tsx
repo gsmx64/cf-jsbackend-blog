@@ -8,6 +8,7 @@ import useSettings from "./hooks/useSettings";
 import useCurrentUserStore from "./state/stores/currentUser";
 import useSettingsStore from "./state/stores/settings";
 import { IProps } from "./interfaces/router.interface";
+import { useTheme } from "react-hook-theme";
 
 
 const AppDefault = () => {
@@ -46,6 +47,7 @@ function App() {
 
   const [searchTerm, setSearchTerm] = useState<string>('');
   const containerRef = useRef();
+  const { theme, } = useTheme();
 
   const handleNavbarSearch = (term: any) => {
     setSearchTerm(term.toLowerCase());
@@ -57,9 +59,9 @@ function App() {
     handleChangeAvatarSaveClick, handleLogOutClick, containerRef }
 
   return (
-    <>
+    <div data-bs-theme={theme}>
       {MyRoutes(props)}
-    </>
+    </div>
   )
 }
 

@@ -5,9 +5,10 @@ const Pagination = ({ totalPages, currentPage, setCurrentPage }: any) => {
         totalPages > 1 && (
           <div className="pagination justify-content-center">
             <ul className="pagination">
-              <li className={`page-item ${(currentPage !== totalPages ? ' disabled' : '')}`}>
+              <li className={`${((currentPage !== totalPages) ? 'page-item disabled' : 'page-item')}`}>
                 <button
-                  className="page-link"
+                  className={`${((currentPage !== totalPages) ? 'btn btn-outline-light' : 'btn btn-outline-dark')}`}
+                  style={{color: 'inherit'}}
                   onClick={() => {
                     if (currentPage !== 1){
                       setCurrentPage(currentPage - 1);
@@ -21,20 +22,22 @@ const Pagination = ({ totalPages, currentPage, setCurrentPage }: any) => {
                 [...Array(totalPages)].map((_, idx) => (
                   <li key={`pagination-page-${idx}`} className={`page-item ${(currentPage === (idx + 1) ? ' active' : '')}`}>
                     <button
+                      key={idx + 1}
+                      className={`${((currentPage === (idx + 1)) ? 'btn btn-dark' : 'btn btn-outline-dark')}`}
+                      style={{color: `${((currentPage === (idx + 1)) ? '#fff' : 'inherit')}`}}
                       onClick={() => {
                         setCurrentPage(idx + 1);
                       }}
-                      key={idx + 1}
-                      className="page-link"
                     >
                       {idx + 1}
                     </button>
                   </li>
                 ))
               }
-              <li className={`page-item ${(currentPage === totalPages ? ' disabled' : '')}`}>
+              <li className={`${((currentPage === totalPages) ? 'page-item disabled' : 'page-item')}`}>
                 <button
-                  className="page-link"
+                  className={`${((currentPage === totalPages) ? 'btn btn-outline-light' : 'btn btn-outline-dark')}`}
+                  style={{color: 'inherit'}}
                   onClick={() => {
                     if (currentPage !== totalPages){
                       setCurrentPage(currentPage + 1);

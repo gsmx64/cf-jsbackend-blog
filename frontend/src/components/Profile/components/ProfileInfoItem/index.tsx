@@ -10,9 +10,12 @@ const ProfileInfoItem = ({ user, canEdit, onProfileEditClick }: any) => {
   }
 
   return (
-    <div className="card mb-3">
-      <div className="card-body">
-      <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">User data</i></h6>
+    <div className="border rounded-3 mb-3">
+      <div className="card-body mb-3">
+        <h6 className="d-flex align-items-center">
+          <i className="material-icons text-info ps-2 pt-2">User data</i>
+        </h6>
+        <hr />
         <div className="row">
           <div className="col-sm-3">
             <h6 className="mb-0">Username</h6>

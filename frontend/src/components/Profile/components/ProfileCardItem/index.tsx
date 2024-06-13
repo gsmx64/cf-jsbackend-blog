@@ -21,11 +21,11 @@ const ProfileCardItem = ({ user, /*onProfileKarmaLikeClick, onProfileKarmaDislik
   }, [user?.avatar]);
 
   return (
-    <div className="card">
+    <div className="border rounded-3">
       <BootstrapLink />
       <div className="card-body">
         <div className="d-flex flex-column align-items-center text-center">
-          <img src={avatarUser ? avatarUser : DEFAULT_NO_AVATAR_TINY} alt={user?.username} className="rounded" width="150" />
+          <img src={avatarUser ? avatarUser : DEFAULT_NO_AVATAR_TINY} alt={user?.username} className="rounded mt-2" width="150" />
           <div className="mt-3">
             <h4>{user?.firstName ? user?.firstName : 'User not found'} {user?.lastName ? user?.lastName : ''}</h4>
             {(user?.status == 'PENDING') &&
@@ -44,7 +44,7 @@ const ProfileCardItem = ({ user, /*onProfileKarmaLikeClick, onProfileKarmaDislik
               {(user?.role == 'MODERATOR') && 'Moderator'}
               {(user?.role == 'ADMIN') && 'Administrator'}
             </p>
-            <p className="text-muted font-size-sm">{user?.city ? `${user?.city},` : ''} {user?.country ? user?.country : ''}</p>
+            <p className="text-secondary font-size-sm">{user?.city ? `${user?.city},` : ''} {user?.country ? user?.country : ''}</p>
             {
               /*(user?.karma) &&
               (

@@ -44,17 +44,17 @@ const PanelPostItem = ({ idx, post, currentUser, onPostItemUpdateStatusPost,
         />
       </td>
       <td>
-        <Link to={`/post/${post?.id}`}>
+        <Link to={`/post/${post?.id}`} style={{color: 'inherit'}}>
           {post?.title}
         </Link>
       </td>
       <td>
-        <Link to={`/category/${post?.category?.id}`}>
+        <Link to={`/category/${post?.category?.id}`} style={{color: 'inherit'}}>
           {post?.category?.title}
         </Link>
       </td>
       <td>
-        <Link to={`/user/${post?.author?.id}`}>
+        <Link to={`/user/${post?.author?.id}`} style={{color: 'inherit'}}>
           <img
             src={post?.author?.avatar ? post?.author?.avatar : DEFAULT_NO_AVATAR_TINY}
             width={38}

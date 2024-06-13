@@ -29,7 +29,7 @@ const PanelCommentItem = ({ idx, comment, currentUser, onCommentItemEditComment,
     <tr>
       <th scope="row">{(idx+1)}</th>
       <td>
-        <Link to={`/user/${comment?.author?.id}`}>
+        <Link to={`/user/${comment?.author?.id}`} style={{color: 'inherit'}}>
           <img src={comment?.author?.avatar ? comment?.author?.avatar : DEFAULT_NO_AVATAR_TINY} width={38} height={38} alt={comment?.author?.username} className="rounded" />
           <span className="ms-2">
             {comment?.author?.username}
@@ -38,7 +38,7 @@ const PanelCommentItem = ({ idx, comment, currentUser, onCommentItemEditComment,
         </Link>
       </td>
       <td>
-        <Link to={`/post/${comment?.post?.id}`}>
+        <Link to={`/post/${comment?.post?.id}`} style={{color: 'inherit'}}>
           {comment?.post?.title}
         </Link>
       </td>

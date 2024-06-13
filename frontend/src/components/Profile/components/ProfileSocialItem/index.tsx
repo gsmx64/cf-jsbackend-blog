@@ -3,7 +3,7 @@ const ProfileSocialItem = ({ social }: any) => {
   if(social.length === 0) return <></>;
 
   return (
-    <div className="card mt-3">
+    <div className="border rounded-3 pt-2 pb-2 ps-2 pe-2 mt-3">
       <ul className="list-group list-group-flush">
         (social.website) && (
           <li className="list-group-item d-flex justify-content-between align-items-center flex-wrap">

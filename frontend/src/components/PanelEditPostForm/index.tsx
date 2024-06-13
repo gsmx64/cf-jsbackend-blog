@@ -52,14 +52,17 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
         <Loading />
       ) : (
         <>
-          <div className="card mb-3">
+          <div className="border rounded-3">
             <div className="card-body">
               <form
                   onSubmit={handleSubmit(onSubmitHandler)}
                   noValidate
                   className="needs-validation"
                 >
-                <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">Edit Post</i></h6>
+                <h6 className="d-flex align-items-center mb-3">
+                  <i className="material-icons text-info mr-2 pe-1">Edit Post</i>
+                </h6>
+                
                 <div className="row">
                   <div className="col-sm-3">
                     <h6 className="mb-0">Title</h6>
