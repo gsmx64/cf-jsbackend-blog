@@ -12,6 +12,7 @@ import { UsersService } from '../users/services/users.service';
 import { CategoriesEntity } from './entities/categories.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsEntity } from '../posts/entities/posts.entity';
+import { SettingsEntity } from '../settings/entities/settings.entity';
 
 
 @Module({
@@ -19,7 +20,8 @@ import { PostsEntity } from '../posts/entities/posts.entity';
     TypeOrmModule.forFeature([
       CategoriesEntity,
       UsersEntity,
-      PostsEntity      
+      PostsEntity,
+      SettingsEntity
     ])
   ],
   providers: [

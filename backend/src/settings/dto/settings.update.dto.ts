@@ -1,4 +1,4 @@
-import { IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 
 
@@ -13,6 +13,14 @@ export class SettingsUpdateDTO {
     @IsString()
     @IsOptional()
     brand: string;
+
+    /**
+     * The user account activation mode.
+     */
+    @ApiProperty()
+    @IsString()
+    @IsOptional()
+    activation: string;
 
     /**
      * The terms and conditions for blog.
@@ -69,4 +77,12 @@ export class SettingsUpdateDTO {
     @IsString()
     @IsOptional()
     tiktok: string;
+
+    /**
+     * Value to check if setup is enabled.
+     */
+    @ApiProperty()
+    @IsNumber()
+    @IsOptional()
+    setup: number;
 }

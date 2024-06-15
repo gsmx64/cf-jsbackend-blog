@@ -1,7 +1,7 @@
 /**
  * Controller responsible for handling the settings related API endpoints.
  */
-import { Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 
 import { SettingsService } from '../services/settings.service';
@@ -21,7 +21,7 @@ import { PublicAccess } from '../../auth/decorators/public.decorator';
 export class SettingsController {
   constructor(private readonly settingsService: SettingsService) {}
 
-   /**
+  /**
    * Update settings.
    * @param body - The updated settings data.
    * @returns The updated settings.
@@ -44,5 +44,19 @@ export class SettingsController {
   @Get('view')
   public async getSettings() {
     return this.settingsService.getSettings();
+  }
+
+  /**
+   * Load sample data.
+   * @param body - The updated settings data.
+   * @returns The updated settings.
+   */
+  @ApiBearerAuth('access_token')
+  @AdminAccess()
+  @Post('sampledata')
+  public async loadSampleData(
+    @Param('sample') sample: string
+  ) {
+    return this.settingsService.loadSampleData(sample);
   }
 }

@@ -12,6 +12,7 @@ import { CommentsService } from './services/comments.service';
 import { CommentsEntity } from './entities/comments.entity';
 import { UsersEntity } from '../users/entities/users.entity';
 import { PostsEntity } from '../posts/entities/posts.entity';
+import { SettingsEntity } from '../settings/entities/settings.entity';
 
 
 @Module({
@@ -19,7 +20,8 @@ import { PostsEntity } from '../posts/entities/posts.entity';
     TypeOrmModule.forFeature([
       CommentsEntity,
       UsersEntity,
-      PostsEntity
+      PostsEntity,
+      SettingsEntity
     ])  
   ],
   providers: [

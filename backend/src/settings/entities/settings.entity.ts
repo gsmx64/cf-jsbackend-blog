@@ -34,6 +34,16 @@ export class SettingsEntity implements ISettings {
     brand: string;
 
     /**
+     * The user account activation mode.
+     */
+    @Column({
+        type: 'varchar',
+        width: 10,
+        nullable: true
+    })
+    activation: string;
+
+    /**
      * The terms and conditions for blog.
      */
     @Column({
@@ -101,4 +111,14 @@ export class SettingsEntity implements ISettings {
         nullable: true
     })
     tiktok: string;
+
+    /**
+     * Value to check if setup is enabled.
+     */
+    @Column({
+        type: 'int',
+        width: 1,
+        nullable: true
+    })
+    setup: number;
 }

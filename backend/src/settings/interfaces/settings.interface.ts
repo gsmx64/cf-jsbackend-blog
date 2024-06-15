@@ -8,6 +8,11 @@ export interface ISettings {
     brand: string;
 
     /**
+     * The user account activation mode.
+     */
+    activation: string;
+
+    /**
      * The terms and conditions for blog.
      */
     terms: string;
@@ -41,4 +46,9 @@ export interface ISettings {
      * The TikTok link for social media info.
      */
     tiktok: string;
+
+    /**
+     * Value to check if setup is enabled.
+     */
+    setup: number;
 }

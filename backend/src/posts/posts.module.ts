@@ -14,6 +14,7 @@ import { UsersEntity } from '../users/entities/users.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { PostsEntity } from './entities/posts.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
+import { SettingsEntity } from '../settings/entities/settings.entity';
 
 
 @Module({
@@ -22,7 +23,8 @@ import { CommentsEntity } from '../comments/entities/comments.entity';
       PostsEntity,
       UsersEntity,
       CategoriesEntity,
-      CommentsEntity
+      CommentsEntity,
+      SettingsEntity
     ])
   ],
   providers: [

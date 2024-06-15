@@ -11,13 +11,15 @@ import { UsersService } from '../users/services/users.service';
 import { SettingsService } from './services/settings.service';
 import { SettingsEntity } from './entities/settings.entity';
 import { UsersEntity } from '../users/entities/users.entity';
+import { PostsEntity } from '../posts/entities/posts.entity';
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       SettingsEntity,
-      UsersEntity
+      UsersEntity,
+      PostsEntity
     ])  
   ],
   providers: [

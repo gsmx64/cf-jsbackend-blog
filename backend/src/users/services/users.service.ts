@@ -29,6 +29,7 @@ import {
   USERS_DEFAULT_CONFIG,
   USERS_DEFAULT_CONFIG_LOW } from '../filters/users.default';
 import { IUserPassword } from '../interfaces/user.interface';
+import { SettingsEntity } from 'src/settings/entities/settings.entity';
 
 
 /**
@@ -43,6 +44,9 @@ export class UsersService {
 
     @InjectRepository(UsersEntity)
     private readonly userRepository: Repository<UsersEntity>,
+
+    @InjectRepository(SettingsEntity)
+    private readonly settingsRepository: Repository<SettingsEntity>,
   ) {
     this.dataForLog = this.getUserRoleforLogging(this.request);
   }
@@ -145,12 +149,23 @@ export class UsersService {
     body: UserCreateDTO
   ): Promise<UsersEntity> {
     try {
-      const statusOverride = 'PENDING' as USER_STATUS;
-      const roleOverride = 'BASIC' as ROLES;
+      const settings: SettingsEntity = await this.settingsRepository
+        .createQueryBuilder('settings')
+        .where('settings.id = :Id', { Id: 1 })
+        .getOne();
+      
+      // If the brand is not set, we assume it is the first user created by setup.
+      const statusOverride = (
+        (settings.setup !== 0) || (settings.activation === 'auto')
+      ) ? 'ENABLED' as USER_STATUS : 'PENDING' as USER_STATUS;
+
+      const roleOverride = (settings.setup !== 0) ? 'ADMIN' as ROLES : 'BASIC' as ROLES;
+
       const hashedPassword = await bcrypt.hash(
         body.password, 
         Number(process.env.APP_AUTH_HASH_SALT)
       );
+
       const user: UsersEntity = await this.userRepository.save(
         { ...body,
           status: statusOverride,
