@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -24,7 +23,6 @@ interface PanelEditCommentFormProps {
 
 const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, errorMessage,
   onEditCommentSaveClick, onEditCommentCancelClick }: PanelEditCommentFormProps) => {
-  const navigate = useNavigate();
   
   const {
     register,
@@ -39,13 +37,7 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
   );
 
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onEditCommentSaveClick(commentId, body);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '')
-    ) {
-      navigate(`/list-comments`);
-    }
+    onEditCommentSaveClick(commentId, body);
   }
 
   const handleEditCommentCancelClick = (event: any) => {
@@ -133,7 +125,7 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
               className="btn btn-primary btn-block ms-2"
               disabled={loading}
             >
-              <span>Cancel</span>
+              <span>Close</span>
             </button>
           </div>
           <Alerts

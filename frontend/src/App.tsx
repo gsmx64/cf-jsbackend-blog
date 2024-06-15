@@ -46,7 +46,7 @@ function App() {
     handleChangeAvatarSaveClick, handleLogOutClick } = (isZustandEnabled) ? AppZustand() : AppDefault();
 
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const containerRef = useRef();
+  const containerRef = useRef<HTMLInputElement>();
   const { theme, } = useTheme();
 
   const handleNavbarSearch = (term: any) => {

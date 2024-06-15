@@ -1,6 +1,7 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MultiStep from "react-multistep";
+import { AxiosResponse } from "axios";
 
 import RegisterForm from "../../components/RegisterForm";
 import PanelSettingsForm from "../../components/PanelSettingsForm";
@@ -12,6 +13,9 @@ import useCategory from "../../hooks/useCategory";
 import useCurrentUserStore from "../../state/stores/currentUser";
 import useSettingsStore from "../../state/stores/settings";
 import { initICategoryCreate } from "../../interfaces/category.interface";
+import Alerts from "../../components/Alerts";
+import AuthService from "../../services/auth.service";
+import SettingsService from "../../services/settings.service";
 
 
 const SetupViewDefault = () => {
@@ -50,7 +54,75 @@ const SetupView = () => {
   const { loading: loadingCategory, alertMessage: alertMessageCategory, errorMessage: errorMessageCategory,
     handleNewCategorySaveClick } = useCategory();
 
+  const navigate = useNavigate();
+  
+  const InstallSampleData = ({ title }: any) => {
+    const [alertMessage, setAlertMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
+    const handleInstallSampleDataClick = (event: any) => {
+      event.stopPropagation();
+      try {
+        AuthService
+        .installSampleData()
+        .then((response: AxiosResponse) => {
+          setAlertMessage(response.data);
+        })
+        .catch((error: any) => {
+          setErrorMessage(JSON.stringify(error.response.data.message));
+        });
+      } catch (error: any) {
+        setErrorMessage(error.toString());
+      }
+    };
+    
+    title = title + ''; //Dummy code to avoid warning
+    return (
+      <>
+        <section className="py-3 py-md-5 min-vh-99 d-flex justify-content-center align-items-center">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <div className="text-center">
+                  <h1 className="d-flex justify-content-center align-items-center gap-2 mb-4">
+                    <span className="">Install sample data:</span>
+                  </h1>
+                  <button
+                    className={(alertMessage && !errorMessage) ? "btn btn-secondary btn-block" : "btn btn-primary btn-block"}
+                    disabled={(alertMessage && !errorMessage) ? true : false}
+                    onClick={handleInstallSampleDataClick}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Delete Comment"
+                  >
+                    Click here to install sample data
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <Alerts
+          alertMessage={alertMessage}
+          errorMessage={errorMessage}
+        />
+      </>
+    )
+  };
+
   const FinishSetup = ({ title }: any) => {
+    const handleDisableSetupClick = (event: any) => {
+      event.stopPropagation();
+      try {
+        SettingsService
+        .update({'setup': 0})
+        .then(() => {});
+      } catch (error: any) {
+        console.log(error);
+      }
+      navigate('/');
+    }
+      
     title = title + ''; //Dummy code to avoid warning
     return (
       <section className="py-3 py-md-5 min-vh-99 d-flex justify-content-center align-items-center">
@@ -61,9 +133,15 @@ const SetupView = () => {
                 <h1 className="d-flex justify-content-center align-items-center gap-2 mb-4">
                   <span className="fw-bold">Thanks for choosing Cf-Blog!</span>
                 </h1>
-                <Link to={"/"} className="btn bsb-btn-5xl btn-dark rounded-pill px-5 fs-6 m-0">
-                  <span className="ms-2">Go to Home</span>
-                </Link>
+                <button
+                    className="btn bsb-btn-5xl btn-dark rounded-pill px-5 fs-6 m-0"
+                    onClick={handleDisableSetupClick}
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Delete Comment"
+                  >
+                    Go to Home
+                  </button>
               </div>
             </div>
           </div>
@@ -73,7 +151,7 @@ const SetupView = () => {
   };
 
   return (
-    (settings?.brand === '') ? (
+    (settings?.setup !== 0) ? (
       <>
         <div className="container mb-3">
           <MultiStep
@@ -107,8 +185,11 @@ const SetupView = () => {
               onNewCategorySaveClick={handleNewCategorySaveClick}
               isSetup={true}
             />
+            <InstallSampleData
+              title="Step 4 - Install sample data"
+            />
             <FinishSetup
-              title="Step 4 - All done!"
+              title="Step 5 - All done!"
             />
           </MultiStep>
         </div>

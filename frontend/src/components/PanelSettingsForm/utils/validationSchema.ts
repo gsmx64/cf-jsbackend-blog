@@ -22,6 +22,8 @@ const validationSchema = yup
       VALID_LETTERS_NUMBERS_REGEX,
       'Title can contain spaces, letters, numbers and only these special characters: % & ( ) * + , . : ? @ _ -',
     ),
+    activation: yup.string()
+      .required('This field is required!'),
     terms: yup.string()
     .test(
       'len',

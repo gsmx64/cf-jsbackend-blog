@@ -1,18 +1,18 @@
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import validationSchema from "./utils/validationSchema";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
+import Editor from "../Editor";
 
 
-const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
-  errorMessage, onEditPostSaveClick, onEditPostCancelClick }: any) => {
-  const navigate = useNavigate();
+const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alertMessage,
+  errorMessage, onEditPostSaveClick, onEditPostCancelClick }: any, ref: any) => {
   const activeCategories = Array.from(categories);
+  const [postContent, setPostContent] = useState<string>('');
   
   const {
     register,
@@ -33,12 +33,19 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
     }
   );
 
+  useEffect(() => {
+    setPostContent(ref?.current?.value);
+  }, [ref]);
+
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onEditPostSaveClick(postId, body);
-    if (saveSuccessful !== undefined) {
-      navigate(`/list-posts`);
-    }
+    onEditPostSaveClick(postId, body);
   }
+
+  const handleWYSIWYGChange = useCallback((postContent: string) => {
+		setPostContent(postContent);
+    console.log('handleWYSIWYGChange', postContent);
+		return (postContent: string) => setPostContent(postContent);
+	}, []);
 
   const handleNewPostCancelClick = (event: any) => {
     event.stopPropagation();
@@ -135,10 +142,18 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
                     <h6 className="mb-0">Content</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
+                    <Editor
+                      defaultValue={post.content}
+                      toolbarMode={'full'}
+                      placeholder="Post content"
+                      handleWYSIWYGChange={handleWYSIWYGChange}
+                    />
                     <textarea
                       id={`post-content-textarea`}
                       placeholder="Post content"
                       autoComplete="off"
+                      value={postContent}
+                      //style={{display: 'none'}}
                       className={`${(
                         (isSubmitted && errors?.content) ?
                         "form-control is-invalid" :
@@ -232,7 +247,7 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
                     <span>Save</span>
                   </button>
                   <button type="submit" onClick={handleNewPostCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
-                    <span>Cancel</span>
+                    <span>Close</span>
                   </button>
                 </div>
                 <Alerts
@@ -246,6 +261,6 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
       )}
     </>  
   );
-}
+})
 
 export default PanelEditPostForm;

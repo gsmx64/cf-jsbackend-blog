@@ -8,6 +8,7 @@ import CategoriesService from "../../services/categories.service";
 
 const usePostStore = create<IUsePostStore>((set) => ({
   ...initialPostStoreState,
+  setReset: () => set(() => ({ loading: false, alertMessage: '', errorMessage: '' })),
   fetchPost: (id: string | undefined) => {
     try {
       set(() => ({ loading: true, errorMessage: '' }));
@@ -95,7 +96,7 @@ const usePostStore = create<IUsePostStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if(response.data) {
-          set(() => ({ alertMessage: `Post "${data.title}" created!` }));
+          set(() => ({ alertMessage: `Post "${data.title}" created! ${JSON.stringify(response)}` }));
         }
       })
       .catch((error: any) => {

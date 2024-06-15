@@ -1,17 +1,18 @@
+import { forwardRef, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import validationSchema from "./utils/validationSchema";
 import Alerts from "../Alerts";
 import Loading from "../Loading";
+import Editor from "../Editor";
 
 
-const PanelNewPostForm = ({ categories, loading, alertMessage,
-  errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any) => {
+const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
+  errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any, ref: any) => {
   const activeCategories = Array.from(categories);
-  const navigate = useNavigate();
+  const [postContent, setPostContent] = useState<string>('');
 
   const {
     register,
@@ -24,15 +25,19 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
     }
   );
 
+  useEffect(() => {
+    setPostContent(ref?.current?.value);
+  }, [ref]);
+
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onNewPostSaveClick(body);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '')
-    ) {
-      navigate(`/list-posts`);
-    }
+    onNewPostSaveClick(body);
   };
+
+	const handleWYSIWYGChange = useCallback((postContent: string) => {
+		setPostContent(postContent);
+    console.log('handleWYSIWYGChange', postContent);
+		return (postContent: string) => setPostContent(postContent);
+	}, []);
 
   const handleNewPostCancelClick = (event: any) => {
     event.stopPropagation();
@@ -49,10 +54,11 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
           <div className="card mb-3">
             <div className="card-body">
               <form
-                  onSubmit={handleSubmit(onSubmitHandler)}
-                  noValidate
-                  className="needs-validation"
-                >
+                id="NewPostForm"
+                onSubmit={handleSubmit(onSubmitHandler)}
+                noValidate
+                className="needs-validation"
+              >
                 <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">New post</i></h6>
                 <div className="row">
                   <div className="col-sm-3">
@@ -126,10 +132,18 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
                     <h6 className="mb-0">Content</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
+                    <Editor
+                      defaultValue={''}
+                      toolbarMode={'full'}
+                      placeholder="Post content"
+                      handleWYSIWYGChange={handleWYSIWYGChange}
+                    />
                     <textarea
                       id={`post-content-textarea`}
                       placeholder="Post content"
                       autoComplete="off"
+                      value={postContent}
+                      style={{display: 'none'}}
                       className={`${(
                         (isSubmitted && errors?.content) ?
                         "form-control is-invalid" :
@@ -180,7 +194,7 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
                     <span>Save</span>
                   </button>
                   <button type="submit" onClick={handleNewPostCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
-                    <span>Cancel</span>
+                    <span>Close</span>
                   </button>
                 </div>
                 <Alerts
@@ -194,6 +208,6 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
       )}
     </>  
   );
-}
+})
 
 export default PanelNewPostForm;

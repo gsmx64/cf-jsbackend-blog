@@ -9,11 +9,12 @@ import usePost from "../../hooks/usePost";
 
 const PanelNewPostView = ({ currentUser, settings, searchTerm }: any) => {
   const { activeCategories, loading, alertMessage, errorMessage,
-    handleNewPostSaveClick } = usePost();
+    setReset, handleNewPostSaveClick } = usePost();
   const navigate = useNavigate();
 
   const handleNewPostCancelClick = () => {
-    navigate(`/posts`);
+    setReset();
+    navigate(`/list-posts`);
   };
 
   return (

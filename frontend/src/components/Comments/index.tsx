@@ -30,7 +30,7 @@ const Comments = ({ comments }: CommentsProps) => {
           ) : (
             (commentsData).map((comment: any, idx: number) => (
               <div key={idx} className="card mt-2">
-                <div className="card-header">
+                <div className="card-header" style={{minWidth: '40rem'}}>
                   <div className="float-start">
                     <span className="pe-1" style={{fontSize:12}}>Comment by: </span>
                     <img

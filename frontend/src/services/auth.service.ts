@@ -123,6 +123,14 @@ const getCurrentUser = () => {
   );
 };
 
+const installSampleData = () => {
+  return api.post<any>(
+    'settings/sampledata',
+    { sample: 'install_sample_data' },
+    { headers: AuthService.authHeader() }
+  );
+};
+
 const AuthService = {
   authHeader,
   authHeaderFetch,
@@ -137,7 +145,8 @@ const AuthService = {
   isAdmin,
   userRole,
   getCurrentUserId,
-  getCurrentUser
+  getCurrentUser,
+  installSampleData
 };
 
 export default AuthService;

@@ -17,6 +17,12 @@ const usePost = () => {
   const [alertMessage, setAlertMessage] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
+  const setReset = () => {
+    setLoading(false);
+    setAlertMessage('');
+    setErrorMessage('');
+  }
+
   const fetchPost = (id: string | undefined) => {
     try {
       setAlertMessage('');
@@ -99,7 +105,7 @@ const usePost = () => {
       .update(id, data)
       .then((response: AxiosResponse) => {
         if(response.data) {
-          setAlertMessage(`Post "${data.title}" created!`);
+          setAlertMessage(`Post "${data.title}" edited!`);
         }
       })
       .catch((error: any) => {
@@ -119,8 +125,8 @@ const usePost = () => {
     fetchActiveCategories();
   }, []);
 
-  return { postId, post, loading, alertMessage, errorMessage,
-    activeCategories, handleNewPostSaveClick, handleEditPostSaveClick };
+  return { postId, post, loading, alertMessage, errorMessage, activeCategories,
+    setReset, handleNewPostSaveClick, handleEditPostSaveClick };
 };
 
 export default usePost;

@@ -1,6 +1,4 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -25,7 +23,6 @@ interface PanelEditCategoryViewProps {
 
 const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, errorMessage,
   onEditCategorySaveClick, onEditCategoryCancelClick }: PanelEditCategoryViewProps) => {
-  const navigate = useNavigate();
   
   const {
     register,
@@ -45,13 +42,7 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
   );
 
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onEditCategorySaveClick(categoryId, body);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '')
-    ) {
-      navigate(`/list-categories`);
-    }
+    onEditCategorySaveClick(categoryId, body);
   }
 
   const handleEditCategoryCancelClick = (event: any) => {
@@ -215,7 +206,7 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
               className="btn btn-primary btn-block ms-2"
               disabled={loading}
             >
-              <span>Cancel</span>
+              <span>Close</span>
             </button>
           </div>
           <Alerts

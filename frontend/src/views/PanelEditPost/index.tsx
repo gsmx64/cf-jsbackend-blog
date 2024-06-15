@@ -20,6 +20,7 @@ const PanelEditPostViewZustand = () => {
   const loading = usePostStore((state) => state.loading);
   const alertMessage = usePostStore((state) => state.alertMessage);
   const errorMessage = usePostStore((state) => state.errorMessage);
+  const setReset = usePostStore((state) => state.setReset);
   const fetchPost = usePostStore((state) => state.fetchPost);
   const fetchActiveCategories = usePostStore((state) => state.fetchActiveCategories);
   const handleEditPostSaveClick = usePostStore((state) => state.handleEditPostSaveClick);
@@ -30,17 +31,18 @@ const PanelEditPostViewZustand = () => {
   }, []);
 
   return { postId, post, activeCategories, loading, alertMessage, errorMessage,
-    handleEditPostSaveClick
+    setReset, handleEditPostSaveClick
    }
 }
 
 const PanelEditPostView = ({ currentUser, settings, searchTerm }: any) => {
   const { postId, post, activeCategories, loading, alertMessage, errorMessage,
-    handleEditPostSaveClick } = (
+    setReset, handleEditPostSaveClick } = (
     isZustandEnabled) ? PanelEditPostViewZustand() : PanelEditPostViewDefault();
   const navigate = useNavigate();
 
   const handleEditPostCancelClick = () => {
+    setReset();
     navigate(`/list-posts`);
   };
 

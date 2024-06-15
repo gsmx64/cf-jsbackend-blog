@@ -20,6 +20,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
       resolver: yupResolver(validationSchema),
       values: {
         brand: settings?.brand,
+        activation: settings?.activation,
         terms: settings?.terms,
         facebook: settings?.facebook,
         instagram: settings?.instagram,
@@ -79,6 +80,26 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           {...register('brand')}
                         />
                         {errors.brand && <div className="invalid-feedback">{(errors.brand.message?.toString())}</div>}
+                      </div>
+                    </div>
+                    <hr />
+                    <div className="row">
+                      <div className="col-sm-3">
+                        <h6 className="mt-2">User account activation mode</h6>
+                      </div>
+                      <div className="col-sm-9 text-secondary">
+                        <select
+                          id="settings-select-activation-mode"
+                          defaultValue=""
+                          className="form-select form-select-sm pe-14"
+                          style={{minWidth: 124}}
+                          {...register('activation')}
+                        >
+                          <option disabled value=""> - Select Mode - </option>
+                          <option value="auto">Autoactivation</option>
+                          <option value="email">Email</option>
+                        </select>
+                        {errors.activation && <div className="invalid-feedback">{(errors.activation.message?.toString())}</div>}
                       </div>
                     </div>
                     <hr />
@@ -257,7 +278,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                   </button>
                   { !isSetup &&
                     <button type="submit" onClick={handleSettingsCancelClick} className="btn btn-primary btn-block ms-2" disabled={loading}>
-                      <span>Cancel</span>
+                      <span>Close</span>
                     </button>
                   }
                 </div>

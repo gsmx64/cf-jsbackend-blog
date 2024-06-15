@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -9,7 +8,6 @@ import Alerts from "../Alerts";
 
 const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
   onNewCategorySaveClick, onNewCategoryCancelClick, isSetup }: any) => {
-  const navigate = useNavigate();
 
   const {
     register,
@@ -23,14 +21,7 @@ const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
   );
 
   const onSubmitHandler = (body: any) => {
-    const saveSuccessful = onNewCategorySaveClick(body);
-    if (
-      (saveSuccessful !== undefined) &&
-      (errorMessage == '') &&
-      (!isSetup)
-    ) {
-      navigate(`/list-categories`);
-    }
+    onNewCategorySaveClick(body);
   }
 
   const handleNewCategoryCancelClick = (event: any) => {
@@ -152,7 +143,7 @@ const PanelNewCategoryForm = ({ loading, alertMessage, errorMessage,
                 className="btn btn-primary btn-block ms-2"
                 disabled={loading}
               >
-                <span>Cancel</span>
+                <span>Close</span>
               </button>
             }
           </div>

@@ -46,7 +46,9 @@ const Post = ({ post, alertMessage, errorMessage, loading, currentUser, /*settin
             </div>
             <h4 className="h4">{post?.title}</h4>
             <small className="text-muted">{post?.description}</small>
-            <p className="lead">{post?.content}</p>
+            <div>
+              <div dangerouslySetInnerHTML={{__html: post?.content}} />
+            </div>
             <div className="align-self-end ps-2">
               <div className="btn-group align-self-end" role="group">
                 <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>

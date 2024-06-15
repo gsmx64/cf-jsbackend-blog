@@ -9,6 +9,7 @@ export interface IUsePostStore {
   loading: boolean;
   alertMessage: string;
   errorMessage: Error | null | unknown;
+  setReset: () => void,
   fetchPost: (id: string | undefined) => void;
   fetchActiveCategories: () => void;
   handleUpdateStatusPost: (id: string, status: string, title: string) => void;

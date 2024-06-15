@@ -3,7 +3,7 @@ import AuthService from "./auth.service";
 import ISettings from "../interfaces/settings.interface";
 
 
-const update = (data: ISettings) => {
+const update = (data: any) => {
   return api.put<any>(
     `admin/settings/edit`,
     data,
