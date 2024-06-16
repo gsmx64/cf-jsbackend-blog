@@ -46,7 +46,7 @@ const Post = ({ post, alertMessage, errorMessage, loading, currentUser, /*settin
             </div>
             <h4 className="h4">{post?.title}</h4>
             <small className="text-muted">{post?.description}</small>
-            <div>
+            <div className="align-self-start">
               <div dangerouslySetInnerHTML={{__html: post?.content}} />
             </div>
             <div className="align-self-end ps-2">

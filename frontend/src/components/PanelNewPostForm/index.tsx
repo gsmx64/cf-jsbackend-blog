@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,9 +9,10 @@ import Loading from "../Loading";
 import Editor from "../Editor";
 
 
-const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
-  errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any, ref: any) => {
+const PanelNewPostForm = ({ categories, loading, alertMessage,
+  errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any) => {
   const activeCategories = Array.from(categories);
+  const editorRef = useRef(null);
   const [postContent, setPostContent] = useState<string>('');
 
   const {
@@ -25,17 +26,12 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
     }
   );
 
-  useEffect(() => {
-    setPostContent(ref?.current?.value);
-  }, [ref]);
-
   const onSubmitHandler = (body: any) => {
     onNewPostSaveClick(body);
   };
 
 	const handleWYSIWYGChange = useCallback((postContent: string) => {
 		setPostContent(postContent);
-    console.log('handleWYSIWYGChange', postContent);
 		return (postContent: string) => setPostContent(postContent);
 	}, []);
 
@@ -62,7 +58,7 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                 <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">New post</i></h6>
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Title</h6>
+                    <h6 className="text-center mb-0">Title</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <input
@@ -71,10 +67,10 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                       placeholder="Post title"
                       className={`${(
                         (isSubmitted && errors?.title) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.title === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('title')}
                     />
@@ -84,21 +80,22 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Description</h6>
+                    <h6 className="text-center mb-0">Description</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
-                    <input
-                      type="text"
-                      id="description"
+                    <textarea
+                      id={`post-description-textarea`}
                       placeholder="Post description"
+                      autoComplete="off"
                       className={`${(
                         (isSubmitted && errors?.description) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.description === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('description')}
+                      rows={5}
                     />
                     {errors.description && <div className="invalid-feedback">{(errors.description.message?.toString())}</div>}
                   </div>
@@ -106,7 +103,7 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Image</h6>
+                    <h6 className="text-center mb-0">Image</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <input
@@ -116,10 +113,10 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                       autoComplete="off"
                       className={`${(
                         (isSubmitted && errors?.image) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.image === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('image')}
                     />
@@ -129,21 +126,10 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Content</h6>
+                    <h6 className="text-center mb-0">Content</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
-                    <Editor
-                      defaultValue={''}
-                      toolbarMode={'full'}
-                      placeholder="Post content"
-                      handleWYSIWYGChange={handleWYSIWYGChange}
-                    />
-                    <textarea
-                      id={`post-content-textarea`}
-                      placeholder="Post content"
-                      autoComplete="off"
-                      value={postContent}
-                      style={{display: 'none'}}
+                    <div
                       className={`${(
                         (isSubmitted && errors?.content) ?
                         "form-control is-invalid" :
@@ -151,6 +137,21 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                         "form-control is-valid" :
                         "form-control"
                       )}`}
+                    >
+                      <Editor
+                        defaultValue={postContent}
+                        ref={editorRef}
+                        toolbarMode={'full'}
+                        placeholder="Post content"
+                        handleWYSIWYGChange={handleWYSIWYGChange}
+                      />
+                    </div>
+                    <textarea
+                      id={`post-content-textarea`}
+                      placeholder="Post content"
+                      autoComplete="off"
+                      value={postContent}
+                      style={{display: 'none'}}
                       {...register('content')}
                       rows={10}
                     />
@@ -160,7 +161,7 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Category</h6>
+                    <h6 className="text-center mb-0">Category</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <select
@@ -186,7 +187,7 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
                   </div>
                 </div>
                 <hr />
-                <div className="mb-3">
+                <div className="text-center mb-3">
                   <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
                     {loading && (
                       <span className="spinner-border spinner-border-sm"></span>
@@ -208,6 +209,6 @@ const PanelNewPostForm = forwardRef(({ categories, loading, alertMessage,
       )}
     </>  
   );
-})
+}
 
 export default PanelNewPostForm;

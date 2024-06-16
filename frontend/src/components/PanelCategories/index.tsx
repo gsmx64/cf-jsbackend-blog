@@ -32,73 +32,75 @@ const PanelCategories = ({data, currentPage, setCurrentPage, totalPages, alertMe
 
   return (
     <>
-      <div className="container mt-3">
-        <div className="font-weight-bold">
-          <h4>Categories</h4>
-        </div>
-        {currentData && loading ? (
-          <Loading />
-        ) : (
-          <>
-            {!currentData ? (
-              <div className="justify-content-center pt-20">
-                <p>No posts found!</p>
-              </div>
-            ) : (
-              <div className="container-fluid">
-                <BootstrapLink />
-                <table className="table table-striped table-hover align-middle">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Image</th>
-                      <th scope="col">Category Title</th>
-                      <th scope="col">Author</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Created Date</th>
-                      <th scope="col">Updated Date</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentData?.map((category: any, idx: number) => {
-                      if (searchTerm !== '') {
-                        if (
-                          !category.title.toLowerCase().includes(searchTerm) &&
-                          !category.description.toLowerCase().includes(searchTerm)
-                        ) {
-                          return '';
+      <div className="card mb-3">
+        <div className="card-body">
+          <h6 className="d-flex align-items-center mb-3">
+            <i className="material-icons text-info mr-2 pe-1">Categories</i>
+          </h6>
+        
+          {currentData && loading ? (
+            <Loading />
+          ) : (
+            <>
+              {!currentData ? (
+                <div className="justify-content-center pt-20">
+                  <p>No posts found!</p>
+                </div>
+              ) : (
+                <div className="container-fluid">
+                  <BootstrapLink />
+                  <table className="table table-striped table-hover align-middle">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Category Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created Date</th>
+                        <th scope="col">Updated Date</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentData?.map((category: any, idx: number) => {
+                        if (searchTerm !== '') {
+                          if (
+                            !category.title.toLowerCase().includes(searchTerm) &&
+                            !category.description.toLowerCase().includes(searchTerm)
+                          ) {
+                            return '';
+                          }
                         }
-                      }
 
-                      return (
-                        <PanelCategoryItem
-                          key={`category-item-${category.id}`}
-                          idx={idx}
-                          //row_state={(idx % 2) ? 'odd' : 'even'}
-                          category={category}
-                          onCategoryItemUpdateStatusCategory={handleCategoryItemUpdateStatusCategory}
-                          onCategoryItemEditCategory={handleCategoryEditCategory}
-                          onCategoryItemDeleteCategory={handleCategoryItemDeleteCategory}
-                          currentUser={currentUser}
-                        />
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            <Pagination
-              totalPages={totalPages}
-              currentPage={currentPage}
-              setCurrentPage={setCurrentPage}
-            />
-            <Alerts
-              alertMessage={alertMessage}
-              errorMessage={errorMessage}
-            />
-          </>            
-        )}
+                        return (
+                          <PanelCategoryItem
+                            key={`category-item-${category.id}`}
+                            idx={idx}
+                            category={category}
+                            onCategoryItemUpdateStatusCategory={handleCategoryItemUpdateStatusCategory}
+                            onCategoryItemEditCategory={handleCategoryEditCategory}
+                            onCategoryItemDeleteCategory={handleCategoryItemDeleteCategory}
+                            currentUser={currentUser}
+                          />
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+              />
+              <Alerts
+                alertMessage={alertMessage}
+                errorMessage={errorMessage}
+              />
+            </>
+          )}
+        </div>
       </div>
     </>
   );

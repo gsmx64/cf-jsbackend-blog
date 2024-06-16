@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,10 +9,11 @@ import Loading from "../Loading";
 import Editor from "../Editor";
 
 
-const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alertMessage,
-  errorMessage, onEditPostSaveClick, onEditPostCancelClick }: any, ref: any) => {
+const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
+  errorMessage, onEditPostSaveClick, onEditPostCancelClick }: any) => {
   const activeCategories = Array.from(categories);
-  const [postContent, setPostContent] = useState<string>('');
+  const editorRef = useRef(null);
+  const [postContent, setPostContent] = useState<string>(post.content);
   
   const {
     register,
@@ -26,16 +27,12 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
         title: post.title,
         description: post.description,
         image: post.image,
-        content: post.content,
+        content: postContent,
         category: post.category.id,
         status: post.status
       },
     }
   );
-
-  useEffect(() => {
-    setPostContent(ref?.current?.value);
-  }, [ref]);
 
   const onSubmitHandler = (body: any) => {
     onEditPostSaveClick(postId, body);
@@ -43,7 +40,6 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
 
   const handleWYSIWYGChange = useCallback((postContent: string) => {
 		setPostContent(postContent);
-    console.log('handleWYSIWYGChange', postContent);
 		return (postContent: string) => setPostContent(postContent);
 	}, []);
 
@@ -62,6 +58,7 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
           <div className="border rounded-3">
             <div className="card-body">
               <form
+                  id={`form-edit-post-form-${postId}`}
                   onSubmit={handleSubmit(onSubmitHandler)}
                   noValidate
                   className="needs-validation"
@@ -72,7 +69,7 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Title</h6>
+                    <h6 className="text-center mb-0">Title</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <input
@@ -81,10 +78,10 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                       placeholder="Post title"
                       className={`${(
                         (isSubmitted && errors?.title) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.title === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('title')}
                     />
@@ -94,21 +91,22 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Description</h6>
+                    <h6 className="text-center mb-0">Description</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
-                    <input
-                      type="text"
-                      id="description"
+                    <textarea
+                      id={`post-description-textarea`}
                       placeholder="Post description"
+                      autoComplete="off"
                       className={`${(
                         (isSubmitted && errors?.description) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.description === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('description')}
+                      rows={5}
                     />
                     {errors.description && <div className="invalid-feedback">{(errors.description.message?.toString())}</div>}
                   </div>
@@ -116,7 +114,7 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Image</h6>
+                    <h6 className="text-center mb-0">Image</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <input
@@ -126,10 +124,10 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                       autoComplete="off"
                       className={`${(
                         (isSubmitted && errors?.image) ?
-                        "form-control is-invalid text-center" :
+                        "form-control is-invalid" :
                         (isSubmitted && errors?.image === undefined) ?
-                        "form-control is-valid text-center" :
-                        "form-control text-center"
+                        "form-control is-valid" :
+                        "form-control"
                       )}`}
                       {...register('image')}
                     />
@@ -139,21 +137,10 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Content</h6>
+                    <h6 className="text-center mb-0">Content</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
-                    <Editor
-                      defaultValue={post.content}
-                      toolbarMode={'full'}
-                      placeholder="Post content"
-                      handleWYSIWYGChange={handleWYSIWYGChange}
-                    />
-                    <textarea
-                      id={`post-content-textarea`}
-                      placeholder="Post content"
-                      autoComplete="off"
-                      value={postContent}
-                      //style={{display: 'none'}}
+                    <div
                       className={`${(
                         (isSubmitted && errors?.content) ?
                         "form-control is-invalid" :
@@ -161,8 +148,23 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                         "form-control is-valid" :
                         "form-control"
                       )}`}
-                      {...register('content')}
+                    >
+                      <Editor
+                        defaultValue={postContent}
+                        ref={editorRef}
+                        toolbarMode={'full'}
+                        placeholder="Post content"
+                        handleWYSIWYGChange={handleWYSIWYGChange}
+                      />
+                    </div>
+                    <textarea
+                      id={`post-content-textarea`}
+                      placeholder="Post content"
+                      autoComplete="off"
+                      value={postContent}
+                      style={{display: 'none'}}
                       rows={10}
+                      {...register('content')}
                     />
                     {errors.content && <div className="invalid-feedback">{(errors.content.message?.toString())}</div>}
                   </div>
@@ -170,7 +172,7 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Category</h6>
+                    <h6 className="text-center mb-0">Category</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <select
@@ -198,7 +200,7 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Status</h6>
+                    <h6 className="text-center mb-0">Status</h6>
                   </div>
                   <div className="col-sm-9 text-secondary">
                     <select
@@ -219,9 +221,9 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Created</h6>
+                    <h6 className="text-center mb-0">Created</h6>
                   </div>
-                  <div className="col-sm-9 text-secondary">
+                  <div className="col-sm-9 text-secondary text-center">
                     <span>
                       {post.createAt}
                     </span>
@@ -230,16 +232,16 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
                 <hr />
                 <div className="row">
                   <div className="col-sm-3">
-                    <h6 className="mb-0">Last update</h6>
+                    <h6 className="text-center mb-0">Last update</h6>
                   </div>
-                  <div className="col-sm-9 text-secondary">
+                  <div className="col-sm-9 text-secondary text-center">
                     <span>
                       {post.updateAt}
                     </span>
                   </div>
                 </div>
                 <hr />
-                <div className="mb-3">
+                <div className="text-center mb-3">
                   <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
                     {loading && (
                       <span className="spinner-border spinner-border-sm"></span>
@@ -261,6 +263,6 @@ const PanelEditPostForm = forwardRef(({ postId, post, categories, loading, alert
       )}
     </>  
   );
-})
+}
 
 export default PanelEditPostForm;

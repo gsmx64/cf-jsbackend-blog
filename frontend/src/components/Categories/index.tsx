@@ -20,7 +20,7 @@ const Categories = ({data, currentPage, setCurrentPage, totalPages,
 
   return (
     <>
-      <div className="font-weight-bold">
+      <div className="font-weight-bold text-center">
         <h4>Categories</h4>
       </div>
       <div>
@@ -31,7 +31,7 @@ const Categories = ({data, currentPage, setCurrentPage, totalPages,
             <>
               {!currentData ? (
                 <div className="justify-content-center pt-20">
-                  <p>No categories found!</p>
+                  <p className="text-center">No categories found!</p>
                 </div>
               ) : (
                 <div className="justify-content-center">

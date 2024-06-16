@@ -55,7 +55,9 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                 noValidate
                 className="needs-validation"
               >
-                <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">Blog Settings</i></h6>
+                <h6 className="d-flex align-items-center mb-3">
+                  <i className="material-icons text-info mr-2 pe-1">Blog Settings</i>
+                </h6>
 
                 <div className="card">
                   <div className="card-body">
@@ -63,7 +65,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
 
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Brand</h6>
+                        <h6 className="text-center mt-2">Brand</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -72,10 +74,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.brand ? settings?.brand : 'Blog Brand Name'}
                           className={`${(
                             (isSubmitted && errors?.brand) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.brand === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('brand')}
                         />
@@ -85,7 +87,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">User account activation mode</h6>
+                        <h6 className="text-center mt-2">User account activation mode</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <select
@@ -105,7 +107,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Terms and conditions</h6>
+                        <h6 className="text-center mt-2">Terms and conditions</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <textarea
@@ -133,7 +135,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">Social Media</i></h6>
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Facebook</h6>
+                        <h6 className="text-center mt-2">Facebook</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -142,10 +144,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.facebook ? settings?.facebook : 'Facebook Link'}
                           className={`${(
                             (isSubmitted && errors?.facebook) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.facebook === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('facebook')}
                         />
@@ -155,7 +157,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Instagram</h6>
+                        <h6 className="text-center mt-2">Instagram</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -164,10 +166,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.instagram ? settings?.instagram : 'Instagram Link'}
                           className={`${(
                             (isSubmitted && errors?.instagram) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.instagram === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('instagram')}
                         />
@@ -177,7 +179,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">X</h6>
+                        <h6 className="text-center mt-2">X</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -186,10 +188,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.twitterx ? settings?.twitterx : 'X Link'}
                           className={`${(
                             (isSubmitted && errors?.twitterx) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.twitterx === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('twitterx')}
                         />
@@ -199,7 +201,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">LinkedIn</h6>
+                        <h6 className="text-center mt-2">LinkedIn</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -208,10 +210,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.linkedin ? settings?.linkedin : 'LinkedIn Link'}
                           className={`${(
                             (isSubmitted && errors?.linkedin) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.linkedin === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('linkedin')}
                         />
@@ -221,7 +223,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Youtube</h6>
+                        <h6 className="text-center mt-2">Youtube</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -230,10 +232,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.youtube ? settings?.youtube : 'Youtube Link'}
                           className={`${(
                             (isSubmitted && errors?.youtube) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.youtube === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('youtube')}
                         />
@@ -243,7 +245,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mt-2">Tik Tok</h6>
+                        <h6 className="text-center mt-2">Tik Tok</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
                         <input
@@ -252,10 +254,10 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                           placeholder={settings?.tiktok ? settings?.tiktok : 'TikTok Link'}
                           className={`${(
                             (isSubmitted && errors?.tiktok) ?
-                            "form-control is-invalid text-center" :
+                            "form-control is-invalid" :
                             (isSubmitted && errors?.tiktok === undefined) ?
-                            "form-control is-valid text-center" :
-                            "form-control text-center"
+                            "form-control is-valid" :
+                            "form-control"
                           )}`}
                           {...register('tiktok')}
                         />
@@ -265,7 +267,7 @@ const PanelSettingsForm = ({ settings, loading, alertMessage, errorMessage,
                   </div>
                 </div>
 
-                <div className="mt-3 mb-3">
+                <div className="mt-3 mb-3 text-center">
                   <button
                     type="submit"
                     className={(isSetup && alertMessage && !errorMessage) ? "btn btn-secondary btn-block" : "btn btn-primary btn-block"}

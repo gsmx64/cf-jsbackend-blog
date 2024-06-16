@@ -38,7 +38,7 @@ const Posts = ({ posts, currentPage, setCurrentPage, totalPages, currentUser,
 
   return (
     <>
-      <div className="font-weight-bold">
+      <div className="font-weight-bold text-center">
         <h4>Posts</h4>
       </div>
       {postsData && loading ? (
@@ -47,7 +47,7 @@ const Posts = ({ posts, currentPage, setCurrentPage, totalPages, currentUser,
         <>
           {!postsData ? (
             <div className="justify-content-center pt-20">
-              <p>No posts found!</p>
+              <p className="text-center">No posts found!</p>
             </div>
           ) : (
             <div className="justify-content-center">
@@ -80,7 +80,7 @@ const Posts = ({ posts, currentPage, setCurrentPage, totalPages, currentUser,
           />
           {(postsData.length === filteredPosts) && (
             <div className="justify-content-center pt-20">
-              <p>No posts found!</p>
+              <p className="text-center">No posts found!</p>
             </div>
           )}
           <Alerts

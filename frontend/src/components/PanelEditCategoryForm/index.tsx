@@ -66,7 +66,7 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           </h6>
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Title</h6>
+              <h6 className="text-center mb-0">Title</h6>
             </div>
             <div className="col-sm-9 text-secondary">
               <input
@@ -75,10 +75,10 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
                 placeholder="Category title"
                 className={`${(
                   (isSubmitted && errors?.title) ?
-                  "form-control is-invalid text-center" :
+                  "form-control is-invalid" :
                   (isSubmitted && errors?.title === undefined) ?
-                  "form-control is-valid text-center" :
-                  "form-control text-center"
+                  "form-control is-valid" :
+                  "form-control"
                 )}`}
                 {...register('title')}
               />
@@ -93,21 +93,22 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Description</h6>
+              <h6 className="text-center mb-0">Description</h6>
             </div>
             <div className="col-sm-9 text-secondary">
-              <input
-                type="text"
-                id="description"
+              <textarea
+                id={`category-description-textarea`}
                 placeholder="Category description"
+                autoComplete="off"
                 className={`${(
                   (isSubmitted && errors?.description) ?
-                  "form-control is-invalid text-center" :
+                  "form-control is-invalid" :
                   (isSubmitted && errors?.description === undefined) ?
-                  "form-control is-valid text-center" :
-                  "form-control text-center"
+                  "form-control is-valid" :
+                  "form-control"
                 )}`}
                 {...register('description')}
+                rows={5}
               />
               {
                 errors.description &&
@@ -120,7 +121,7 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Image</h6>
+              <h6 className="text-center mb-0">Image</h6>
             </div>
             <div className="col-sm-9 text-secondary">
               <input
@@ -130,10 +131,10 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
                 autoComplete="off"
                 className={`${(
                   (isSubmitted && errors?.image) ?
-                  "form-control is-invalid text-center" :
+                  "form-control is-invalid" :
                   (isSubmitted && errors?.image === undefined) ?
-                  "form-control is-valid text-center" :
-                  "form-control text-center"
+                  "form-control is-valid" :
+                  "form-control"
                 )}`}
                 {...register('image')}
               />
@@ -148,7 +149,7 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Status</h6>
+              <h6 className="text-center mb-0">Status</h6>
             </div>
             <div className="col-sm-9 text-secondary">
               <select
@@ -169,9 +170,9 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Created</h6>
+              <h6 className="text-center mb-0">Created</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <span>
                 {category.createAt}
               </span>
@@ -180,16 +181,16 @@ const PanelEditCategoryForm = ({ categoryId, category, loading, alertMessage, er
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Last update</h6>
+              <h6 className="text-center mb-0 text-center">Last update</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <span>
                 {category.updateAt}
               </span>
             </div>
           </div>
           <hr />
-          <div className="mb-3">
+          <div className="text-center mb-3">
             <button
               type="submit"
               className="btn btn-primary btn-block"

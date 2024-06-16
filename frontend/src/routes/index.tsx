@@ -97,7 +97,9 @@ const createRouteElementsFromObject = (
                   onSearch={undefined}
                   ref={props.containerRef}
                 />
-                <ComponentOnACLFail />
+                <ComponentOnACLFail
+                  settings={props.settings}
+                />
                 <Footer
                   currentUser={props.currentUser}
                   settings={props.settings}
@@ -124,7 +126,9 @@ const createRouteElementsFromObject = (
                 onSearch={search ? props.handleNavbarSearch : undefined}
                 ref={props.containerRef}
               />
-              <ComponentOnError />
+              <ComponentOnError
+                settings={props.settings}
+              />
               <Footer
                 currentUser={props.currentUser}
                 settings={props.settings}

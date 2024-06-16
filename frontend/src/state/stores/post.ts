@@ -96,7 +96,7 @@ const usePostStore = create<IUsePostStore>((set) => ({
       .update(id, data)
       .then((response: AxiosResponse) => {
         if(response.data) {
-          set(() => ({ alertMessage: `Post "${data.title}" created! ${JSON.stringify(response)}` }));
+          set(() => ({ alertMessage: `Post "${data.title}" created!` }));
         }
       })
       .catch((error: any) => {

@@ -20,15 +20,12 @@ const PostItem = ({ post, currentUser, onPostClick }: any) => {
       </div>
       <div className={styles.postsContentContainer}>
         <h4 className="h4">{post?.title}</h4>
-        <p className={styles.postsContent}>{post?.content}</p>
+        <p className={styles.postsContent}>{post?.description}</p>
         <div className="d-flex">
           <div className="align-self-start me-2">
             <button onClick={handleSeeMoreClick} className="btn btn-outline-secondary">
               Ver mas
             </button>
-            {/*<Link to={`/post/${post?.id}`} className="btn btn-outline-secondary">
-              <span className="text-info">Ver mas</span>
-            </Link>*/}
           </div>
           <div className="align-self-end">
             <div className="btn-group align-self-end" role="group">

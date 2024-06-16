@@ -27,74 +27,75 @@ const LoginForm = ({ currentUser, loading, alertMessage, errorMessage, onLoginUs
   }
 
   return (
-    (currentUser === undefined) ? (
-    <div className="container">
+    (currentUser === undefined) ?
+    (
       <div className="row">
-        <div className="offset-md-3 col-md-6 offset-md-3">
-          <div className={styles.cardContainer}>
-            <img
-              src={DEFAULT_NO_AVATAR_MEDIUM}
-              alt="profile-img"
-              className={styles.cardContainerImage}
-            />
-            <form onSubmit={handleSubmit(onSubmitHandler)} className="px-4 py-3">
-              <div className="form-group mb-3">
-                <label htmlFor="username" className="form-label">
-                  Username:
-                </label>
-                <input
-                  type="text"
-                  id="username"
-                  placeholder="Insert your username..."
-                  className={`${(
-                    (isSubmitted && errors?.username) ?
-                    "form-control is-invalid" :
-                    (isSubmitted && errors?.username === undefined) ?
-                    "form-control is-valid" :
-                    "form-control"
-                  )}`}
-                  {...register('username')}
-                />
-                {errors.username && <div className="invalid-feedback">{String(errors.username.message)}</div>}
-              </div>
-  
-              <div className="form-group mb-3">
-                <label htmlFor="password" className="form-label">
-                  Password:
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  placeholder="Insert your password..."
-                  className={`${(
-                    (isSubmitted && errors?.password) ?
-                    "form-control is-invalid" :
-                    (isSubmitted && errors?.password === undefined) ?
-                    "form-control is-valid" :
-                    "form-control"
-                  )}`}
-                  {...register('password')}
-                />
-                {errors.password && <div className="invalid-feedback">{String(errors.password.message)}</div>}
-              </div>
-  
-              <div className="mb-3">
-                <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-                  {loading && (
-                    <span className="spinner-border spinner-border-sm"></span>
-                  )}
-                  <span>Login</span>
-                </button>
-              </div>
-              <Alerts
-                alertMessage={alertMessage}
-                errorMessage={errorMessage}
+        <div className="offset-md-3 col-md-6">
+          <div className="border rounded-3 mb-3 ps-3 pt-3 pe-3">
+            <div className="card-body">
+              <img
+                src={DEFAULT_NO_AVATAR_MEDIUM}
+                alt="profile-img"
+                className={styles.cardContainerImage}
               />
-            </form>
-          </div>
+              <form onSubmit={handleSubmit(onSubmitHandler)}>
+                <div className="form-group mb-3">
+                  <label htmlFor="username" className="form-label">
+                    Username:
+                  </label>
+                  <input
+                    type="text"
+                    id="username"
+                    placeholder="Insert your username..."
+                    className={`${(
+                      (isSubmitted && errors?.username) ?
+                      "form-control is-invalid" :
+                      (isSubmitted && errors?.username === undefined) ?
+                      "form-control is-valid" :
+                      "form-control"
+                    )}`}
+                    {...register('username')}
+                  />
+                  {errors.username && <div className="invalid-feedback">{String(errors.username.message)}</div>}
+                </div>
+    
+                <div className="form-group mb-3">
+                  <label htmlFor="password" className="form-label">
+                    Password:
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    placeholder="Insert your password..."
+                    className={`${(
+                      (isSubmitted && errors?.password) ?
+                      "form-control is-invalid" :
+                      (isSubmitted && errors?.password === undefined) ?
+                      "form-control is-valid" :
+                      "form-control"
+                    )}`}
+                    {...register('password')}
+                  />
+                  {errors.password && <div className="invalid-feedback">{String(errors.password.message)}</div>}
+                </div>
+    
+                <div className="text-center mb-3">
+                  <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
+                    {loading && (
+                      <span className="spinner-border spinner-border-sm"></span>
+                    )}
+                    <span>Login</span>
+                  </button>
+                </div>
+                <Alerts
+                  alertMessage={alertMessage}
+                  errorMessage={errorMessage}
+                />
+              </form>
+            </div>
+          </div>  
         </div>
       </div>
-    </div>
     ) : (
       <>
         <Navigate to="/" replace />

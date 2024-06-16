@@ -41,9 +41,9 @@ const Category = ({category, loading, errorMessage, setSearchTerm,
         <Loading />
       ) : (
         <>
-          <div className={styles.categoryContainer}>
+          <div className={`text-center ${styles.categoryContainer}`}>
             <BootstrapLink />
-            <div className={styles.imageContainer}>
+            <div className={`text-center ${styles.imageContainer}`}>
               <img
                 src={category?.image}
                 width={200}
@@ -52,8 +52,8 @@ const Category = ({category, loading, errorMessage, setSearchTerm,
                 className="rounded"
               />
             </div>
-            <h4 className="h4">{category?.title}</h4>
-            <p className="lead">{category?.description}</p>
+            <h4 className="h4 text-center">{category?.title}</h4>
+            <p>{category?.description}</p>
             <div className="align-self-end">
               <div className="btn-group align-self-end" role="group">
                 <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
@@ -89,7 +89,7 @@ const Category = ({category, loading, errorMessage, setSearchTerm,
                 </div>
                 {((categoryPosts as IPostArray[]).length === 0) ? (
                   <div className="justify-content-center pt-20">
-                    <p>No posts found!</p>
+                    <p className="text-center">No posts found!</p>
                   </div>
                 ) : (
                   <>

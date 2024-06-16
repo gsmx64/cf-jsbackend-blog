@@ -196,7 +196,7 @@ const SetupView = () => {
       </>
     ) : (
       <div className="container">
-        <h2>Setup is disabled!</h2>
+        <h2 className="text-center">Setup is disabled!</h2>
       </div>
     )
   )

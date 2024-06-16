@@ -26,7 +26,7 @@ const ProfilePostsItem = ({ posts }: any) => {
                       </div>
                       <div className="mb-1">
                         <Link to={`/post/${post.id}`} style={{color: 'inherit'}}>
-                          <h4 className="mb-1">Post: {post.title}</h4>
+                          <h4 className="mb-1 text-center">Post: {post.title}</h4>
                         </Link>
                       </div>
                       <small className="">Category: {post.category.title}</small>

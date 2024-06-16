@@ -47,7 +47,7 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
   };
 
   return (
-    <div className="border rounded-3">
+    <div className="border rounded-3 mb-3">
       <div className="card-body">
         <form
             onSubmit={handleSubmit(onSubmitHandler)}
@@ -62,7 +62,7 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
             
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Comment</h6>
+              <h6 className="text-center mb-0">Comment</h6>
             </div>
             <div className="col-sm-9 text-secondary">
               <textarea
@@ -88,9 +88,9 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Created</h6>
+              <h6 className="text-center mb-0">Created</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <span>
                 {comment.createAt}
               </span>
@@ -99,16 +99,16 @@ const PanelEditCommentForm = ({ commentId, comment, loading, alertMessage, error
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Last update</h6>
+              <h6 className="text-center mb-0">Last update</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <span>
                 {comment.updateAt}
               </span>
             </div>
           </div>
           <hr />
-          <div className="mb-3 mt-2">
+          <div className="mb-3 mt-2 text-center">
             <button
               type="submit"
               className="btn btn-primary btn-block"

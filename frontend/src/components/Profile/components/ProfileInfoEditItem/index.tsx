@@ -55,18 +55,18 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Username</h6>
+              <h6 className="text-center mb-0">Username</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 font-weight-bold text-center">
               {user?.username}
             </div>
           </div>
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Name</h6>
+              <h6 className="text-center mb-0">Name</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <div className="me-3">
                 <input
                   type="text"
@@ -88,9 +88,9 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Lastname</h6>
+              <h6 className="text-center mb-0">Lastname</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <div className="me-3">
                 <input
                   type="text"
@@ -112,9 +112,9 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Email</h6>
+              <h6 className="text-center mb-0">Email</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <div className="me-3">
                 <input
                   type="text"
@@ -137,9 +137,9 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Age</h6>
+              <h6 className="text-center mb-0">Age</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <div className="me-3">
                 <input
                   type="text"
@@ -161,9 +161,9 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">City</h6>
+              <h6 className="text-center mb-0">City</h6>
             </div>
-            <div className="col-sm-9 text-secondary">
+            <div className="col-sm-9 text-secondary text-center">
               <div className="me-3">
                 <input
                   type="text"
@@ -185,7 +185,7 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Country</h6>
+              <h6 className="text-center mb-0">Country</h6>
             </div>
             <div className="col-sm-9">
               <div className="me-3">
@@ -210,14 +210,14 @@ const ProfileInfoEditItem = ({ user, loading, alertMessage, errorMessage,
           <hr />
           <div className="row">
             <div className="col-sm-3">
-              <h6 className="mb-0">Created</h6>
+              <h6 className="text-center mb-0">Created</h6>
             </div>
-            <div className="col-sm-9">
+            <div className="text-center col-sm-9">
               {formatDate(user?.createAt)}
             </div>
           </div>
           <hr />
-          <div className="mb-3">
+          <div className="text-center mb-3">
             <button
               type="submit"
               className="btn btn-primary btn-block"
