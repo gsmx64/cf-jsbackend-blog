@@ -1,29 +1,9 @@
-import { useRef, useMemo } from 'react';
-import JoditEditor, { Jodit } from 'jodit-react';
+import { useMemo } from 'react';
+import JoditEditor from 'jodit-react';
 
-
-function preparePaste(jodit: Jodit) {
-  jodit.e.on(
-    'paste',
-    (e: ClipboardEvent | DragEvent) => {
-      if (confirm('Change pasted content?')) {
-        jodit.e.stopPropagation('paste');
-        const dataTransfer = Jodit.modules.Helpers.getDataTransfer(e);
-        const data = dataTransfer?.getData(Jodit.constants.TEXT_HTML);
-        if (data) {
-          jodit.s.insertHTML(data.replace(/a/g, 'b'));
-        }
-        return false;
-      }
-    },
-    { top: true }
-  );
-}
-Jodit.plugins.add('preparePaste', preparePaste);
 
 const Editor = ({ toolbarMode, defaultValue, placeholder, 
-  handleWYSIWYGChange }: any) => { 
-  const editorRef = useRef(null);
+  handleWYSIWYGChange }: any) => {
 
   const options = [ 'bold', 'italic', '|', 'ul', 'ol', '|', 'font',
     'fontsize', '|', 'outdent', 'indent', 'align', '|', 'hr', '|',
@@ -76,7 +56,6 @@ const Editor = ({ toolbarMode, defaultValue, placeholder,
   return (
     <>
       <JoditEditor
-        ref={editorRef}
         config={config}
         onChange={handleWYSIWYGChange}
         value={defaultValue || ''}

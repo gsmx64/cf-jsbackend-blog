@@ -41,7 +41,7 @@ const Category = ({category, loading, errorMessage, setSearchTerm,
         <Loading />
       ) : (
         <>
-          <div className={`text-center ${styles.categoryContainer}`}>
+          <div className={`${styles.categoryContainer}`}>
             <BootstrapLink />
             <div className={`text-center ${styles.imageContainer}`}>
               <img

@@ -29,7 +29,7 @@ const validationSchema = yup
         (val: any) =>
         val &&
         val.toString().length >= 3 &&
-        val.toString().length <= 254
+        val.toString().length <= 738
       )
       .required('This field is required!')
       .matches(

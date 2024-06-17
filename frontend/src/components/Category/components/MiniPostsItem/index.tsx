@@ -17,7 +17,7 @@ const MiniPostsItem = ({ post, currentUser, onMiniPostClick }: any) => {
     <div className="col-6">
       <div className="border p-3">
         <BootstrapLink />
-        <div className={styles.imageContainer}>
+        <div className={`text-center ${styles.imageContainer}`}>
           <img src={post?.image} width={200} height={200} alt={post?.title} className="rounded" />
         </div>
         <div className={styles.postsContentContainer}>

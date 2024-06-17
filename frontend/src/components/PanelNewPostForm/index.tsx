@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -12,7 +12,6 @@ import Editor from "../Editor";
 const PanelNewPostForm = ({ categories, loading, alertMessage,
   errorMessage, onNewPostSaveClick, onNewPostCancelClick }: any) => {
   const activeCategories = Array.from(categories);
-  const editorRef = useRef(null);
   const [postContent, setPostContent] = useState<string>('');
 
   const {
@@ -55,7 +54,9 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
                 noValidate
                 className="needs-validation"
               >
-                <h6 className="d-flex align-items-center mb-3"><i className="material-icons text-info mr-2 pe-1">New post</i></h6>
+                <h6 className="d-flex align-items-center mb-3">
+                  <i className="material-icons text-info mr-2 pe-1">New post</i>
+                </h6>
                 <div className="row">
                   <div className="col-sm-3">
                     <h6 className="text-center mb-0">Title</h6>
@@ -140,7 +141,6 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
                     >
                       <Editor
                         defaultValue={postContent}
-                        ref={editorRef}
                         toolbarMode={'full'}
                         placeholder="Post content"
                         handleWYSIWYGChange={handleWYSIWYGChange}

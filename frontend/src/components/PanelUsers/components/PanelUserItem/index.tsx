@@ -56,7 +56,7 @@ const PanelUserItem = ({ idx, user, currentUser, onUserItemUpdateUserRole,
     <tr>
       <th scope="row">{(idx+1)}</th>
       <td>
-        <Link to={`/user/${user?.id}`}>
+        <Link to={`/user/${user?.id}`} style={{color: 'inherit'}}>
           <img
             src={user?.avatar ? user?.avatar : DEFAULT_NO_AVATAR_TINY}
             width={38}
