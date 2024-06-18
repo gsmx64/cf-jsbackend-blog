@@ -4,10 +4,13 @@ WORKDIR /app-build
 
 COPY src .
 COPY package*.json .
-COPY .env.docker.${NODE_ENV}.sample .
+COPY .env.docker.production.sample .
 COPY .dockerignore .
+COPY nest-cli.json .
+COPY tsconfig.json .
+COPY tsconfig.build.json .
 
-RUN cp .env.docker.${NODE_ENV}.sample .env.${NODE_ENV}
+RUN cp .env.docker.production.sample .env.production
 
 RUN npm install -g @nestjs/cli@10.3.0
 RUN npm i --production

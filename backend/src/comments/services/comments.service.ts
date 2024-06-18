@@ -11,13 +11,13 @@ import { CommentsEntity } from '../entities/comments.entity';
 import { CommentCreateDTO } from '../dto/comment.create.dto';
 import { CommentUpdateDTO } from '../dto/comment.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
+import { AuthService } from '../../auth/services/auth.service';
 import { UsersService } from '../../users/services/users.service';
 import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
 import { COMMENTS_FILTER_CONFIG } from '../filters/comments.filter';
 import { COMMENTS_SEARCH_CONFIG } from '../filters/comments.search';
 import { COMMENTS_DEFAULT_CONFIG } from '../filters/comments.default';
-import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**

@@ -12,6 +12,7 @@ import { CategoryCreateDTO } from '../dto/category.create.dto';
 import { CategoryUpdateDTO } from '../dto/category.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { PUBLISH_STATUS } from '../../constants/publish.status';
+import { AuthService } from '../../auth/services/auth.service';
 import { UsersService } from '../../users/services/users.service';
 import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
@@ -24,7 +25,6 @@ import {
 import {
   CATEGORIES_DEFAULT_CONFIG,
   CATEGORIES_DEFAULT_CONFIG_LOW } from '../filters/categories.default';
-import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**

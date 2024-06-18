@@ -11,7 +11,7 @@ import { UsersService } from '../../users/services/users.service';
 import { UsersEntity } from '../../users/entities/users.entity';
 import { AuthDTO } from '../dto/auth.dto';
 import { LoggingMessages } from '../../utils/logging.messages';
-import { useToken } from 'src/utils/use.token';
+import { useToken } from '../../utils/use.token';
 
 
 @Injectable()

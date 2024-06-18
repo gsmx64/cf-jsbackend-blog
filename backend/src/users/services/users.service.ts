@@ -9,6 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { PaginateQuery, paginate, Paginated } from 'nestjs-paginate';
 
 import { UsersEntity } from '../entities/users.entity';
+import { SettingsEntity } from '../../settings/entities/settings.entity';
 import { UserCreateDTO } from '../dto/user.create.dto';
 import { UserUpdateDTO } from '../dto/user.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
@@ -29,7 +30,6 @@ import {
   USERS_DEFAULT_CONFIG,
   USERS_DEFAULT_CONFIG_LOW } from '../filters/users.default';
 import { IUserPassword } from '../interfaces/user.interface';
-import { SettingsEntity } from 'src/settings/entities/settings.entity';
 
 
 /**

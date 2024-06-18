@@ -12,6 +12,7 @@ import { PostCreateDTO } from '../dto/post.create.dto';
 import { PostUpdateDTO } from '../dto/post.update.dto';
 import { ErrorManager } from '../../utils/error.manager';
 import { PUBLISH_STATUS } from '../../constants/publish.status';
+import { AuthService } from '../../auth/services/auth.service';
 import { UsersService } from '../../users/services/users.service';
 import { TypeUserRoleforLogging } from '../../auth/interfaces/auth.interface';
 import { LoggingMessages } from '../../utils/logging.messages';
@@ -24,7 +25,6 @@ import {
 import {
   POSTS_SEARCH_CONFIG,
   POSTS_SEARCH_CONFIG_LOW } from '../filters/posts.search';
-import { AuthService } from 'src/auth/services/auth.service';
 
 
 /**
