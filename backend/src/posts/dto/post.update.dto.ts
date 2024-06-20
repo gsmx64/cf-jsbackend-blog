@@ -9,7 +9,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { CategoryUpdateDTO } from "../../categories/dto/category.update.dto";
 import { UserUpdateDTO } from "../../users/dto/user.update.dto";
 import { CommentUpdateDTO } from "../../comments/dto/comment.update.dto";
-import { PUBLISH_STATUS } from "src/constants/publish.status";
+import { PUBLISH_STATUS } from "../../constants/publish.status";
 
 
 export class PostUpdateDTO {
