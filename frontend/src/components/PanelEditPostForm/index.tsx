@@ -58,7 +58,7 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
         <Loading />
       ) : (
         <>
-          <div className="border rounded-3">
+          <div className="card mb-3">
             <div className="card-body">
               <form
                   id={`form-edit-post-form-${postId}`}
@@ -67,7 +67,7 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
                   className="needs-validation"
                 >
                 <h6 className="d-flex align-items-center mb-3">
-                  <i className="material-icons text-info mr-2 pe-1">Edit Post</i>
+                  <i className="material-icons text-info e-1">Edit Post</i>
                 </h6>
                 
                 <div className="row">
@@ -155,18 +155,18 @@ const PanelEditPostForm = ({ postId, post, categories, loading, alertMessage,
                       <Editor
                         defaultValue={postContent}
                         toolbarMode={'full'}
+                        theme="dark"
                         handleWYSIWYGChange={handleWYSIWYGChange}
                       />
                     </div>
-                    <textarea
-                      id={`post-content-textarea`}
-                      placeholder="Post content"
-                      autoComplete="off"
-                      value={postContent}
-                      style={{display: 'none'}}
-                      rows={10}
-                      {...register('content')}
-                    />
+                      <textarea
+                        id={`post-content-textarea`}
+                        autoComplete="off"
+                        value={postContent}
+                        style={{display: 'none'}}
+                        {...register('content')}
+                        rows={10}
+                      />
                     {errors.content && <div className="invalid-feedback">{(errors.content.message?.toString())}</div>}
                   </div>
                 </div>

@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   cf-blog-database:
     image: postgres:15.5
@@ -15,7 +17,6 @@ services:
       - network-cf-blog
     volumes:
       - database-cf-blog:/var/lib/postgresql/data
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   cf-blog-backend:
     image: cf-blog-backend:0.0.3
@@ -27,12 +28,13 @@ services:
     restart: unless-stopped
     env_file:
       - ./.env
+      - ./backend/.env.docker.production.sample
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
     depends_on:
       - cf-blog-database
     ports:
-      - ${APP_BACKEND_PORT}:3001
+      - 82:80
     networks:
       - network-cf-blog
     volumes:
@@ -49,24 +51,30 @@ services:
     env_file:
       - ./.env
     environment:
-      NODE_ENV: production
+      - NODE_ENV=production
     depends_on:
       - cf-blog-backend
     ports:
-      - ${APP_FRONTEND_PORT}:3000
+      - ${APP_PROD_HTTP_PORT}:80
     networks:
       - network-cf-blog
     volumes:
       - ./frontend:/app-frontend
+      #- ./frontend/default.pem:/etc/ssl/default.pem
+      #- ./frontend/default.key:/etc/ssl/default.key
 
   cf-blog-reverse-proxy:
-    image: nginx:1.27.0-alpine
+    image: cf-blog-reverse-proxy:0.0.3
+    build:
+      context: ./reverse-proxy
+      dockerfile: Dockerfile.prod
+    working_dir: /etc/nginx
     container_name: ${APP_PROXY_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
-      APP_ENV: production
+      - NODE_ENV=production
     depends_on:
       - cf-blog-backend
       - cf-blog-frontend
@@ -76,7 +84,9 @@ services:
     networks:
       - network-cf-blog
     volumes:
-      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+      - ./reverse-proxy/nginx.conf:/etc/nginx/nginx.conf
+      #- ./reverse-proxy/default.pem:/etc/ssl/default.pem
+      #- ./reverse-proxy/default.key:/etc/ssl/default.key
 
 networks:
   network-cf-blog:

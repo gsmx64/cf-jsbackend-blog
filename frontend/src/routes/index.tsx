@@ -9,6 +9,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Error401View from "../views/Error401";
 import Error404View from "../views/Error404";
+import Error500View from "../views/Error500";
 import LoginView from "../views/Login";
 import RegisterView from "../views/Register";
 import ProfileView from "../views/Profile";
@@ -123,12 +124,9 @@ const createRouteElementsFromObject = (
                 handleChangePasswordSaveClick={props.handleChangePasswordSaveClick}
                 handleChangeAvatarSaveClick={props.handleChangeAvatarSaveClick}
                 handleLogOutClick={props.handleLogOutClick}
-                onSearch={search ? props.handleNavbarSearch : undefined}
-                ref={props.containerRef}
+                onSearch={undefined}
               />
-              <ComponentOnError
-                settings={props.settings}
-              />
+              <ComponentOnError />
               <Footer
                 currentUser={props.currentUser}
                 settings={props.settings}
@@ -309,6 +307,20 @@ const routes: RouteDefinition[] = [
     acl: true,
     search: false,
     Component: SetupView,
+  },
+  {
+    name: 'Error404',
+    urlPath: '404',
+    acl: true,
+    search: false,
+    Component: Error404View,
+  },
+  {
+    name: 'Error500',
+    urlPath: '500',
+    acl: true,
+    search: false,
+    Component: Error500View,
   }
 ];
 

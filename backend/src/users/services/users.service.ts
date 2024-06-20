@@ -156,7 +156,7 @@ export class UsersService {
       
       // If the brand is not set, we assume it is the first user created by setup.
       const statusOverride = (
-        (settings.setup !== 0) || (settings.activation === 'auto')
+        (settings?.setup !== 0) || (settings?.activation === 'auto')
       ) ? 'ENABLED' as USER_STATUS : 'PENDING' as USER_STATUS;
 
       const roleOverride = (settings.setup !== 0) ? 'ADMIN' as ROLES : 'BASIC' as ROLES;

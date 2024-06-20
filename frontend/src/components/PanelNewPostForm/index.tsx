@@ -55,7 +55,7 @@ const PanelNewPostForm = ({ categories, loading, alertMessage,
                 className="needs-validation"
               >
                 <h6 className="d-flex align-items-center mb-3">
-                  <i className="material-icons text-info mr-2 pe-1">New post</i>
+                  <i className="material-icons text-info pe-1">New post</i>
                 </h6>
                 <div className="row">
                   <div className="col-sm-3">

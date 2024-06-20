@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import MyRoutes from "./routes";
+import { useTheme } from "react-hook-theme";
 
-import "./App.css";
+import MyRoutes from "./routes";
 import { isZustandEnabled } from "./constants/defaultConstants";
 import useCurrentUser from "./hooks/useCurrentUser";
 import useSettings from "./hooks/useSettings";
 import useCurrentUserStore from "./state/stores/currentUser";
 import useSettingsStore from "./state/stores/settings";
 import { IProps } from "./interfaces/router.interface";
-import { useTheme } from "react-hook-theme";
+import "./App.css";
 
 
-const AppDefault = () => {
+export const AppDefault = () => {
   return {...useCurrentUser(), ...useSettings()};
 }
 
-const AppZustand = () => {
+export const AppZustand = () => {
   const currentUser = useCurrentUserStore((state) => state.currentUser);
   const loading = useCurrentUserStore((state) => state.loading);
   const alertMessage = useCurrentUserStore((state) => state.alertMessage);
@@ -65,4 +65,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

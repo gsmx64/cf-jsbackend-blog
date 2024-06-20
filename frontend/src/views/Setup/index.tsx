@@ -153,7 +153,7 @@ const SetupView = () => {
   return (
     (settings?.setup !== 0) ? (
       <>
-        <div className="container mb-3">
+        <div className="container mb-3 text-center">
           <MultiStep
             activeStep={0}
             prevButton={{title: 'Back'}}

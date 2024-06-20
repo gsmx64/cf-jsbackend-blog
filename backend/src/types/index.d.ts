@@ -26,5 +26,11 @@ declare namespace NodeJS {
     APP_PAGINATION_DEFAULT_LIMIT: number;
     APP_PAGINATION_MAX_LIMIT: number;
     APP_LOGGING_ENABLE: string;
+    FRONTEND_PROTOCOL: string;
+    FRONTEND_HOST: string;
+    FRONTEND_PORT: number;
+    FRONTEND_PROXY_PROTOCOL: string;
+    FRONTEND_PROXY_HOST: string;
+    FRONTEND_PROXY_PORT: number;
   }
 }

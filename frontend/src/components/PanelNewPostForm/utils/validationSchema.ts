@@ -25,11 +25,11 @@ const validationSchema = yup
       description: yup.string()
       .test(
         'len',
-        'The description must be between 3 and 254 characters.',
+        'The description must be between 3 and 1762 characters.',
         (val: any) =>
         val &&
         val.toString().length >= 3 &&
-        val.toString().length <= 738
+        val.toString().length <= 1762
       )
       .required('This field is required!')
       .matches(

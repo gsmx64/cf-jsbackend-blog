@@ -1,5 +1,6 @@
-import { Controller, Post, UseGuards, Body, Get, Param } from '@nestjs/common';
+import { Controller, Post, UseGuards, Body, Get, Param, Res } from '@nestjs/common';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
+//import { Response } from 'express';
 
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { AuthService } from '../services/auth.service';
@@ -42,6 +43,15 @@ export class LocalAuthController {
   async login(@Body() { username, password }: AuthDTO): Promise<any> {
     return this.authService.login({ username, password });
   }
+  /*async login(@Body() { username, password }: AuthDTO, @Res({ passthrough: true }) res: Response): Promise<void> {
+    const { access_token } = await this.authService.login({ username, password });
+    res.cookie('access_token', access_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+    }).send({ status: 'ok' });
+  }*/
 
   /**
    * Returns user current user role.

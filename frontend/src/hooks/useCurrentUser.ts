@@ -54,10 +54,10 @@ const useCurrentUser = () => {
               (response.data.user.id !== undefined)
             ) {
               localStorage.setItem('user', JSON.stringify(response.data));
-              setAlertMessage('Login successful, redirecting to home page...');
+              setAlertMessage('Login successful!');
               fetchCurrentUser();
             } else {
-              setErrorMessage(`Error logging in user. ${response.data.message}`);
+              setErrorMessage('Error logging in user!');
             }
           })
           .catch((error: any) => {

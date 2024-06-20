@@ -53,13 +53,13 @@ const Post = ({ post, alertMessage, errorMessage, loading, currentUser, /*settin
                 <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
                   <i className="bi bi-tags pb-1 pe-2"></i>
                   <Link to={`/category/${post?.category?.id}`} style={{color: 'inherit'}}>
-                    <span className="text-info">{post?.category?.title}</span>
+                    {post?.category?.title}
                   </Link>
                 </span>
                 <span className="btn btn-outline-secondary" style={{whiteSpace: 'nowrap'}}>
                   <i className="bi bi-person-circle pb-1 pe-2"></i>                
                   <Link to={`/user/${post?.author?.id}`} style={{color: 'inherit'}}>
-                    <span className="text-info">{post?.author?.username}</span>
+                    {post?.author?.username}
                     {(post?.author?.status === 'BANNED') && <i className="bi bi-ban link-danger"></i>}
                   </Link>
                 </span>

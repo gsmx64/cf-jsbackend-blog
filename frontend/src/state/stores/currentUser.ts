@@ -48,9 +48,9 @@ const useCurrentUserStore = create<IUseCurrentUserStore>((set, get) => ({
               (response.data.user.id !== undefined)
             ) {
               localStorage.setItem('user', JSON.stringify(response.data));
-              set(() => ({ alertMessage: 'Login successful, redirecting to home page...' }))
+              set(() => ({ alertMessage: 'Login successful!' }))
             } else {
-              set(() => ({ errorMessage: 'Error logging in user.' }));
+              set(() => ({ errorMessage: 'Error logging in user!' }));
             }
           })
           .catch((error: any) => {

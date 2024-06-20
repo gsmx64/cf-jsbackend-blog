@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
+import { useTheme } from 'react-hook-theme';
 import JoditEditor from 'jodit-react';
 
 
 const Editor = ({ toolbarMode, defaultValue, placeholder, 
   handleWYSIWYGChange }: any) => {
+  const { theme, } = useTheme();
 
   const options = [ 'bold', 'italic', '|', 'ul', 'ol', '|', 'font',
     'fontsize', '|', 'outdent', 'indent', 'align', '|', 'hr', '|',
@@ -27,7 +29,7 @@ const Editor = ({ toolbarMode, defaultValue, placeholder,
         toolbarButtonSize: 'medium',
         minHeight: 600,
         language: 'en',
-        theme:'dark',
+        theme: (theme === 'dark') ? 'dark' : 'default',
       }
     },[placeholder])
   :
@@ -49,7 +51,7 @@ const Editor = ({ toolbarMode, defaultValue, placeholder,
       toolbar: true,
       toolbarAdaptive: false,
       language: 'en',
-      theme:'dark',
+      theme:(theme === 'dark') ? 'dark' : 'default',
     }
   },[placeholder]);
 

@@ -1,12 +1,15 @@
 import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as session from 'express-session';
 import * as morgan from 'morgan';
+import * as ExpressSession from 'express-session';
+import { TypeormStore } from 'connect-typeorm';
 import { setDefaultResultOrder } from "dns";
 
 import { AppModule } from './app.module';
 import { CORS } from './constants';
+import { AppDS } from './config/data.source';
+import { SessionEntity } from './config/session.entity';
 
 
 /**
@@ -26,6 +29,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       transformOptions: {
         enableImplicitConversion: true,
       },
@@ -35,13 +39,29 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
+  await AppDS.initialize();
+  const sessionRepo = AppDS.getRepository(SessionEntity);
   app.use(
-    session({
-      secret: process.env.APP_AUTH_SECRET,
+    ExpressSession({
       resave: false,
       saveUninitialized: false,
+      store: new TypeormStore({
+        cleanupLimit: 2,
+        limitSubquery: false, // If using MariaDB.
+        ttl: 86400,
+      }).connect(sessionRepo),
+      secret: process.env.APP_AUTH_SECRET,
+      cookie: {
+        maxAge: 1000 * 604800, // 1 week
+        sameSite: true,
+        //sameSite: "none",
+        //secure: process.env.NODE_ENV === "production",
+      }
     })
-  )
+  );
+
+  const cookieParser = require("cookie-parser");
+  app.use(cookieParser());
 
   app.enableCors(CORS);
 

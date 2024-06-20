@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,10 +8,13 @@ import styles from "./Login.module.css";
 import validationSchema from "./utils/validationSchema";
 import { DEFAULT_NO_AVATAR_MEDIUM } from "../../constants/defaultConstants";
 import Alerts from "../Alerts";
+import { useEffect, useState } from "react";
 
 
 const LoginForm = ({ currentUser, loading, alertMessage, errorMessage, onLoginUserSaveClick }: any) => {
-
+  const [redirectTimeout, setRedirectTimeout] = useState(false);
+  const navigate = useNavigate();
+  
   const {
     register,
     handleSubmit,
@@ -23,8 +26,20 @@ const LoginForm = ({ currentUser, loading, alertMessage, errorMessage, onLoginUs
 
   const onSubmitHandler = (body: AuthBody) => {
     const { username, password } = body;
-    onLoginUserSaveClick(username, password);
+    const saveSuccessful = onLoginUserSaveClick(username, password);
+    if (saveSuccessful !== undefined) {
+      setRedirectTimeout(true);
+    }
   }
+
+  useEffect(() => {
+    if (redirectTimeout) {
+      setTimeout(()=> {
+        navigate('/', { replace: true });
+        window.location.reload();
+      }, 2000);
+    }
+  }, [redirectTimeout, currentUser, navigate]);
 
   return (
     (currentUser === undefined) ?

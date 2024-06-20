@@ -10,6 +10,7 @@ import { PostsEntity } from '../posts/entities/posts.entity';
 import { CategoriesEntity } from '../categories/entities/categories.entity';
 import { CommentsEntity } from '../comments/entities/comments.entity';
 import { SettingsEntity } from '../settings/entities/settings.entity';
+import { SessionEntity } from './session.entity';
 
 
 /**
@@ -34,7 +35,7 @@ export const DataSourceConfig: DataSourceOptions = {
   logging: false,
   synchronize: true,
   name: 'default',
-  entities: [UsersEntity, PostsEntity, CategoriesEntity, CommentsEntity, SettingsEntity], 
+  entities: [UsersEntity, PostsEntity, CategoriesEntity, CommentsEntity, SettingsEntity, SessionEntity], 
   migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
   subscribers: [__dirname + '/../subscriber/**/*{.ts,.js}'],
   migrationsRun: true,

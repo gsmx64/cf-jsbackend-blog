@@ -1,25 +1,10 @@
-FROM node:20.14 AS build-phase
+FROM nginx:1.27.0-alpine
 
-WORKDIR /app-build
+WORKDIR /etc/nginx
 
 COPY . .
 
-RUN cp .env.docker.production.sample .env.production
-
-RUN npm i
-RUN npm run build
-
-
-FROM nginx:1.27.0-alpine
-
-WORKDIR /usr/share/nginx/html
-
-RUN rm -rf ./*
-
 RUN apk update && apk add build-base
-
-COPY --from=build-phase ./app-build/build /usr/share/nginx/html
-COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 
 RUN [ ! -f /etc/ssl/default.key ] && apk add openssl && openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt
 

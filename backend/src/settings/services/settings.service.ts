@@ -39,6 +39,15 @@ export class SettingsService {
     private userService: UsersService
   ) {
     this.dataForLog = this.userService.getUserRoleforLogging(this.request);
+
+    const settings_check: any = this.settingsRepository
+        .createQueryBuilder('settings')
+        .where('settings.id = :Id', { Id: 1 })
+        .getOne();
+
+      if(!settings_check) {
+        this.settingsRepository.query(`BEGIN;INSERT INTO "public"."settings" ("id","activation") VALUES ("1", "auto");COMMIT;`);
+      }
   }
 
   /**
@@ -110,7 +119,7 @@ export class SettingsService {
         const appDataSource = await AppDS.initialize();
         const queryRunner = appDataSource.createQueryRunner();
     
-        const queries = SqlReader.readSqlFile(path.join(__dirname, "../../../../db/sample_data.sql"))
+        const queries = SqlReader.readSqlFile(path.join(__dirname, "../../utils/sample_data.sql"))
         for (let query of queries) {
           queryRunner.manager.query(query);
         }
