@@ -18,7 +18,7 @@ RUN rm -rf ./*
 
 RUN apk update && apk add build-base
 
-COPY --from=build-phase ./app-build/build /usr/share/nginx/html
+COPY --from=build-phase ./app-build/dist /usr/share/nginx/html
 COPY nginx.default.conf /etc/nginx/conf.d/default.conf
 
 RUN [ ! -f /etc/ssl/default.key ] && apk add openssl && openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt

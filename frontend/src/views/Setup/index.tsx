@@ -151,7 +151,11 @@ const SetupView = () => {
   };
 
   return (
-    (settings?.setup !== 0) ? (
+    (
+      (settings?.setup === null) ||
+      (settings?.setup === undefined) ||
+      (settings?.setup === 1)
+    ) ? (
       <>
         <div className="container mb-3 text-center">
           <MultiStep

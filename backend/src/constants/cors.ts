@@ -1,22 +1,13 @@
 import { CorsOptions } from "@nestjs/common/interfaces/external/cors-options.interface";
 
-// Get Frontend URL from .env file
-const frontendProtocol = process.env.FRONTEND_PROTOCOL;
-const frontendHost = process.env.FRONTEND_HOST;
-const frontendPort = (process.env.FRONTEND_PORT === 80) ? '' : ':'+process.env.FRONTEND_PORT;
-
-// Get Frontend URL from .env file
-const frontendProxyProtocol = process.env.FRONTEND_PROXY_PROTOCOL;
-const frontendProxyHost = process.env.FRONTEND_PROXY_HOST;
-const frontendProxyPort = (process.env.FRONTEND_PROXY_PORT === 80) ? '' : ':'+process.env.FRONTEND_PORT;
-
 /**
  * Configuration options for Cross-Origin Resource Sharing (CORS).
  */
 export const CORS: CorsOptions = {
+  origin: (process.env.NODE_ENV === 'production') ? process.env.APP_CORS_PROD_WHITELIST.split(", ") : true,
   credentials: true,
-  origin: (process.env.NODE_ENV === 'production') ?
-    `${frontendProxyProtocol}://${frontendProxyHost}${frontendProxyPort}` :
-    `${frontendProtocol}://${frontendHost}${frontendPort}`,
+  allowedHeaders: 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method, access_token',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };

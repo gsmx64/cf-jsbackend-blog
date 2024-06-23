@@ -111,9 +111,16 @@ CREATE TABLE "settings" (
   "youtube" varchar COLLATE "pg_catalog"."default",
   "tiktok" varchar COLLATE "pg_catalog"."default",
   "terms" text COLLATE "pg_catalog"."default"
+  "setup" int4,
+  "activation" varchar COLLATE "pg_catalog"."default"
 )
 ;
 ALTER TABLE "settings" OWNER TO "blogdbu";
+BEGIN;
+LOCK TABLE "public"."settings" IN SHARE MODE;
+DELETE FROM "public"."settings";
+INSERT INTO "public"."settings" ("id","activation") VALUES ('1', 'auto');
+COMMIT;
 CREATE TABLE "users" (
   "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
   "created_at" timestamp(6) NOT NULL DEFAULT now(),

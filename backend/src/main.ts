@@ -2,14 +2,14 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as morgan from 'morgan';
-import * as ExpressSession from 'express-session';
-import { TypeormStore } from 'connect-typeorm';
+//import * as ExpressSession from 'express-session';
+//import { TypeormStore } from 'connect-typeorm';
 import { setDefaultResultOrder } from "dns";
 
 import { AppModule } from './app.module';
 import { CORS } from './constants';
-import { AppDS } from './config/data.source';
-import { SessionEntity } from './config/session.entity';
+//import { AppDS } from './config/data.source';
+//import { SessionEntity } from './config/session.entity';
 
 
 /**
@@ -20,6 +20,7 @@ import { SessionEntity } from './config/session.entity';
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    logger: ['log', 'fatal', 'error', 'warn', 'debug'],
     cors: true
   });
   
@@ -39,7 +40,7 @@ async function bootstrap() {
   const reflector = app.get(Reflector);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 
-  await AppDS.initialize();
+  /*await AppDS.initialize();
   const sessionRepo = AppDS.getRepository(SessionEntity);
   app.use(
     ExpressSession({
@@ -53,17 +54,18 @@ async function bootstrap() {
       secret: process.env.APP_AUTH_SECRET,
       cookie: {
         maxAge: 1000 * 604800, // 1 week
-        sameSite: true,
-        //sameSite: "none",
+        sameSite: "none",
+        secure: false,
+        //sameSite: true,
         //secure: process.env.NODE_ENV === "production",
       }
     })
-  );
+  );*/
 
-  const cookieParser = require("cookie-parser");
-  app.use(cookieParser());
+  //const cookieParser = require("cookie-parser");
+  //app.use(cookieParser());
 
-  app.enableCors(CORS);
+  (process.env.NODE_ENV === 'production') && app.enableCors(CORS);
 
   app.setGlobalPrefix('api');
 

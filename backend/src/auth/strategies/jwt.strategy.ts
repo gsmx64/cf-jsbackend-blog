@@ -2,7 +2,8 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Request } from 'express';
+//import { Request } from 'express';
+
 import { AuthService } from '../services/auth.service';
 
 
@@ -22,12 +23,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  private static extractJWTFromCookie(req: Request): string | null {
+  /*private static extractJWTFromCookie(req: Request): string | null {
     if (req.cookies && req.cookies.access_token) {
       return req.cookies.access_token;
     }
     return null;
-  }
+  }*/
 
   /**
    * Validates the payload extracted from the JWT.
