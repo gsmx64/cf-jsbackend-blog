@@ -1,12 +1,10 @@
 services:
-  cf-blog-database:
+  cf-blog-database-dev:
     image: postgres:15.5
-    container_name: ${APP_DATABASE_HOST}
+    container_name: ${APP_DATABASE_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
-    environment:
-      NODE_ENV: development
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
@@ -14,52 +12,57 @@ services:
     ports:
       - ${APP_DATABASE_PORT}:5432
     networks:
-      - network-cf-blog
+      - network-cf-blog-dev
     volumes:
-      - database-cf-blog:/var/lib/postgresql/data
-      - ./db/sample_data.sql:/docker-entrypoint-initdb.d/init.sql
+      - database-cf-blog-dev:/var/lib/postgresql/data
 
-  cf-blog-backend:
-    image: cf-blog-backend:0.0.3
-    build: ./backend
-    working_dir: /backend
-    container_name: ${APP_BACKEND_HOST}
+  cf-blog-backend-dev:
+    image: cf-blog-backend-dev:0.0.3
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    working_dir: /app-backend
+    container_name: ${APP_BACKEND_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
     depends_on:
-      - cf-blog-database
+      - cf-blog-database-dev
     ports:
       - ${APP_BACKEND_PORT}:3001
     networks:
-      - network-cf-blog
+      - network-cf-blog-dev
     volumes:
       - ./backend:/app-backend
+      - ./node_modules:/app-backend/node_modules
 
   cf-blog-frontend:
-    image: cf-blog-frontend:0.0.3
-    build: ./frontend
+    image: cf-blog-frontend-dev:0.0.3
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
     working_dir: /app-frontend
-    container_name: ${APP_FRONTEND_HOST}
+    container_name: ${APP_FRONTEND_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
-      NODE_ENV: development
+      - NODE_ENV=development
     depends_on:
-      - cf-blog-backend
+      - cf-blog-backend-dev
     ports:
       - ${APP_FRONTEND_PORT}:3000
     networks:
-      - network-cf-blog
+      - network-cf-blog-dev
     volumes:
       - ./frontend:/app-frontend
+      - ./node_modules:/app-frontend/node_modules
 
 networks:
-  network-cf-blog:
+  network-cf-blog-dev:
   
 volumes:
-  database-cf-blog:
+  database-cf-blog-dev:
     driver: local

@@ -4,11 +4,13 @@ WORKDIR /app-frontend
 
 RUN apk update && apk add build-base
 
-COPY . .
-
-RUN cp .env.docker.${NODE_ENV}.sample .env.${NODE_ENV}
+COPY package*.json /
 
 RUN npm i
+
+COPY . .
+
+RUN cp .env.docker.development.sample .env.development
 
 EXPOSE 3000
 
