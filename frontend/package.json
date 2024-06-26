@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "start:dev": "export NODE_ENV=development && vite",
+    "start:dev": "export NODE_ENV=development && vite --host",
     "start:debug": "export NODE_ENV=testing && vite",
     "start:prod": "export NODE_ENV=production && tsc && vite build",
     "startw:dev": "set NODE_ENV=development && vite",

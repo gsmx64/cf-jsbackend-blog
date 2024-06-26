@@ -35,9 +35,9 @@ const usePostsStore = create<IUsePostsStore>((set, get) => ({
       .then((response: AxiosResponse) => {
         set(() => ({
           posts: response.data.data,
-          totalPages: response.data.meta.totalPages,
-          totalItems: response.data.meta.totalItems,
-          itemsPerPage: response.data.meta.itemsPerPage,
+          totalPages: response.data?.meta?.totalPages,
+          totalItems: response.data?.meta?.totalItems,
+          itemsPerPage: response.data?.meta?.itemsPerPage,
           loading: false
         }));
       })

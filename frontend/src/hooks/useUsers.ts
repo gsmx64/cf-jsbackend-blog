@@ -25,9 +25,9 @@ const useUsers = () => {
       .getAll(currentPage, itemsPerPage)
       .then((response: AxiosResponse) => {
         setUsers(response.data.data);
-        setTotalPages(response.data.meta.totalPages);
-        setTotalItems(response.data.meta.totalItems);
-        setItemsPerPage(response.data.meta.itemsPerPage);
+        setTotalPages(response.data?.meta?.totalPages);
+        setTotalItems(response.data?.meta?.totalItems);
+        setItemsPerPage(response.data?.meta?.itemsPerPage);
       })
       .catch((error: any) => {
         setErrorMessage(error.toString()+" :: "+JSON.stringify(error.response));

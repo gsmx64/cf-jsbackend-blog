@@ -93,7 +93,7 @@ const SetupView = () => {
                     onClick={handleInstallSampleDataClick}
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    title="Delete Comment"
+                    title="Install sample data"
                   >
                     Click here to install sample data
                   </button>
@@ -138,7 +138,7 @@ const SetupView = () => {
                     onClick={handleDisableSetupClick}
                     data-bs-toggle="tooltip"
                     data-bs-placement="top"
-                    title="Delete Comment"
+                    title="Close Setup and redirect to Homepage"
                   >
                     Go to Home
                   </button>
