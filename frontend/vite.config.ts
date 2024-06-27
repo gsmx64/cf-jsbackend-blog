@@ -10,7 +10,7 @@ export default defineConfig(({ command, mode }) => {
     server: {
       host: true,
       strictPort: true,
-      port: Number(env.VITE_APP_PORT),
+      port: Number(env.VITE_APP_PORT) || 80,
     },
     build: {
       target: 'esnext'
