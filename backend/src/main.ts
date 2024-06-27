@@ -20,7 +20,7 @@ import { CORS } from './constants';
  */
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['log', 'fatal', 'error', 'warn', 'debug'],
+    //logger: ['log', 'fatal', 'error', 'warn', 'debug'],
     cors: true
   });
   
