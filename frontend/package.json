@@ -6,10 +6,10 @@
   "scripts": {
     "start:dev": "export NODE_ENV=development && vite --host",
     "start:debug": "export NODE_ENV=testing && vite --host",
-    "start:prod": "export NODE_ENV=production && tsc && vite build --host",
+    "start:prod": "export NODE_ENV=production && tsc && vite --host build",
     "startw:dev": "set NODE_ENV=development && vite --host",
     "startw:debug": "set NODE_ENV=testing && vite --host",
-    "startw:prod": "set NODE_ENV=production && tsc && vite build --host",
+    "startw:prod": "set NODE_ENV=production && tsc && vite --host build",
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
