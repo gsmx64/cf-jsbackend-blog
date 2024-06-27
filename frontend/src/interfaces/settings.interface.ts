@@ -8,7 +8,7 @@ export default interface ISettings {
   linkedin: string;
   youtube: string;
   tiktok: string;
-  //setup: number;
+  setup: number | null | undefined;
 }
 
 export const initISettings: ISettings = {
@@ -21,5 +21,5 @@ export const initISettings: ISettings = {
   linkedin: '',
   youtube: '',
   tiktok: '',
-  //setup: 0
+  setup: null
 }
