@@ -32,5 +32,6 @@ export default axios.create({
     "Content-type": "application/json;charset=utf-8",
     "Access-Control-Allow-Headers": "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method, access_token",
     "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Credentials": "true",
   }
 });
