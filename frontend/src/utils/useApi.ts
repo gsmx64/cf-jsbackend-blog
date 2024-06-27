@@ -3,7 +3,10 @@ import axios from "axios";
 // Get API URL from .env file
 const apiProtocol = import.meta.env.VITE_API_PROTOCOL;
 const apiHost = import.meta.env.VITE_API_HOST;
-const apiPort = (import.meta.env.VITE_API_PORT === 80) ? '' : ':'+import.meta.env.VITE_API_PORT;
+const apiPort = (
+  (import.meta.env.VITE_API_PORT === 80) ||
+  (import.meta.env.VITE_API_PORT === 443)
+  ) ? '' : ':'+import.meta.env.VITE_API_PORT;
 const apiPath = import.meta.env.VITE_API_PATH;
 const apiTimeout = import.meta.env.VITE_API_TIMEOUT;
 
