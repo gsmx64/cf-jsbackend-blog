@@ -21,7 +21,7 @@ import { CORS } from './constants';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     //logger: ['log', 'fatal', 'error', 'warn', 'debug'],
-    //cors: true
+    cors: true
   });
   
   setDefaultResultOrder("ipv4first");
@@ -66,6 +66,7 @@ async function bootstrap() {
   //app.use(cookieParser());
 
   //(process.env.NODE_ENV === 'production') && app.enableCors(CORS);
+  app.use(CORS);
 
   app.setGlobalPrefix('api');
 
