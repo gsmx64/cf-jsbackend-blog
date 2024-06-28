@@ -18,8 +18,8 @@ const currentHost = window.location.hostname;
 const prodUrl = import.meta.env.VITE_PROD_API_BY_PROXY;
 
 // Get CORS Settings from .env file
-//const corsWithCredentials = import.meta.env.VITE_CORS_WITH_CREDENTIALS === 'true';
-//const corsWithXSRFToken = import.meta.env.VITE_CORS_WITH_XSRF_TOKEN === 'true';
+const corsWithCredentials = import.meta.env.VITE_CORS_WITH_CREDENTIALS === 'true';
+const corsWithXSRFToken = import.meta.env.VITE_CORS_WITH_XSRF_TOKEN === 'true';
 
 export default axios.create({
   baseURL: (process.env.NODE_ENV === 'production') ?
@@ -27,14 +27,14 @@ export default axios.create({
     (devUrl) ?
     `${apiProtocol}://${currentHost}${apiPort}${apiPath}/` :
     `${apiProtocol}://${apiHost}${apiPort}${apiPath}/`,
-  //withCredentials: corsWithCredentials,
-  //withXSRFToken: corsWithXSRFToken,
+  withCredentials: corsWithCredentials,
+  withXSRFToken: corsWithXSRFToken,
   timeout: apiTimeout,
   headers: {
     "Accept": "application/json",
     "Content-type": "application/json;charset=utf-8",
-    /*"Access-Control-Allow-Headers": "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method, access_token",
+    "Access-Control-Allow-Headers": "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method, access_token",
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Credentials": "true",*/
+    "Access-Control-Allow-Credentials": "true",
   }
 });
