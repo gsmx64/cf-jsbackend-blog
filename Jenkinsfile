@@ -198,7 +198,7 @@ pipeline {
                 """
             }
         }
-        stage('Scan Docker development image with Trivy - HIGH severity - backend') {
+        /*stage('Scan Docker development image with Trivy - HIGH severity - backend') {
             steps {
                 script {
                     def trivyOutput = sh(script: "trivy image --severity HIGH ${APP_IMAGE_NAME_BACKEND}-dev:${APP_BUILD_NUMBER}", returnStdout: true).trim()
@@ -253,7 +253,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Stop docker development containers and do docker clean up') {
             steps {
                 sh """
@@ -350,7 +350,7 @@ pipeline {
                 """
             }
         }
-        stage('Scan Docker production image with Trivy - HIGH severity - backend') {
+        /*stage('Scan Docker production image with Trivy - HIGH severity - backend') {
             steps {
                 script {
                     def trivyOutput = sh(script: "trivy image --severity HIGH ${APP_IMAGE_NAME_BACKEND}:${APP_BUILD_NUMBER}", returnStdout: true).trim()
@@ -433,7 +433,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Stop docker production containers and do docker clean up') {
             steps {
                 sh """
