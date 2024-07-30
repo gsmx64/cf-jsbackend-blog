@@ -1,4 +1,20 @@
 services:
+  cf-blog-database:
+    image: postgres:15.5
+    container_name: ${APP_DATABASE_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${APP_DB_NAME}
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+    ports:
+      - ${APP_DATABASE_PORT}:5432
+    networks:
+      - network-cf-blog
+    volumes:
+      - database-cf-blog:/var/lib/postgresql/data
 
   cf-blog-backend:
     image: gsmx64/cf-blog-backend:${APP_BUILD_NUMBER}
@@ -36,6 +52,8 @@ services:
       - APP_PAGINATION_MAX_LIMIT=${APP_PAGINATION_MAX_LIMIT}
       - APP_LOGGING_ENABLE=${APP_LOGGING_ENABLE}
       - APP_CORS_PROD_WHITELIST=${APP_CORS_PROD_WHITELIST}
+    depends_on:
+      - cf-blog-database
     networks:
       - network-cf-blog
     volumes:
@@ -66,6 +84,7 @@ services:
       - VITE_CORS_WITH_XSRF_TOKEN=${VITE_CORS_WITH_XSRF_TOKEN}
       - VITE_ZUSTAND_ENABLED=${VITE_ZUSTAND_ENABLED}
     depends_on:
+      - cf-blog-database
       - cf-blog-backend
     networks:
       - network-cf-blog
@@ -87,6 +106,7 @@ services:
     environment:
       - NODE_ENV=production
     depends_on:
+      - cf-blog-database
       - cf-blog-backend
       - cf-blog-frontend
     ports:
@@ -101,3 +121,7 @@ services:
 
 networks:
   network-cf-blog:
+
+volumes:
+  database-cf-blog:
+    driver: local

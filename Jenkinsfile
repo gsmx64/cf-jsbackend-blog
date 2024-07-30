@@ -62,6 +62,12 @@ pipeline {
             steps {
                 sh """
                     cd backend
+                    cp .env.testing.sample .env.testing
+                    sed -i 's/^APP_DB_HOST=.*/APP_DB_HOST=${APP_TESTING_DB_HOST}/' .env.testing
+                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=${APP_TESTING_DB_PORT}/' .env.testing
+                    sed -i 's/^APP_DB_NAME=.*/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
+                    sed -i 's/^APP_DB_USER=.*/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
+                    sed -i 's/^APP_DB_PASSWORD=.*/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
                     export NODE_ENV=testing && npm test
                     cd ..
                 """
@@ -71,6 +77,7 @@ pipeline {
             steps {
                 sh """
                     cd frontend
+                    cp .env.testing.sample .env.testing
                     export NODE_ENV=testing && npm test
                     cd ..
                 """
@@ -132,6 +139,8 @@ pipeline {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
                     cp .env.sample .env
+                    cp ./backend/.env.docker.development.sample .env.development
+                    cp ./frontend/.env.docker.development.sample .env.development
                     sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
                     sed -i 's/^APP_DATABASE_PORT=.*/APP_DATABASE_PORT=5433/' .env
                     docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
@@ -260,6 +269,8 @@ pipeline {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
                     cp .env.sample .env
+                    cp ./backend/.env.docker.production.sample .env.production
+                    cp ./frontend/.env.docker.production.sample .env.production
                     sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
                     sed -i 's/^DOCKER_PROD_HTTP_PORT=.*/DOCKER_PROD_HTTP_PORT=81/' .env
                     sed -i 's/^DOCKER_PROD_HTTPS_PORT=.*/DOCKER_PROD_HTTPS_PORT=7443/' .env
