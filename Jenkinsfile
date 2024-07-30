@@ -122,7 +122,7 @@ pipeline {
                 """
             }
         }*/
-        stage('Check local Docker Engine Status') {
+        /*stage('Check local Docker Engine Status') {
             steps {
                 script {
                     def check_docker = sh(returnStdout: true, script: "systemctl is-active docker")
@@ -135,15 +135,15 @@ pipeline {
                 }
             }
         }
-        stage('Build docker development images and push to Dockerhub') {
+        stage('Build docker development images') {
             steps {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
                     cp .env.sample .env
                     cp ./backend/.env.docker.development.sample ./backend/.env.development
                     cp ./frontend/.env.docker.development.sample ./frontend/.env.development
-                    sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
-                    sed -i 's/^APP_DATABASE_PORT=.*/APP_DATABASE_PORT=5433/' .env
+                    sed -i 's/^APP_BUILD_NUMBER=.*%/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
+                    sed -i 's/^APP_DATABASE_PORT=.*%/APP_DATABASE_PORT=5433/' .env
                     docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
                 """
             }
@@ -197,7 +197,7 @@ pipeline {
                     docker logout
                 """
             }
-        }
+        }*/
         /*stage('Scan Docker development image with Trivy - HIGH severity - backend') {
             steps {
                 script {
@@ -254,7 +254,7 @@ pipeline {
                 }
             }
         }*/
-        stage('Stop docker development containers and do docker clean up') {
+        /*stage('Stop docker development containers and do docker clean up') {
             steps {
                 sh """
                     docker compose -f docker-compose.dev.yml down -v
@@ -264,8 +264,8 @@ pipeline {
                     rm -f .env
                 """
             }
-        }
-        stage('Build docker production images and push to Dockerhub') {
+        }*/
+        stage('Build docker production images') {
             steps {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
