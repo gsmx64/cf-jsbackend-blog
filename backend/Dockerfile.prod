@@ -14,6 +14,7 @@ RUN cp .env.docker.production.sample .env.production
 
 RUN npm install -g @nestjs/cli@10.3.0
 RUN npm i --omit=dev
+RUN npm run m:generate && npm run m:migrate
 RUN npm run build
 
 

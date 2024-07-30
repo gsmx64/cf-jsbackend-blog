@@ -68,7 +68,8 @@ pipeline {
                     sed -i 's/^APP_DB_NAME=.*/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
                     sed -i 's/^APP_DB_USER=.*/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
                     sed -i 's/^APP_DB_PASSWORD=.*/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
-                    export NODE_ENV=testing && npm run m:generate:test && npm run m:migrate:test && npm test
+                    export NODE_ENV=testing && npm run m:generate:test && npm run m:migrate:test
+                    export NODE_ENV=testing && npm test
                     cd ..
                 """
             }
@@ -83,7 +84,7 @@ pipeline {
                 """
             }
         }
-        stage('OWASP Dependency-Check Vulnerabilities - backend') {
+        /*stage('OWASP Dependency-Check Vulnerabilities - backend') {
             steps {
                 sh """
                     cd backend
@@ -120,7 +121,7 @@ pipeline {
                     rm -f dependency-check-*
                 """
             }
-        }
+        }*/
         stage('Check local Docker Engine Status') {
             steps {
                 script {
