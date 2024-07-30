@@ -282,7 +282,7 @@ pipeline {
         stage('Test docker production image - backend') {
             steps {
                 script {
-                    def status_dev = sh(returnStdout: true, script: "docker container inspect -f '{{.State.Status}}' '$APP_NAME_BACKEND-dev'")
+                    def status_dev = sh(returnStdout: true, script: "docker container inspect -f '{{.State.Status}}' '$APP_NAME_BACKEND'")
                     echo '----------------------------------------------------------'
                     if (status_dev.trim() == 'running') {
                         echo '> Docker production backend image: running correctly.'
