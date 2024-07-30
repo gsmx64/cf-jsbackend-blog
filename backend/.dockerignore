@@ -1,5 +1,6 @@
 **/node_modules/
 **/dist
+**/src/migrations
 .git
 npm-debug.log
 .coverage
