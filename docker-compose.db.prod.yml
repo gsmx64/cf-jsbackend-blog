@@ -4,7 +4,7 @@ services:
     container_name: ${APP_DATABASE_HOST}
     restart: unless-stopped
     env_file:
-      - .env
+      - ./.env
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
@@ -24,34 +24,9 @@ services:
     container_name: ${APP_BACKEND_HOST}
     restart: unless-stopped
     env_file:
-      - .env
-      - backend/.env.production
+      - ./backend/.env.production
     environment:
       - NODE_ENV=production
-      - APP_HOST=${APP_HOST}
-      - APP_PORT=${APP_PORT}
-      - APP_AUTH_SECRET=${APP_AUTH_SECRET}
-      - APP_AUTH_HASH_SALT=${APP_AUTH_HASH_SALT}
-      - APP_AUTH_TOKEN_EXPIRATION=${APP_AUTH_TOKEN_EXPIRATION}
-      - APP_AUTH_FACEBOOK_ENABLE=${APP_AUTH_FACEBOOK_ENABLE}
-      - APP_AUTH_FACEBOOK_KEY=${APP_AUTH_FACEBOOK_SECRET}
-      - APP_AUTH_FACEBOOK_SECRET=${APP_AUTH_FACEBOOK_SECRET}
-      - APP_AUTH_GOOGLE_ENABLE=${APP_AUTH_GOOGLE_ENABLE}
-      - APP_AUTH_GOOGLE_ID=${APP_AUTH_GOOGLE_ID}
-      - APP_AUTH_GOOGLE_SECRET=${APP_AUTH_GOOGLE_SECRET}
-      - APP_AUTH_TWITTER_ENABLE=${APP_AUTH_TWITTER_ENABLE}
-      - APP_AUTH_TWITTER_ID=${APP_AUTH_TWITTER_ID}
-      - APP_AUTH_TWITTER_SECRET=${APP_AUTH_TWITTER_SECRET}
-      - APP_DB_HOST=${APP_DB_HOST}
-      - APP_DB_PORT=${APP_DB_PORT}
-      - APP_DB_NAME=${APP_DB_NAME}
-      - APP_DB_SCHEMA=${APP_DB_SCHEMA}
-      - APP_DB_USER=${APP_DB_USER}
-      - APP_DB_PASSWORD=${APP_DB_PASSWORD}
-      - APP_PAGINATION_DEFAULT_LIMIT=${APP_PAGINATION_DEFAULT_LIMIT}
-      - APP_PAGINATION_MAX_LIMIT=${APP_PAGINATION_MAX_LIMIT}
-      - APP_LOGGING_ENABLE=${APP_LOGGING_ENABLE}
-      - APP_CORS_PROD_WHITELIST=${APP_CORS_PROD_WHITELIST}
     depends_on:
       - cf-blog-database
     networks:
@@ -67,22 +42,9 @@ services:
     container_name: ${APP_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
-      - .env
-      - backend/.env.production
+      - ./frontend/.env.production
     environment:
       - NODE_ENV=production
-      - VITE_APP_NAME=${VITE_APP_NAME}
-      - VITE_APP_PORT=${VITE_APP_PORT}
-      - VITE_API_PROTOCOL=${VITE_API_PROTOCOL}
-      - VITE_API_HOST=${VITE_API_HOST}
-      - VITE_API_PORT=${VITE_API_PORT}
-      - VITE_API_PATH=${VITE_API_PATH}
-      - VITE_API_TIMEOUT=${VITE_API_TIMEOUT}
-      - VITE_DEV_API_DOCKER=${VITE_DEV_API_DOCKER}
-      - VITE_PROD_API_BY_PROXY=${VITE_PROD_API_BY_PROXY}
-      - VITE_CORS_WITH_CREDENTIALS=${VITE_CORS_WITH_CREDENTIALS}
-      - VITE_CORS_WITH_XSRF_TOKEN=${VITE_CORS_WITH_XSRF_TOKEN}
-      - VITE_ZUSTAND_ENABLED=${VITE_ZUSTAND_ENABLED}
     depends_on:
       - cf-blog-database
       - cf-blog-backend
@@ -101,7 +63,7 @@ services:
     container_name: ${APP_PROXY_HOST}
     restart: unless-stopped
     env_file:
-      - .env
+      - ./.env
     environment:
       - NODE_ENV=production
     depends_on:
