@@ -15,6 +15,7 @@ services:
     networks:
       - network-cf-blog
     volumes:
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - database-cf-blog:/var/lib/postgresql/data
 
   cf-blog-backend:

@@ -1,12 +1,14 @@
--- CREATE DATABASE IF NOT EXISTS blogdb
-SELECT 'CREATE DATABASE blogdb'
-WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'blogdb')\gexec
+/*
+CF-Blog Init DB
+Database: blogdb/public
+*/
 
 DROP SEQUENCE IF EXISTS "public"."migrations_id_seq";
 DROP TABLE IF EXISTS "public"."categories";
 DROP TABLE IF EXISTS "public"."comments";
 DROP TABLE IF EXISTS "public"."migrations";
 DROP TABLE IF EXISTS "public"."posts";
+DROP TABLE IF EXISTS "public"."session_entity";
 DROP TABLE IF EXISTS "public"."settings";
 DROP TABLE IF EXISTS "public"."users";
 DROP FUNCTION IF EXISTS "public"."uuid_generate_v1()";
@@ -29,6 +31,56 @@ MINVALUE  1
 MAXVALUE 2147483647
 START 1
 CACHE 1;
+CREATE OR REPLACE FUNCTION "uuid_generate_v1"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v1'
+  LANGUAGE c VOLATILE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_generate_v1"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_generate_v1mc"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v1mc'
+  LANGUAGE c VOLATILE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_generate_v1mc"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_generate_v3"("namespace" uuid, "name" text)
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v3'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_generate_v3"("namespace" uuid, "name" text) OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_generate_v4"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v4'
+  LANGUAGE c VOLATILE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_generate_v4"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_generate_v5"("namespace" uuid, "name" text)
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v5'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_generate_v5"("namespace" uuid, "name" text) OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_nil"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_nil'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_nil"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_ns_dns"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_dns'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_ns_dns"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_ns_oid"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_oid'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_ns_oid"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_ns_url"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_url'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_ns_url"() OWNER TO "postgres";
+CREATE OR REPLACE FUNCTION "uuid_ns_x500"()
+  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_x500'
+  LANGUAGE c IMMUTABLE STRICT
+  COST 1;
+ALTER FUNCTION "uuid_ns_x500"() OWNER TO "postgres";
 CREATE TYPE "categories_status_enum" AS ENUM (
   'PUBLISHED',
   'UNPUBLISHED',
@@ -91,7 +143,7 @@ CREATE TABLE "posts" (
   "created_at" timestamp(6) NOT NULL DEFAULT now(),
   "updated_at" timestamp(6) NOT NULL DEFAULT now(),
   "title" varchar COLLATE "pg_catalog"."default" NOT NULL,
-  "description" varchar COLLATE "pg_catalog"."default" NOT NULL,
+  "description" text COLLATE "pg_catalog"."default",
   "image" text COLLATE "pg_catalog"."default" NOT NULL,
   "content" text COLLATE "pg_catalog"."default" NOT NULL,
   "status" "public"."posts_status_enum" NOT NULL DEFAULT 'UNPUBLISHED'::posts_status_enum,
@@ -100,27 +152,30 @@ CREATE TABLE "posts" (
 )
 ;
 ALTER TABLE "posts" OWNER TO "blogdbu";
+CREATE TABLE "session_entity" (
+  "expired_at" int8 NOT NULL,
+  "id" varchar(255) COLLATE "pg_catalog"."default" NOT NULL,
+  "json" text COLLATE "pg_catalog"."default" NOT NULL,
+  "destroyed_at" timestamp(6)
+)
+;
+ALTER TABLE "session_entity" OWNER TO "blogdbu";
 CREATE TABLE "settings" (
   "id" varchar COLLATE "pg_catalog"."default" NOT NULL,
   "updated_at" timestamp(6) NOT NULL DEFAULT now(),
   "brand" varchar COLLATE "pg_catalog"."default",
+  "activation" varchar COLLATE "pg_catalog"."default",
+  "terms" text COLLATE "pg_catalog"."default",
   "facebook" varchar COLLATE "pg_catalog"."default",
   "instagram" varchar COLLATE "pg_catalog"."default",
   "twitterx" varchar COLLATE "pg_catalog"."default",
   "linkedin" varchar COLLATE "pg_catalog"."default",
   "youtube" varchar COLLATE "pg_catalog"."default",
   "tiktok" varchar COLLATE "pg_catalog"."default",
-  "terms" text COLLATE "pg_catalog"."default"
-  "setup" int4,
-  "activation" varchar COLLATE "pg_catalog"."default"
+  "setup" int4
 )
 ;
 ALTER TABLE "settings" OWNER TO "blogdbu";
-BEGIN;
-LOCK TABLE "public"."settings" IN SHARE MODE;
-DELETE FROM "public"."settings";
-INSERT INTO "public"."settings" ("id","activation") VALUES ('1', 'auto');
-COMMIT;
 CREATE TABLE "users" (
   "id" uuid NOT NULL DEFAULT uuid_generate_v4(),
   "created_at" timestamp(6) NOT NULL DEFAULT now(),
@@ -140,61 +195,43 @@ CREATE TABLE "users" (
 )
 ;
 ALTER TABLE "users" OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_generate_v1"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v1'
-  LANGUAGE c VOLATILE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_generate_v1"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_generate_v1mc"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v1mc'
-  LANGUAGE c VOLATILE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_generate_v1mc"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_generate_v3"("namespace" uuid, "name" text)
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v3'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_generate_v3"("namespace" uuid, "name" text) OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_generate_v4"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v4'
-  LANGUAGE c VOLATILE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_generate_v4"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_generate_v5"("namespace" uuid, "name" text)
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_generate_v5'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_generate_v5"("namespace" uuid, "name" text) OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_nil"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_nil'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_nil"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_ns_dns"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_dns'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_ns_dns"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_ns_oid"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_oid'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_ns_oid"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_ns_url"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_url'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_ns_url"() OWNER TO "blogdbu";
-CREATE OR REPLACE FUNCTION "uuid_ns_x500"()
-  RETURNS "pg_catalog"."uuid" AS '$libdir/uuid-ossp', 'uuid_ns_x500'
-  LANGUAGE c IMMUTABLE STRICT
-  COST 1;
-ALTER FUNCTION "uuid_ns_x500"() OWNER TO "blogdbu";
-
+BEGIN;
+LOCK TABLE "public"."categories" IN SHARE MODE;
+DELETE FROM "public"."categories";
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."comments" IN SHARE MODE;
+DELETE FROM "public"."comments";
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."migrations" IN SHARE MODE;
+DELETE FROM "public"."migrations";
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."posts" IN SHARE MODE;
+DELETE FROM "public"."posts";
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."session_entity" IN SHARE MODE;
+DELETE FROM "public"."session_entity";
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."settings" IN SHARE MODE;
+DELETE FROM "public"."settings";
+INSERT INTO "public"."settings" ("id","updated_at","brand","activation","terms","facebook","instagram","twitterx","linkedin","youtube","tiktok","setup") VALUES ('1', '2024-07-31 00:00:00.000000', 'CF-Blog', 'auto', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);
+COMMIT;
+BEGIN;
+LOCK TABLE "public"."users" IN SHARE MODE;
+DELETE FROM "public"."users";
+COMMIT;
 ALTER TABLE "categories" ADD CONSTRAINT "PK_24dbc6126a28ff948da33e97d3b" PRIMARY KEY ("id");
 ALTER TABLE "comments" ADD CONSTRAINT "PK_8bf68bc960f2b69e818bdb90dcb" PRIMARY KEY ("id");
 ALTER TABLE "migrations" ADD CONSTRAINT "PK_8c82d7f526340ab734260ea46be" PRIMARY KEY ("id");
 ALTER TABLE "posts" ADD CONSTRAINT "PK_2829ac61eff60fcec60d7274b9e" PRIMARY KEY ("id");
+ALTER TABLE "session_entity" ADD CONSTRAINT "PK_897bc09b92e1a7ef6b30cba4786" PRIMARY KEY ("id");
+CREATE INDEX "IDX_878fa342c8dfca0f0217483ff6" ON "session_entity" USING btree (
+  "expired_at" "pg_catalog"."int8_ops" ASC NULLS LAST
+);
 ALTER TABLE "settings" ADD CONSTRAINT "PK_0669fe20e252eb692bf4d344975" PRIMARY KEY ("id");
 ALTER TABLE "users" ADD CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id");
 ALTER TABLE "categories" ADD CONSTRAINT "UQ_aa79448dc3e959720ab4c13651d" UNIQUE ("title");
@@ -206,7 +243,12 @@ ALTER TABLE "posts" ADD CONSTRAINT "FK_312c63be865c81b922e39c2475e" FOREIGN KEY 
 ALTER TABLE "posts" ADD CONSTRAINT "FK_852f266adc5d67c40405c887b49" FOREIGN KEY ("category_id") REFERENCES "public"."categories" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "users" ADD CONSTRAINT "UQ_fe0bb3f6520ee0469504521e710" UNIQUE ("username");
 ALTER TABLE "users" ADD CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email");
+BEGIN;
+LOCK TABLE "public"."users" IN SHARE MODE;
+DELETE FROM "public"."users";
+INSERT INTO "public"."users" ("id","created_at","updated_at","username","email","password","status","role","karma","avatar","first_name","last_name","age","city","country") VALUES ('ce77df22-d5ee-423e-99ca-23d64287573a', '2024-07-31 00:00:00.000000', '2024-07-31 00:00:01.000000', 'Admin', 'admin@email.com', '$2b$10$Ui1uWUAmSFnK7jWFEssbhei8ZZuS0xcZ4k2DdDHNGqn7SWBmkHTja', 'ENABLED', 'ADMIN', 0, 'https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png', 'AdminLastnName', 'AdminLastname', 30, 'MyCity', 'MyCountry');
+COMMIT;
 ALTER SEQUENCE "migrations_id_seq"
 OWNED BY "migrations"."id";
-SELECT setval('"migrations_id_seq"', 3, true);
+SELECT setval('"migrations_id_seq"', 1, false);
 ALTER SEQUENCE "migrations_id_seq" OWNER TO "blogdbu";
