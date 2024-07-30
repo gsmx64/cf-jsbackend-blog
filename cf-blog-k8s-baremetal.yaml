@@ -24,8 +24,8 @@ spec:
             value: "cf-blog-backend"
           - name: APP_PORT
             value: "82"
-		      - name: APP_AUTH_SECRET
-			      valueFrom:
+          - name: APP_AUTH_SECRET
+            valueFrom:
               secretKeyRef:
                 name: cf-blog-apisecret
                 key: APP_AUTH_SECRET
@@ -43,8 +43,8 @@ spec:
               secretKeyRef:
                 name: cf-blog-facebookkey
                 key: APP_AUTH_FACEBOOK_KEY
-		      - name: APP_AUTH_FACEBOOK_SECRET
-			      valueFrom:
+          - name: APP_AUTH_FACEBOOK_SECRET
+            valueFrom:
               secretKeyRef:
                 name: cf-blog-facebooksecret
                 key: APP_AUTH_FACEBOOK_SECRET
