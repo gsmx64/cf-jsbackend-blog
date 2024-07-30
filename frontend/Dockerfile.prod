@@ -21,7 +21,8 @@ RUN [ ! -f /etc/ssl/default.key ] && \
     openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt
 
 RUN addgroup -S app && adduser -S app -G app && \
-    chown -R app:app /var/run && \
+    touch /var/run/nginx.pid && \    
+    chown -R app:app /var/run/nginx.pid && \
     chown -R app:app /var/cache/nginx && \
     chown -R app:app /etc/nginx && \
     chown -R app:app /etc/ssl/default.* && \
