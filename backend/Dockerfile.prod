@@ -5,9 +5,7 @@ WORKDIR /app-build
 COPY ./ /
 
 RUN npm install -g @nestjs/cli@10.3.0
-RUN npm i --omit=dev
-RUN npm run m:generate && npm run m:migrate
-RUN npm run build
+RUN npm i --omit=dev && npm run build
 
 
 FROM node:20.14-alpine
