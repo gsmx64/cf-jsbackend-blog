@@ -20,7 +20,7 @@ spec:
       - name: cf-blog-backend
         image: gsmx64/cf-blog-backend:latest
         env:
-		      - name: APP_HOST
+          - name: APP_HOST
             value: "cf-blog-backend"
           - name: APP_PORT
             value: "82"
