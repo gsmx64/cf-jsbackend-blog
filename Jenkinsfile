@@ -15,15 +15,6 @@ pipeline {
         nodejs "nodejs-v20.14"
     }
     stages {
-        stage("Pre Build Cleanup") {
-            steps {
-                preBuildCleanup { // Clean before build
-                    includePattern('**/target/**')
-                    deleteDirectories()
-                    cleanupParameter('CLEANUP')
-                }
-            }
-        }
         stage("Install Project Dependencies - backend") {
             steps {
                 nodejs(nodeJSInstallationName: 'nodejs-v20.14') {
