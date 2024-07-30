@@ -14,6 +14,13 @@ pipeline {
     tools {
         nodejs "nodejs-v20.14"
     }
+    wrappers {
+        preBuildCleanup { // Clean before build
+            includePattern('**/target/**')
+            deleteDirectories()
+            cleanupParameter('CLEANUP')
+        }
+    }
     stages {
         stage("Install Project Dependencies - backend") {
             steps {
@@ -479,15 +486,17 @@ pipeline {
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl rollout restart deployment $APP_NAME -n $APP_NAME || true"'
             }
         }
-        /*stage('Post - Clean up') {
-            steps {
-                sh """
-                    pwd
-                    echo 'Clean up workfolder'
-                    cd ..
-                    rm -Rf /var/lib/jenkins/workspace/${APP_NAME} /var/lib/jenkins/workspace/${APP_NAME}@tmp
-                """
-            }
-        }*/
+        
+    }
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                            [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
     }
 }
