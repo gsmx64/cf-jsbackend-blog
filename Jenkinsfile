@@ -15,7 +15,7 @@ pipeline {
         nodejs "nodejs-v20.14"
     }
     stages {
-        stage("Install Project Dependencies - backend") {
+        stage("Pre Build Cleanup") {
             steps {
                 preBuildCleanup { // Clean before build
                     includePattern('**/target/**')
