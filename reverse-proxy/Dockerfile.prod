@@ -6,7 +6,7 @@ COPY ./ /
 
 RUN apk update && apk add build-base
 
-RUN if [ ! -f /etc/ssl/default.key ] \
+RUN if [ ! -f /etc/ssl/default.key ]; then \
     apk add openssl && \
     openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt \
     fi
