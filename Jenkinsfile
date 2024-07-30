@@ -273,8 +273,8 @@ pipeline {
                     cp ./backend/.env.docker.production.sample ./backend/.env.production
                     cp ./frontend/.env.docker.production.sample ./frontend/.env.production
                     sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
-                    sed -i 's/^DOCKER_PROD_HTTP_PORT=.*/DOCKER_PROD_HTTP_PORT=81/' .env
-                    sed -i 's/^DOCKER_PROD_HTTPS_PORT=.*/DOCKER_PROD_HTTPS_PORT=7443/' .env
+                    sed -i 's/^APP_PROD_HTTP_PORT=.*/APP_PROD_HTTP_PORT=81/' .env
+                    sed -i 's/^APP_PROD_HTTPS_PORT=.*/APP_PROD_HTTPS_PORT=7443/' .env
                     docker compose -f docker-compose.prod.yml up --build --force-recreate --detach
                 """
             }
