@@ -140,8 +140,8 @@ pipeline {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
                     cp .env.sample .env
-                    cp ./backend/.env.docker.development.sample .env.development
-                    cp ./frontend/.env.docker.development.sample .env.development
+                    cp ./backend/.env.docker.development.sample ./backend/.env.development
+                    cp ./frontend/.env.docker.development.sample ./frontend/.env.development
                     sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
                     sed -i 's/^APP_DATABASE_PORT=.*/APP_DATABASE_PORT=5433/' .env
                     docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
@@ -270,8 +270,8 @@ pipeline {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
                     cp .env.sample .env
-                    cp ./backend/.env.docker.production.sample .env.production
-                    cp ./frontend/.env.docker.production.sample .env.production
+                    cp ./backend/.env.docker.production.sample ./backend/.env.production
+                    cp ./frontend/.env.docker.production.sample ./frontend/.env.production
                     sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
                     sed -i 's/^DOCKER_PROD_HTTP_PORT=.*/DOCKER_PROD_HTTP_PORT=81/' .env
                     sed -i 's/^DOCKER_PROD_HTTPS_PORT=.*/DOCKER_PROD_HTTPS_PORT=7443/' .env
