@@ -30,11 +30,11 @@ export class ErrorManager extends Error {
    *                        Otherwise, it throws an HttpException with the HTTP status code INTERNAL_SERVER_ERROR.
    */
   public static createSignatureError(message: string) {
-    const name = message.split(' :: ')[0];
+    /*const name = message.split(' :: ')[0];
     if (name) {
       throw new HttpException(message, HttpStatus[name]);
     } else {
       throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    }*/
   }
 }

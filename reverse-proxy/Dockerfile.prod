@@ -2,11 +2,15 @@ FROM nginx:1.27.0-alpine
 
 WORKDIR /etc/nginx
 
-COPY . .
+COPY ./ /
 
 RUN apk update && apk add build-base
 
 RUN [ ! -f /etc/ssl/default.key ] && apk add openssl && openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt
+
+RUN addgroup -S app && adduser -S app -G app
+
+USER app
 
 EXPOSE 80
 EXPOSE 443

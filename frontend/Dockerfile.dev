@@ -8,9 +8,11 @@ COPY package*.json /
 
 RUN npm i
 
-COPY . .
+RUN addgroup -S app && adduser -S app -G app
 
-RUN cp .env.docker.development.sample .env.development
+COPY ./ /
+
+#USER app  //NOSONAR
 
 EXPOSE 3000
 

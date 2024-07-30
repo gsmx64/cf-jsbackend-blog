@@ -170,7 +170,7 @@ export class UsersService {
         { ...body,
           status: statusOverride,
           role: roleOverride,
-          karma: body.karma ? body.karma : 0,
+          karma: 0,
           password: hashedPassword
         }
       );

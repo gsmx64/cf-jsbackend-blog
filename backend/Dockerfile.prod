@@ -1,4 +1,4 @@
-FROM node:20.14 AS build-phase
+FROM node:20.14-alpine AS build-phase
 
 WORKDIR /app-build
 
@@ -17,22 +17,22 @@ RUN npm i --omit=dev
 RUN npm run build
 
 
-FROM node:20.14
+FROM node:20.14-alpine
 
-WORKDIR /api
+WORKDIR /home/app
 
-ENV NODE_ENV=production
+RUN rm -rf ./* && apk update && apk add build-base && npm install pm2 -g
 
 COPY --from=build-phase /app-build/dist/ /api
 COPY --from=build-phase /app-build/node_modules/ /node_modules
-COPY --from=build-phase /app-build/.env.docker.production.sample /.env.production
+COPY --from=build-phase /app-build/.env.production /.env.production
 
-#RUN npm install pm2 -g
+RUN addgroup -S app && adduser -S app -G app
 
-#RUN source ./.env.production
+#USER app  //NOSONAR
 
 EXPOSE 80
 EXPOSE 443
 
-#CMD ["pm2","start","/api/main.js"]
-CMD ["node", "/api/main.js"]
+CMD ["pm2-runtime","start","/home/app/main.js"]
+#CMD ["node", "/api/main.js"]

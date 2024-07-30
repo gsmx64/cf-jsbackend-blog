@@ -1,10 +1,24 @@
 services:
+  cf-blog-database:
+    image: postgres:15.5
+    container_name: ${APP_DATABASE_HOST}
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    env:
+      NODE_ENV: production
+      POSTGRES_DB: ${APP_DB_NAME}
+      POSTGRES_USER: ${APP_DB_USER}
+      POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
+    ports:
+      - ${APP_DATABASE_PORT}:5432
+    networks:
+      - network-cf-blog
+    volumes:
+      - database-cf-blog:/var/lib/postgresql/data
 
   cf-blog-backend:
-    image: gsmx64/cf-blog-backend:${APP_BUILD_NUMBER}
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
+    image: gsmx64/cf-blog-backend:latest
     container_name: ${APP_BACKEND_HOST}
     restart: unless-stopped
     env_file:
@@ -36,21 +50,20 @@ services:
       - APP_PAGINATION_MAX_LIMIT=${APP_PAGINATION_MAX_LIMIT}
       - APP_LOGGING_ENABLE=${APP_LOGGING_ENABLE}
       - APP_CORS_PROD_WHITELIST=${APP_CORS_PROD_WHITELIST}
+    depends_on:
+      - cf-blog-database
     networks:
       - network-cf-blog
     volumes:
       - ./node_modules:/home/app/node_modules
 
   cf-blog-frontend:
-    image: gsmx64/cf-blog-frontend:${APP_BUILD_NUMBER}
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+    image: gsmx64/cf-blog-frontend:latest
     container_name: ${APP_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
-      - ./backend/.env.production
+      - ./frontend/.env.production
     environment:
       - NODE_ENV=production
       - VITE_APP_NAME=${VITE_APP_NAME}
@@ -71,14 +84,9 @@ services:
       - network-cf-blog
     volumes:
       - ./frontend/nginx.default.conf:/etc/nginx/conf.d/default.conf
-      #- ./frontend/default.pem:/etc/ssl/default.pem
-      #- ./frontend/default.key:/etc/ssl/default.key
 
   cf-blog-reverse-proxy:
-    image: gsmx64/cf-blog-reverse-proxy:${APP_BUILD_NUMBER}
-    build:
-      context: ./reverse-proxy
-      dockerfile: Dockerfile.prod
+    image: gsmx64/cf-blog-reverse-proxy:latest
     container_name: ${APP_PROXY_HOST}
     restart: unless-stopped
     env_file:
@@ -101,7 +109,3 @@ services:
 
 networks:
   network-cf-blog:
-
-volumes:
-  database-cf-blog:
-    driver: local

@@ -1,4 +1,11 @@
-# env file
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 .env.production
 .env.development
 .env.testing
@@ -12,16 +19,23 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node
 node_modules
 dist
 dist-ssr
 *.local
 
+# Mac files
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
