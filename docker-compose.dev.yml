@@ -4,7 +4,7 @@ services:
     container_name: ${APP_DATABASE_HOST}-dev
     restart: unless-stopped
     env_file:
-      - ./.env
+      - .env
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
@@ -24,8 +24,8 @@ services:
     container_name: ${APP_BACKEND_HOST}-dev
     restart: unless-stopped
     env_file:
-      - ./.env
-      - ./backend/.env.development
+      - .env
+      - backend/.env.development
     environment:
       - NODE_ENV=development
       - APP_HOST=${APP_HOST}
@@ -70,8 +70,8 @@ services:
     container_name: ${APP_FRONTEND_HOST}-dev
     restart: unless-stopped
     env_file:
-      - ./.env
-      - ./frontend/.env.development
+      - .env
+      - frontend/.env.development
     environment:
       - NODE_ENV=development
       - VITE_APP_NAME=${VITE_APP_NAME}

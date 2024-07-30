@@ -4,7 +4,7 @@ services:
     container_name: ${APP_DATABASE_HOST}
     restart: unless-stopped
     env_file:
-      - ./.env
+      - .env
     environment:
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
@@ -24,8 +24,8 @@ services:
     container_name: ${APP_BACKEND_HOST}
     restart: unless-stopped
     env_file:
-      - ./.env
-      - ./backend/.env.production
+      - .env
+      - backend/.env.production
     environment:
       - NODE_ENV=production
       - APP_HOST=${APP_HOST}
@@ -67,8 +67,8 @@ services:
     container_name: ${APP_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
-      - ./.env
-      - ./backend/.env.production
+      - .env
+      - backend/.env.production
     environment:
       - NODE_ENV=production
       - VITE_APP_NAME=${VITE_APP_NAME}
@@ -101,8 +101,7 @@ services:
     container_name: ${APP_PROXY_HOST}
     restart: unless-stopped
     env_file:
-      - ./.env
-      - ./frontend/.env.production
+      - .env
     environment:
       - NODE_ENV=production
     depends_on:
