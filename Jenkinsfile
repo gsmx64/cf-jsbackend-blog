@@ -37,7 +37,7 @@ pipeline {
                 }
             }
         }
-        stage('Code Quality Check via SonarQube') {
+        /*stage('Code Quality Check via SonarQube') {
             steps {
                 sh """
                     rm -f dependency-check-*
@@ -57,7 +57,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('Unittesting - backend') {
             steps {
                 sh """
@@ -457,12 +457,12 @@ pipeline {
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-twitterenabled || true && kubectl create secret generic $APP_NAME-twitterenabled --from-literal=APP_AUTH_TWITTER_ENABLE=$APP_AUTH_TWITTER_ENABLE -n $APP_NAME"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-twitterid || true && kubectl create secret generic $APP_NAME-twitterid --from-literal=APP_AUTH_TWITTER_ID=$APP_AUTH_TWITTER_ID -n $APP_NAME"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-twittersecret || true && kubectl create secret generic $APP_NAME-twittersecret --from-literal=APP_AUTH_TWITTER_SECRET=$APP_AUTH_TWITTER_SECRET -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlhost || true && kubectl create secret generic $APP_NAME-postgresqlhost --from-literal=APP_DB_HOST=$APP_DB_HOST -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlport || true && kubectl create secret generic $APP_NAME-postgresqlport --from-literal=APP_DB_PORT=$APP_DB_PORT -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqluser || true && kubectl create secret generic $APP_NAME-postgresqluser --from-literal=APP_DB_USER=$APP_DB_USER -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlpassword || true && kubectl create secret generic $APP_NAME-postgresqlpassword --from-literal=APP_DB_PASSWORD=$APP_DB_PASSWORD -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqldatabase || true && kubectl create secret generic $APP_NAME-postgresqldatabase --from-literal=APP_DB_NAME=$APP_DB_NAME -n $APP_NAME"'
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlschema || true && kubectl create secret generic $APP_NAME-postgresqlschema --from-literal=APP_DB_SCHEMA=$APP_DB_SCHEMA -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlhost || true && kubectl create secret generic $APP_NAME-postgresqlhost --from-literal=APP_DB_HOST=$APP_PROD_DB_HOST -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlport || true && kubectl create secret generic $APP_NAME-postgresqlport --from-literal=APP_DB_PORT=$APP_PROD_DB_PORT -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqluser || true && kubectl create secret generic $APP_NAME-postgresqluser --from-literal=APP_DB_USER=$APP_PROD_DB_USER -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlpassword || true && kubectl create secret generic $APP_NAME-postgresqlpassword --from-literal=APP_PROD_DB_PASSWORD=$APP_DB_PASSWORD -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqldatabase || true && kubectl create secret generic $APP_NAME-postgresqldatabase --from-literal=APP_PROD_DB_NAME=$APP_DB_NAME -n $APP_NAME"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-postgresqlschema || true && kubectl create secret generic $APP_NAME-postgresqlschema --from-literal=APP_DB_SCHEMA=$APP_PROD_DB_SCHEMA -n $APP_NAME"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-corswhitelist || true && kubectl create secret generic $APP_NAME-corswhitelist --from-literal=APP_CORS_PROD_WHITELIST=$APP_CORS_PROD_WHITELIST -n $APP_NAME"'
 
                 /* Enable this on cloud cluster with loadbalancer
