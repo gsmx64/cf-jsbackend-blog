@@ -21,13 +21,13 @@ spec:
           env:
             - name: APP_HOST
               value: "cf-blog-backend"
-            - name: APP_PORT
-              value: "82"
             - name: APP_AUTH_SECRET
               valueFrom:
                 secretKeyRef:
                   name: cf-blog-apisecret
                   key: APP_AUTH_SECRET
+            - name: APP_PORT
+              value: "82"
             - name: APP_AUTH_HASH_SALT
               value: "10"
             - name: APP_AUTH_TOKEN_EXPIRATION
