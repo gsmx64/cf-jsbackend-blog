@@ -1,4 +1,4 @@
-# CF-Blog on Kubernetes on cloud providers
+# CF-Blog on Kubernetes with Baremetal
 # NestJS Backend Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -191,7 +191,7 @@ spec:
             initialDelaySeconds: 60
             timeoutSeconds: 5
 
-# APP Backend Service
+# APP Backend Service - NodePort
 ---
 apiVersion: v1
 kind: Service
@@ -201,14 +201,15 @@ metadata:
 spec:
   selector:
     app: cf-blog-backend
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: "http"
       port: 82
       targetPort: 82
       protocol: "TCP"
+      nodePort: 30007
 
-# APP Frontend Service
+# APP Frontend Service - NodePort
 ---
 apiVersion: v1
 kind: Service
@@ -218,46 +219,10 @@ metadata:
 spec:
   selector:
     app: cf-blog-frontend
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: "http"
       port: 81
       targetPort: 81
       protocol: "TCP"
-
-# APP Ingress Service
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: cf-blog-ingress-service
-  namespace: todo-list
-  annotations:
-    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
-    nginx.ingress.kubernetes.io/http2-push-preload: "true"
-    nginx.ingress.kubernetes.io/proxy-body-size: "500m"
-    nginx.ingress.kubernetes.io/proxy-pass-headers: "Location"
-spec:
-  ingressClassName: nginx
-  tls:
-    - hosts:
-        - cf-blog.line.pm
-      secretName: cf-blog-tls
-  rules:
-    - host: cf-blog.line.pm
-      http:
-        paths:
-          - path: '/api'
-            pathType: Prefix
-            backend:
-              service:
-                name: cf-blog-backend-service
-                port:
-                  number: 80
-          - path: '/'
-            pathType: Prefix
-            backend:
-              service:
-                name: cf-blog-frontend-service
-                port:
-                  number: 80
+      nodePort: 30006
