@@ -1,4 +1,4 @@
-# CF-Blog on Kubernetes
+# CF-Blog on Kubernetes with Baremetal
 
 # NestJS Backend Deployment
 apiVersion: apps/v1
