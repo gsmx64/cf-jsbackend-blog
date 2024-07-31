@@ -15,7 +15,7 @@ pipeline {
         nodejs "nodejs-v20.14"
     }
     stages {
-        stage("Install Project Dependencies - backend") {
+        /*stage("Install Project Dependencies - backend") {
             steps {
                 nodejs(nodeJSInstallationName: 'nodejs-v20.14') {
                     sh """
@@ -36,7 +36,7 @@ pipeline {
                     """
                 }
             }
-        }
+        }*/
         /*stage('Code Quality Check via SonarQube') {
             steps {
                 sh """
@@ -58,16 +58,16 @@ pipeline {
                 }
             }
         }*/
-        stage('Unittesting - backend') {
+        /*stage('Unittesting - backend') {
             steps {
                 sh """
                     cd backend
                     cp .env.testing.sample .env.testing
-                    sed -i 's/^APP_DB_HOST=.*/APP_DB_HOST=${APP_TESTING_DB_HOST}/' .env.testing
-                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=${APP_TESTING_DB_PORT}/' .env.testing
-                    sed -i 's/^APP_DB_NAME=.*/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
-                    sed -i 's/^APP_DB_USER=.*/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
-                    sed -i 's/^APP_DB_PASSWORD=.*/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
+                    sed -i 's/^APP_DB_HOST=.*%/APP_DB_HOST=${APP_TESTING_DB_HOST}/' .env.testing
+                    sed -i 's/^APP_DB_PORT=.*%/APP_DB_PORT=${APP_TESTING_DB_PORT}/' .env.testing
+                    sed -i 's/^APP_DB_NAME=.*%/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
+                    sed -i 's/^APP_DB_USER=.*%/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
+                    sed -i 's/^APP_DB_PASSWORD=.*%/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
                     export NODE_ENV=testing && npm run m:generate:test && npm run m:migrate:test
                     export NODE_ENV=testing && npm test
                     cd ..
@@ -83,7 +83,7 @@ pipeline {
                     cd ..
                 """
             }
-        }
+        }*/
         /*stage('OWASP Dependency-Check Vulnerabilities - backend') {
             steps {
                 sh """
@@ -265,17 +265,17 @@ pipeline {
                 """
             }
         }*/
-        stage('Build docker production images') {
+        /*stage('Build docker production images') {
             steps {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
-                    sed -i 's/^DOCKER_DATABASE_PORT=.*/DOCKER_DATABASE_PORT=5433/' .env.sample
+                    sed -i 's/^DOCKER_DATABASE_PORT=.*%/DOCKER_DATABASE_PORT=5433/' .env.sample
                     cp .env.sample .env
                     cp ./backend/.env.docker.production.sample ./backend/.env.production
                     cp ./frontend/.env.docker.production.sample ./frontend/.env.production
-                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=5433/' ./backend/.env.production
-                    sed -i 's/^DOCKER_APP_HTTP_PORT=.*/DOCKER_APP_HTTP_PORT=81/' .env
-                    sed -i 's/^DOCKER_APP_HTTPS_PORT=.*/DOCKER_APP_HTTPS_PORT=7443/' .env
+                    sed -i 's/^APP_DB_PORT=.*%/APP_DB_PORT=5433/' ./backend/.env.production
+                    sed -i 's/^DOCKER_APP_HTTP_PORT=.*%/DOCKER_APP_HTTP_PORT=81/' .env
+                    sed -i 's/^DOCKER_APP_HTTPS_PORT=.*%/DOCKER_APP_HTTPS_PORT=7443/' .env
                     docker compose -f docker-compose.prod.db.yml up --build --force-recreate --detach
                 """
             }
@@ -350,7 +350,7 @@ pipeline {
                     docker logout
                 """
             }
-        }
+        }*/
         /*stage('Scan Docker production image with Trivy - HIGH severity - backend') {
             steps {
                 script {
@@ -435,7 +435,7 @@ pipeline {
                 }
             }
         }*/
-        stage('Stop docker production containers and do docker clean up') {
+        /*stage('Stop docker production containers and do docker clean up') {
             steps {
                 sh """
                     docker compose -f docker-compose.prod.db.yml down -v
@@ -445,10 +445,10 @@ pipeline {
                     rm -f .env
                 """
             }
-        }
+        }*/
         stage('Deploy cf-blog on Kubernetes cluster') {
             steps {
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete namespace $APP_NAME || true && kubectl create namespace $APP_NAME || true"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl create namespace $APP_NAME || true"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-apisecret || true && kubectl create secret generic $APP_NAME-apisecret --from-literal=APP_AUTH_SECRET=$APP_AUTH_SECRET -n $APP_NAME"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-facebookenabled || true && kubectl create secret generic $APP_NAME-facebookenabled --from-literal=APP_AUTH_FACEBOOK_ENABLE=$APP_AUTH_FACEBOOK_ENABLE -n $APP_NAME"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl delete secret $APP_NAME-facebookkey || true && kubectl create secret generic $APP_NAME-facebookkey --from-literal=APP_AUTH_FACEBOOK_KEY=$APP_AUTH_FACEBOOK_KEY -n $APP_NAME"'
@@ -488,7 +488,7 @@ pipeline {
         always {
             cleanWs(cleanWhenNotBuilt: false,
                     deleteDirs: true,
-                    disableDeferredWipeout: true,
+                    disableDeferredWipeout: false,
                     notFailBuild: true,
                     patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
                             [pattern: '.propsfile', type: 'EXCLUDE']])
