@@ -1,0 +1,115 @@
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name $DOCKER_PROXY_HOST;
+
+    # Max file size useful for file uploading
+    client_max_body_size 8M;
+
+    location / {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass http://$DOCKER_FRONTEND_HOST;
+    }
+
+    location /404 {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass http://$DOCKER_FRONTEND_HOST/404;
+    }
+
+    location /500 {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass http://$DOCKER_FRONTEND_HOST/500;
+    }
+
+    location ~ ^/(api|ws)/ {
+        # Return 204 for preflight requests
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+        # NGINX acting as reverse proxy for backend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header content-type "application/json";
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_pass http://$DOCKER_BACKEND_HOST:$APP_BACKEND_PORT;
+    }
+}
+
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+    server_name $DOCKER_PROXY_HOST;
+
+    ssl_certificate    /etc/ssl/default.crt;
+    ssl_certificate_key    /etc/ssl/default.key;
+
+    # Max file size useful for file uploading
+    client_max_body_size 8M;
+
+    location / {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass https://$DOCKER_FRONTEND_HOST;
+    }
+
+    location /404 {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass https://$DOCKER_FRONTEND_HOST/404;
+    }
+
+    location /500 {
+        # NGINX acting as reverse proxy for frontend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_pass https://$DOCKER_FRONTEND_HOST/500;
+    }
+
+    location ~ ^/(api|ws)/ {
+        # Return 204 for preflight requests
+        if ($request_method = OPTIONS) {
+            return 204;
+        }
+        # NGINX acting as reverse proxy for backend
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_http_version 1.1;
+        proxy_set_header Host $http_host;
+        proxy_set_header content-type "application/json";
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_pass http://$DOCKER_BACKEND_HOST:$APP_BACKEND_PORT;
+    }
+}
