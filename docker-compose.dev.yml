@@ -1,20 +1,20 @@
 services:
   cf-blog-database-dev:
     image: postgres:15.5
-    container_name: ${APP_DATABASE_HOST}-dev
+    container_name: ${DOCKER_DATABASE_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
+      PGPORT: ${APP_DB_PORT}
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
       POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
     ports:
-      - ${APP_DATABASE_PORT}:5432
+      - ${DOCKER_DATABASE_PORT}:${APP_DB_PORT}
     networks:
       - network-cf-blog-dev
     volumes:
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - database-cf-blog-dev:/var/lib/postgresql/data
 
   cf-blog-backend-dev:
@@ -22,7 +22,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-    container_name: ${APP_BACKEND_HOST}-dev
+    container_name: ${DOCKER_BACKEND_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
@@ -32,7 +32,7 @@ services:
     depends_on:
       - cf-blog-database-dev
     ports:
-      - ${APP_BACKEND_PORT}:3001
+      - ${DOCKER_BACKEND_DEV_PORT}:${APP_BACKEND_DEV_PORT}
     networks:
       - network-cf-blog-dev
     volumes:
@@ -44,7 +44,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
-    container_name: ${APP_FRONTEND_HOST}-dev
+    container_name: ${DOCKER_FRONTEND_HOST}-dev
     restart: unless-stopped
     env_file:
       - ./.env
@@ -54,7 +54,7 @@ services:
     depends_on:
       - cf-blog-backend-dev
     ports:
-      - ${APP_FRONTEND_PORT}:3000
+      - ${DOCKER_FRONTEND_DEV_PORT}:${APP_FRONTEND_DEV_PORT}
     networks:
       - network-cf-blog-dev
     volumes:

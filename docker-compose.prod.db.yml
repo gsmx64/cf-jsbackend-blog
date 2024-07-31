@@ -1,20 +1,20 @@
 services:
   cf-blog-database:
     image: postgres:15.5
-    container_name: ${APP_DATABASE_HOST}
+    container_name: ${DOCKER_DATABASE_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
     environment:
+      PGPORT: ${APP_DB_PORT}
       POSTGRES_DB: ${APP_DB_NAME}
       POSTGRES_USER: ${APP_DB_USER}
       POSTGRES_PASSWORD: ${APP_DB_PASSWORD}
     ports:
-      - ${APP_DATABASE_PORT}:5432
+      - ${DOCKER_DATABASE_PORT}:${APP_DB_PORT}
     networks:
       - network-cf-blog
     volumes:
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
       - database-cf-blog:/var/lib/postgresql/data
 
   cf-blog-backend:
@@ -22,12 +22,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    container_name: ${APP_BACKEND_HOST}
+    container_name: ${DOCKER_BACKEND_HOST}
     restart: unless-stopped
     env_file:
       - ./backend/.env.production
     environment:
       - NODE_ENV=production
+    expose:
+      - ${APP_BACKEND_PORT}
     depends_on:
       - cf-blog-database
     networks:
@@ -40,7 +42,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: ${APP_FRONTEND_HOST}
+    container_name: ${DOCKER_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
       - ./frontend/.env.production
@@ -49,6 +51,8 @@ services:
     depends_on:
       - cf-blog-database
       - cf-blog-backend
+    expose:
+      - 80
     networks:
       - network-cf-blog
     volumes:
@@ -61,7 +65,7 @@ services:
     build:
       context: ./reverse-proxy
       dockerfile: Dockerfile.prod
-    container_name: ${APP_PROXY_HOST}
+    container_name: ${DOCKER_PROXY_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
@@ -72,8 +76,8 @@ services:
       - cf-blog-backend
       - cf-blog-frontend
     ports:
-      - ${APP_PROD_HTTP_PORT}:80
-      - ${APP_PROD_HTTPS_PORT}:443
+      - ${DOCKER_APP_HTTP_PORT}:80
+      - ${DOCKER_APP_HTTPS_PORT}:443
     networks:
       - network-cf-blog
     volumes:

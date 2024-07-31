@@ -5,12 +5,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.prod
-    container_name: ${APP_BACKEND_HOST}
+    container_name: ${DOCKER_BACKEND_HOST}
     restart: unless-stopped
     env_file:
       - ./backend/.env.production
     environment:
       - NODE_ENV=production
+    expose:
+      - ${APP_BACKEND_PORT}
     networks:
       - network-cf-blog
     volumes:
@@ -21,7 +23,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-    container_name: ${APP_FRONTEND_HOST}
+    container_name: ${DOCKER_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
       - ./frontend/.env.production
@@ -29,6 +31,8 @@ services:
       - NODE_ENV=production
     depends_on:
       - cf-blog-backend
+    expose:
+      - 80
     networks:
       - network-cf-blog
     volumes:
@@ -41,7 +45,7 @@ services:
     build:
       context: ./reverse-proxy
       dockerfile: Dockerfile.prod
-    container_name: ${APP_PROXY_HOST}
+    container_name: ${DOCKER_PROXY_HOST}
     restart: unless-stopped
     env_file:
       - ./.env
@@ -51,8 +55,8 @@ services:
       - cf-blog-backend
       - cf-blog-frontend
     ports:
-      - ${APP_PROD_HTTP_PORT}:80
-      - ${APP_PROD_HTTPS_PORT}:443
+      - ${DOCKER_APP_HTTP_PORT}:80
+      - ${DOCKER_APP_HTTPS_PORT}:443
     networks:
       - network-cf-blog
     volumes:

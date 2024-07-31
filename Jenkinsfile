@@ -269,13 +269,14 @@ pipeline {
             steps {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
+                    sed -i 's/^APP_DATABASE_PORT=.*/APP_DATABASE_PORT=5433/' .env.sample
                     cp .env.sample .env
                     cp ./backend/.env.docker.production.sample ./backend/.env.production
                     cp ./frontend/.env.docker.production.sample ./frontend/.env.production
-                    sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
+                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=5433/' ./backend/.env.production
                     sed -i 's/^APP_PROD_HTTP_PORT=.*/APP_PROD_HTTP_PORT=81/' .env
                     sed -i 's/^APP_PROD_HTTPS_PORT=.*/APP_PROD_HTTPS_PORT=7443/' .env
-                    docker compose -f docker-compose.prod.yml up --build --force-recreate --detach
+                    docker compose -f docker-compose.prod.db.yml up --build --force-recreate --detach
                 """
             }
         }
@@ -437,7 +438,7 @@ pipeline {
         stage('Stop docker production containers and do docker clean up') {
             steps {
                 sh """
-                    docker compose -f docker-compose.prod.yml down -v
+                    docker compose -f docker-compose.prod.db.yml down -v
                     docker system prune -af
                     docker volume prune -f
                     docker network prune -f

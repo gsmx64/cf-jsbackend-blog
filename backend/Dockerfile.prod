@@ -27,8 +27,5 @@ RUN addgroup -S app && adduser -S app -G app
 
 #USER app  //NOSONAR
 
-EXPOSE 80
-EXPOSE 443
-
 CMD ["pm2-runtime","start","/home/app/main.js"]
 #CMD ["node", "/api/main.js"]
