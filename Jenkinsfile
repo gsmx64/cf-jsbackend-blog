@@ -474,10 +474,10 @@ pipeline {
                 "'''
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl apply -n $APP_NAME -f $APP_NAME-k8s-cloud.yaml"'*/
 
-                sh '''APP_K8S_CODE=`cat $APP_NAME-k8s-baremetal.yaml` && ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "
-                cat << EOF | sudo tee -a $APP_NAME-k8s-baremetal.yaml $APP_K8S_CODE
+                sh '''APP_K8S_CODE=`cat $APP_NAME-k8s-baremetal-v2.yaml` && ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "
+                cat << EOF | sudo tee -a $APP_NAME-k8s-baremetal-v2.yaml $APP_K8S_CODE
                 "'''
-                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl apply -n $APP_NAME -f $APP_NAME-k8s-baremetal.yaml"'
+                sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl apply -n $APP_NAME -f $APP_NAME-k8s-baremetal-v2.yaml"'
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl rollout restart deployment $APP_NAME -n $APP_NAME || true"'
             }
         }
