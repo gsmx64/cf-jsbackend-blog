@@ -1,4 +1,4 @@
-# CF-Blog on Kubernetes with Baremetal 
+# CF-Blog on Kubernetes with Baremetal
 
 # NestJS Backend Deployment
 apiVersion: apps/v1
@@ -157,7 +157,7 @@ spec:
           - name: APP_PORT
             value: "82"
           - name: VITE_APP_NAME
-		        value: "CF-Blog"
+            value: "CF-Blog"
           - name: VITE_APP_PORT
             value: "81"
           - name: VITE_API_PROTOCOL
