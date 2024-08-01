@@ -3,8 +3,8 @@
  */
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import * as bcrypt from 'bcrypt';
 
 import { AuthResponse, IUseToken, PayloadToken } from '../interfaces/auth.interface';
 import { UsersService } from '../../users/services/users.service';
@@ -16,10 +16,16 @@ import { useToken } from '../../utils/use.token';
 
 @Injectable()
 export class AuthService {
+  private jwtOptions: any;
+
   constructor(
       private readonly userService: UsersService,
-      private readonly jwtService: JwtService
-    ) {}
+      private jwtService: JwtService
+    ) {
+      this.jwtOptions = {
+        secret: process.env.APP_AUTH_SECRET
+      };
+    }
 
   /**
    * Validates a user's credentials.
@@ -43,33 +49,14 @@ export class AuthService {
     if (userByUsername) {
       const match = await bcrypt.compare(password, userByUsername.password);
       if (match) return userByUsername;
-    }
-
-    if (userByEmail) {
+    } else if (userByEmail) {
       const match = await bcrypt.compare(password, userByEmail.password);
       if (match) return userByEmail;
+    } else {
+      throw new UnauthorizedException();
     }
 
     return null;
-  }
-
-  /**
-   * Signs a JSON Web Token (JWT) with the provided payload, secret, and expiration time.
-   * @param payload - The payload of the JWT.
-   * @param secret - The secret key used to sign the JWT.
-   * @param expires - The expiration time of the JWT.
-   * @returns The signed JWT.
-   */
-  public signJWT({
-    payload,
-    secret,
-    expires,
-  }: {
-    payload: jwt.JwtPayload;
-    secret: string;
-    expires: number | string;
-  }): string {
-    return jwt.sign(payload, secret, { expiresIn: expires });
   }
 
   /**
@@ -86,11 +73,12 @@ export class AuthService {
     };
 
     return {
-      access_token: this.signJWT({
+      access_token: this.jwtService.sign(payload, this.jwtOptions),
+      /*this.signJWT({
         payload,
         secret: process.env.APP_AUTH_SECRET,
         expires: process.env.APP_AUTH_TOKEN_EXPIRATION,
-      }),
+      }),*/
       user,
     };
   }
