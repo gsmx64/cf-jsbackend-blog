@@ -265,17 +265,17 @@ pipeline {
                 """
             }
         }*/
-        /*stage('Build docker production images') {
+        stage('Build docker production images') {
             steps {
                 sh """
                     if [ -f .env ]; then rm -f .env; fi
-                    sed -i 's/^DOCKER_DATABASE_PORT=.*%/DOCKER_DATABASE_PORT=5433/' .env.sample
+                    sed -i 's/^DOCKER_DATABASE_PORT=.*/DOCKER_DATABASE_PORT=5433/' .env.sample
                     cp .env.sample .env
                     cp ./backend/.env.docker.production.sample ./backend/.env.production
                     cp ./frontend/.env.docker.production.sample ./frontend/.env.production
-                    sed -i 's/^APP_DB_PORT=.*%/APP_DB_PORT=5433/' ./backend/.env.production
-                    sed -i 's/^DOCKER_APP_HTTP_PORT=.*%/DOCKER_APP_HTTP_PORT=81/' .env
-                    sed -i 's/^DOCKER_APP_HTTPS_PORT=.*%/DOCKER_APP_HTTPS_PORT=7443/' .env
+                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=5433/' ./backend/.env.production
+                    sed -i 's/^DOCKER_APP_HTTP_PORT=.*/DOCKER_APP_HTTP_PORT=81/' .env
+                    sed -i 's/^DOCKER_APP_HTTPS_PORT=.*/DOCKER_APP_HTTPS_PORT=7443/' .env
                     docker compose -f docker-compose.prod.db.yml up --build --force-recreate --detach
                 """
             }
@@ -350,7 +350,7 @@ pipeline {
                     docker logout
                 """
             }
-        }*/
+        }
         /*stage('Scan Docker production image with Trivy - HIGH severity - backend') {
             steps {
                 script {
