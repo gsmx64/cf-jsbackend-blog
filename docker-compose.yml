@@ -32,14 +32,15 @@ services:
       - cf-blog-database
     networks:
       - network-cf-blog
-    volumes:
-      - ./node_modules:/home/app/node_modules
+    #volumes:
+    #  - ./node_modules:/home/app/node_modules
 
   cf-blog-frontend:
     image: gsmx64/cf-blog-frontend:latest
     container_name: ${DOCKER_FRONTEND_HOST}
     restart: unless-stopped
     env_file:
+      - ./.env
       - ./frontend/.env.production
     environment:
       - NODE_ENV=production
