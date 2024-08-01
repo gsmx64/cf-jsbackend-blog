@@ -1,11 +1,20 @@
+upstream websocket {
+    server $DOCKER_BACKEND_HOST; 
+    #SERVER endpoint that handle ws:// connections
+}
 
 server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+    listen $DOCKER_APP_HTTP_PORT default_server;
+    listen [::]:$DOCKER_APP_HTTP_PORT default_server;
     server_name $DOCKER_PROXY_HOST;
 
     # Max file size useful for file uploading
     client_max_body_size 8M;
+
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Methods' 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS' always;
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range' always;
+    add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
 
     location / {
         # NGINX acting as reverse proxy for frontend
@@ -14,7 +23,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass http://$DOCKER_FRONTEND_HOST;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT;
     }
 
     location /404 {
@@ -24,7 +33,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass http://$DOCKER_FRONTEND_HOST/404;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/404;
     }
 
     location /500 {
@@ -34,7 +43,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass http://$DOCKER_FRONTEND_HOST/500;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/500;
     }
 
     location ~ ^/(api|ws)/ {
@@ -56,8 +65,8 @@ server {
 }
 
 server {
-    listen 443 ssl default_server;
-    listen [::]:443 ssl default_server;
+    listen $DOCKER_APP_HTTPS_PORT ssl default_server;
+    listen [::]:$DOCKER_APP_HTTPS_PORT ssl default_server;
     server_name $DOCKER_PROXY_HOST;
 
     ssl_certificate    /etc/ssl/default.crt;
@@ -66,6 +75,11 @@ server {
     # Max file size useful for file uploading
     client_max_body_size 8M;
 
+    add_header 'Access-Control-Allow-Origin' '*' always;
+    add_header 'Access-Control-Allow-Methods' 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS' always;
+    add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range' always;
+    add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
+
     location / {
         # NGINX acting as reverse proxy for frontend
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -73,7 +87,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST;
+        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT;
     }
 
     location /404 {
@@ -83,7 +97,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST/404;
+        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/404;
     }
 
     location /500 {
@@ -93,7 +107,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST/500;
+        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/500;
     }
 
     location ~ ^/(api|ws)/ {

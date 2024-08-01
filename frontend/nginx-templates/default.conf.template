@@ -1,6 +1,6 @@
 server {
-    listen       80;
-    listen  [::]:80;
+    listen       $APP_FRONTEND_PORT;
+    listen  [::]:$APP_FRONTEND_PORT;
     server_name  $DOCKER_FRONTEND_HOST;
 
     #access_log  /var/log/nginx/host.access.log  main;
