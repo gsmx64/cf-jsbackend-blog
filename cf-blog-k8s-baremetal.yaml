@@ -19,6 +19,8 @@ spec:
         - name: cf-blog-backend
           image: gsmx64/cf-blog-backend:latest
           env:
+            - name: NODE_ENV
+              value: "production"
             - name: APP_HOST
               value: "cf-blog-backend"
             - name: APP_PORT
@@ -35,9 +37,9 @@ spec:
             - name: APP_AUTH_FACEBOOK_ENABLE
               valueFrom:
                 secretKeyRef:
-                  name: "false"
-                  key: APP_AUTH_FACEBOOK_KEY
-            - name: APP_AUTH_FACEBOOK_ENABLE
+                  name: cf-blog-facebookenabled
+                  key: APP_AUTH_FACEBOOK_ENABLE
+            - name: APP_AUTH_FACEBOOK_KEY
               valueFrom:
                 secretKeyRef:
                   name: cf-blog-facebookkey
@@ -50,7 +52,7 @@ spec:
             - name: APP_AUTH_GOOGLE_ENABLE
               valueFrom:
                 secretKeyRef:
-                  name: "false"
+                  name: cf-blog-googleenabled
                   key: APP_AUTH_GOOGLE_ENABLE
             - name: APP_AUTH_GOOGLE_ID
               valueFrom:
@@ -65,7 +67,7 @@ spec:
             - name: APP_AUTH_TWITTER_ENABLE
               valueFrom:
                 secretKeyRef:
-                  name: "false"
+                  name: cf-blog-twitterenabled
                   key: APP_AUTH_TWITTER_ENABLE
             - name: APP_AUTH_TWITTER_ID
               valueFrom:

@@ -58,6 +58,7 @@ services:
       - network-cf-blog
     volumes:
       - ./frontend/nginx-templates:/etc/nginx/templates
+      - ./frontend/nginx.conf:/etc/nginx/nginx.conf
       #- ./frontend/default.pem:/etc/ssl/default.pem
       #- ./frontend/default.key:/etc/ssl/default.key
 
