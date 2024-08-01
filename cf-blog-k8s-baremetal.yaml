@@ -22,7 +22,7 @@ spec:
             - name: APP_HOST
               value: "cf-blog-backend"
             - name: APP_PORT
-              value: "82"
+              value: "3001"
             - name: APP_AUTH_SECRET
               valueFrom:
                 secretKeyRef:
@@ -123,11 +123,11 @@ spec:
               memory: "128Mi"
               cpu: "500m"
           ports:
-            - containerPort: 82
+            - containerPort: 3001
           livenessProbe:
             httpGet:
               path: /api/settings/view
-              port: 82
+              port: 3001
             initialDelaySeconds: 60
             timeoutSeconds: 5
 
@@ -152,18 +152,20 @@ spec:
         - name: cf-blog-frontend
           image: gsmx64/cf-blog-frontend:latest
           env:
+            - name: VITE_NODE_ENV
+              value: "production"
             - name: APP_PORT
-              value: "82"
+              value: "3000"
             - name: VITE_APP_NAME
               value: "CF-Blog"
             - name: VITE_APP_PORT
-              value: "81"
+              value: "3000"
             - name: VITE_API_PROTOCOL
               value: "http"
             - name: VITE_API_HOST
               value: "cf-blog-backend"
             - name: VITE_API_PORT
-              value: "82"
+              value: "3001"
             - name: VITE_API_PATH
               value: "/api"
             - name: VITE_API_TIMEOUT
@@ -171,7 +173,7 @@ spec:
             - name: VITE_DEV_API_DOCKER
               value: "false"
             - name: VITE_PROD_API_BY_PROXY
-              value: ""
+              value: "/api"
             - name: VITE_CORS_WITH_CREDENTIALS
               value: "false"
             - name: VITE_CORS_WITH_XSRF_TOKEN
@@ -183,11 +185,11 @@ spec:
               memory: "128Mi"
               cpu: "500m"
           ports:
-            - containerPort: 81
+            - containerPort: 3000
           livenessProbe:
             httpGet:
               path: /
-              port: 81
+              port: 3000
             initialDelaySeconds: 60
             timeoutSeconds: 5
 
@@ -204,8 +206,8 @@ spec:
   type: NodePort
   ports:
     - name: "http"
-      port: 82
-      targetPort: 82
+      port: 3001
+      targetPort: 3001
       protocol: "TCP"
       nodePort: 30007
 
@@ -222,7 +224,7 @@ spec:
   type: NodePort
   ports:
     - name: "http"
-      port: 81
-      targetPort: 81
+      port: 3000
+      targetPort: 3000
       protocol: "TCP"
       nodePort: 30006
