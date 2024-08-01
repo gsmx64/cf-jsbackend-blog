@@ -17,21 +17,14 @@ COPY --from=build-phase ./dist /usr/share/nginx/html
 COPY ./nginx-templates/default.conf.template /etc/nginx/templates/default.conf.template
 COPY nginx.conf /etc/nginx/nginx.conf
 
-RUN [ ! -f /etc/ssl/default.key ] && \
-    apk add openssl && \
-    openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt
-
 RUN addgroup -S app && adduser -S app -G app && \
     touch /var/run/nginx.pid && \    
     chown -R app:app /var/run/nginx.pid && \
     chown -R app:app /var/cache/nginx && \
-    chown -R app:app /etc/nginx && \
-    chown -R app:app /etc/ssl/default.* && \
-    chmod 400 /etc/ssl/default.*
+    chown -R app:app /etc/nginx
 
 USER app
 
-EXPOSE 80
-EXPOSE 443
+EXPOSE 3000
 
 CMD ["nginx","-g","daemon off;"]

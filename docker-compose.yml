@@ -32,8 +32,6 @@ services:
       - cf-blog-database
     networks:
       - network-cf-blog
-    #volumes:
-    #  - ./node_modules:/home/app/node_modules
 
   cf-blog-frontend:
     image: gsmx64/cf-blog-frontend:latest
@@ -73,3 +71,7 @@ services:
 
 networks:
   network-cf-blog:
+
+volumes:
+  database-cf-blog:
+    driver: local

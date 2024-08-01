@@ -21,34 +21,4 @@ server {
     location = /500 {
         internal;
     }
-
-}
-
-server {
-    listen       443 ssl;
-    listen  [::]:443 ssl;
-    server_name  $DOCKER_FRONTEND_HOST;
-
-    ssl_certificate    /etc/ssl/default.crt;
-    ssl_certificate_key    /etc/ssl/default.key;
-
-    #access_log  /var/log/nginx/host.access.log  main;
-
-    location / {
-        root   /usr/share/nginx/html;
-        index  index.html index.htm;
-    }
-
-    # redirect server error pages to the dynamic page /404
-    error_page  404              /404;
-	location = /404 {
-        internal;
-    }
-
-    # redirect server error pages to the dynamic page /500
-    error_page   500 502 503 504  /500;
-    location = /500 {
-        internal;
-    }
-
 }

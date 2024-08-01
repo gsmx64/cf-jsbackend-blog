@@ -87,7 +87,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT;
     }
 
     location /404 {
@@ -97,7 +97,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/404;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/404;
     }
 
     location /500 {
@@ -107,7 +107,7 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_http_version 1.1;
         proxy_set_header Host $http_host;
-        proxy_pass https://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/500;
+        proxy_pass http://$DOCKER_FRONTEND_HOST:$APP_FRONTEND_PORT/500;
     }
 
     location ~ ^/(api|ws)/ {

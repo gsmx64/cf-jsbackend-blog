@@ -39,8 +39,6 @@ services:
     volumes:
       - ./frontend/nginx-templates:/etc/nginx/templates
       - ./frontend/nginx.conf:/etc/nginx/nginx.conf
-      #- ./frontend/default.pem:/etc/ssl/default.pem
-      #- ./frontend/default.key:/etc/ssl/default.key
 
   cf-blog-reverse-proxy:
     image: gsmx64/cf-blog-reverse-proxy:${APP_BUILD_NUMBER}

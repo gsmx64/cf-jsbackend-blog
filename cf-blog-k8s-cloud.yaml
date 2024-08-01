@@ -182,6 +182,10 @@ spec:
               value: "true"
             - name: VITE_ZUSTAND_ENABLED
               value: "true"
+            - name: DOCKER_FRONTEND_HOST
+              value: "cf-blog-frontend"
+            - name: APP_FRONTEND_PORT
+              value: "3000"
           resources:
             limits:
               memory: "128Mi"
