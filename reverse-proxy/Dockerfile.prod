@@ -6,6 +6,9 @@ COPY ./ /
 
 RUN apk update && apk add build-base
 
+COPY ./templates/default.conf.template /etc/nginx/templates/default.conf.template
+COPY nginx.conf /etc/nginx/nginx.conf
+
 RUN [ ! -f /etc/ssl/default.key ] && \
     apk add openssl && \
     openssl req -x509 -new -newkey rsa:2048 -days 365 -nodes -subj "/C=US/ST=Denial/L=Localhost/O=Dis/CN=localhost" -keyout /etc/ssl/default.key -out /etc/ssl/default.crt
