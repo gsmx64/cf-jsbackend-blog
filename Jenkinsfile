@@ -15,7 +15,7 @@ pipeline {
         nodejs "nodejs-v20.14"
     }
     stages {
-        /*stage("Install Project Dependencies - backend") {
+        stage("Install Project Dependencies - backend") {
             steps {
                 nodejs(nodeJSInstallationName: 'nodejs-v20.14') {
                     sh """
@@ -36,8 +36,8 @@ pipeline {
                     """
                 }
             }
-        }*/
-        /*stage('Code Quality Check via SonarQube') {
+        }
+        stage('Code Quality Check via SonarQube') {
             steps {
                 sh """
                     rm -f dependency-check-*
@@ -57,17 +57,17 @@ pipeline {
                     }
                 }
             }
-        }*/
-        /*stage('Unittesting - backend') {
+        }
+        stage('Unittesting - backend') {
             steps {
                 sh """
                     cd backend
                     cp .env.testing.sample .env.testing
-                    sed -i 's/^APP_DB_HOST=.*%/APP_DB_HOST=${APP_TESTING_DB_HOST}/' .env.testing
-                    sed -i 's/^APP_DB_PORT=.*%/APP_DB_PORT=${APP_TESTING_DB_PORT}/' .env.testing
-                    sed -i 's/^APP_DB_NAME=.*%/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
-                    sed -i 's/^APP_DB_USER=.*%/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
-                    sed -i 's/^APP_DB_PASSWORD=.*%/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
+                    sed -i 's/^APP_DB_HOST=.*/APP_DB_HOST=${APP_TESTING_DB_HOST}/' .env.testing
+                    sed -i 's/^APP_DB_PORT=.*/APP_DB_PORT=${APP_TESTING_DB_PORT}/' .env.testing
+                    sed -i 's/^APP_DB_NAME=.*/APP_DB_NAME=${APP_TESTING_DB_NAME}/' .env.testing
+                    sed -i 's/^APP_DB_USER=.*/APP_DB_USER=${APP_TESTING_DB_USER}/' .env.testing
+                    sed -i 's/^APP_DB_PASSWORD=.*/APP_DB_PASSWORD=${APP_TESTING_DB_PASSWORD}/' .env.testing
                     export NODE_ENV=testing && npm run m:generate:test && npm run m:migrate:test
                     export NODE_ENV=testing && npm test
                     cd ..
@@ -83,8 +83,8 @@ pipeline {
                     cd ..
                 """
             }
-        }*/
-        /*stage('OWASP Dependency-Check Vulnerabilities - backend') {
+        }
+        stage('OWASP Dependency-Check Vulnerabilities - backend') {
             steps {
                 sh """
                     cd backend
@@ -121,8 +121,8 @@ pipeline {
                     rm -f dependency-check-*
                 """
             }
-        }*/
-        /*stage('Check local Docker Engine Status') {
+        }
+        stage('Check local Docker Engine Status') {
             steps {
                 script {
                     def check_docker = sh(returnStdout: true, script: "systemctl is-active docker")
@@ -142,8 +142,8 @@ pipeline {
                     cp .env.sample .env
                     cp ./backend/.env.docker.development.sample ./backend/.env.development
                     cp ./frontend/.env.docker.development.sample ./frontend/.env.development
-                    sed -i 's/^APP_BUILD_NUMBER=.*%/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
-                    sed -i 's/^DOCKER_DATABASE_PORT=.*%/DOCKER_DATABASE_PORT=5433/' .env
+                    sed -i 's/^APP_BUILD_NUMBER=.*/APP_BUILD_NUMBER=${APP_BUILD_NUMBER}/' .env
+                    sed -i 's/^DOCKER_DATABASE_PORT=.*/DOCKER_DATABASE_PORT=5433/' .env
                     docker compose -f docker-compose.dev.yml up --build --force-recreate --detach
                 """
             }
@@ -197,8 +197,8 @@ pipeline {
                     docker logout
                 """
             }
-        }*/
-        /*stage('Scan Docker development image with Trivy - HIGH severity - backend') {
+        }
+        stage('Scan Docker development image with Trivy - HIGH severity - backend') {
             steps {
                 script {
                     def trivyOutput = sh(script: "trivy image --severity HIGH ${APP_IMAGE_NAME_BACKEND}-dev:${APP_BUILD_NUMBER}", returnStdout: true).trim()
@@ -253,8 +253,8 @@ pipeline {
                     }
                 }
             }
-        }*/
-        /*stage('Stop docker development containers and do docker clean up') {
+        }
+        stage('Stop docker development containers and do docker clean up') {
             steps {
                 sh """
                     docker compose -f docker-compose.dev.yml down -v
@@ -264,7 +264,7 @@ pipeline {
                     rm -f .env
                 """
             }
-        }*/
+        }
         stage('Build docker production images') {
             steps {
                 sh """
@@ -351,7 +351,7 @@ pipeline {
                 """
             }
         }
-        /*stage('Scan Docker production image with Trivy - HIGH severity - backend') {
+        stage('Scan Docker production image with Trivy - HIGH severity - backend') {
             steps {
                 script {
                     def trivyOutput = sh(script: "trivy image --severity HIGH ${APP_IMAGE_NAME_BACKEND}:${APP_BUILD_NUMBER}", returnStdout: true).trim()
@@ -434,8 +434,8 @@ pipeline {
                     }
                 }
             }
-        }*/
-        /*stage('Stop docker production containers and do docker clean up') {
+        }
+        stage('Stop docker production containers and do docker clean up') {
             steps {
                 sh """
                     docker compose -f docker-compose.prod.db.yml down -v
@@ -445,7 +445,7 @@ pipeline {
                     rm -f .env
                 """
             }
-        }*/
+        }
         stage('Deploy cf-blog on Kubernetes cluster') {
             steps {
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl create namespace $APP_NAME || true"'
@@ -481,17 +481,14 @@ pipeline {
                 sh 'ssh k8s-master -l gsmcfdevops -i ~/.ssh/gsmcfdevops -o StrictHostKeyChecking=no "kubectl rollout restart deployment $APP_NAME -n $APP_NAME || true"'
             }
         }
-        
-    }
-    post {
-        // Clean after build
-        always {
-            cleanWs(cleanWhenNotBuilt: false,
-                    deleteDirs: true,
-                    disableDeferredWipeout: false,
-                    notFailBuild: true,
-                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
-                            [pattern: '.propsfile', type: 'EXCLUDE']])
-        }
+        stage('Post - Clean up') {
+            steps {
+                sh """
+                    pwd
+                    echo 'Clean up workfolder'
+                    rm -Rf /var/lib/jenkins/workspace/${APP_NAME} /var/lib/jenkins/workspace/${APP_NAME}@tmp
+                """
+            }
+        }        
     }
 }
